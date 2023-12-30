@@ -77,4 +77,4 @@ crashlytics-build.properties
 .idea/
 
 Sources/
-#TestScene/
+TestScene/
