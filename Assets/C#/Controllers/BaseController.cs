@@ -17,7 +17,7 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField]
     protected GameObject _lockTarget;
 
-    protected Animator anim;
+    protected Animator _animator;
 
     public Define.AnimState AnimState
     {
@@ -29,7 +29,6 @@ public abstract class BaseController : MonoBehaviour
 
             bool isPlayer = WorldObjectType == Define.WorldObject.Player;
             int minIndex = 1;
-            int maxAttackIndex = isPlayer ? 5 : 3;
             int maxHitIndex = isPlayer ? 3 : 2;
             int maxDieIndex = isPlayer ? 3 : 2;
             int index;
@@ -37,33 +36,32 @@ public abstract class BaseController : MonoBehaviour
             switch (_animState)
             {
                 case Define.AnimState.Attack:
-                    index = random.Next(minIndex, maxAttackIndex);
-                    anim.CrossFade($"Attack{index}", 0.1f);
+                    _animator.CrossFade("Attack1", 0.01f);
                     break;
                 case Define.AnimState.Defend:
-                    anim.CrossFade("Defend", 0.1f);
+                    _animator.CrossFade("Defend", 0.01f);
                     break;
                 case Define.AnimState.DefendHit:
-                    anim.CrossFade("DefendHit", 0.1f);
+                    _animator.CrossFade("DefendHit", 0.01f);
                     break;
                 case Define.AnimState.Die:
                     index = random.Next(minIndex, maxDieIndex);
-                    anim.CrossFade($"Die{index}", 0.1f);
+                    _animator.CrossFade($"Die{index}", 0.01f);
                     break;
                 case Define.AnimState.Dizzy:
-                    anim.CrossFade("Dizzy", 0.1f);
+                    _animator.CrossFade("Dizzy", 0.01f);
                     break;
                 case Define.AnimState.Hit:
                     index = random.Next(minIndex, maxHitIndex);
-                    anim.CrossFade($"Hit{index}", 0.1f);
+                    _animator.CrossFade($"Hit{index}", 0.01f);
                     break;
                 case Define.AnimState.Idle:
-                    anim.CrossFade("Idle", 0.1f);
+                    _animator.CrossFade("Idle", 0.2f);
                     break;
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
-                    anim.CrossFade("Victory", 0.1f);
+                    _animator.CrossFade("Victory", 0.01f);
                     break;
             }
         }
@@ -77,7 +75,7 @@ public abstract class BaseController : MonoBehaviour
 
     private void Start()
     {
-        anim = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
         Init();
     }
     
@@ -119,16 +117,18 @@ public abstract class BaseController : MonoBehaviour
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
 
-    public virtual void OnDamage(Stat attackerStat)
-    {
-        var nextState = (AnimState == Define.AnimState.Idle) ? Define.AnimState.Hit : Define.AnimState.DefendHit;
-        AnimState = nextState;
-    }
+    public abstract void OnDamage(Stat attackerStat);
     
     protected virtual void UpdateAttack() { }
     protected virtual void UpdateDefend() { }
     protected virtual void UpdateDefendHit() { }
-    protected virtual void UpdateDie() { }
+    
+    protected virtual void UpdateDie()
+    {
+        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.98f)
+            Managers.GameMng.Despawn(this.gameObject);
+    }
+    
     protected virtual void UpdateDizzy() { }
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }

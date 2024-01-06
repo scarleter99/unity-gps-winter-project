@@ -53,7 +53,5 @@ public class Stat : MonoBehaviour
         {
             playerStat.Exp += 15;
         }
-        
-        Managers.GameMng.Despawn(gameObject);
     }
 }
