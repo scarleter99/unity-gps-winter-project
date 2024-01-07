@@ -53,4 +53,9 @@
     {
         QuarterView,
     }
+
+    public enum AreaName
+    {
+        Forest,
+    }
 }
