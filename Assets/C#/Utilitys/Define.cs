@@ -26,6 +26,7 @@
         UnknownScene,
         TestTitleScene,
         TestGameScene,
+        TownScene,
     }
     
     public enum Sound
