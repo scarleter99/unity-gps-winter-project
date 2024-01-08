@@ -13,7 +13,7 @@ public abstract class UI_Base : MonoBehaviour
     
     public abstract void Init();
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -47,13 +47,13 @@ public abstract class UI_Base : MonoBehaviour
         return objects[idx] as T;
     }
 
-    protected GameObject GetGameObject(int idx) { return Get<GameObject>(idx); }
+    protected GameObject GetGameObject(Enum idx) { return Get<GameObject>(Convert.ToInt32(idx)); }
 
-    protected TextMeshProUGUI GetTextMeshProUGUI(int idx) { return Get<TextMeshProUGUI>(idx); }
+    protected TextMeshProUGUI GetTextMeshProUGUI(Enum idx) { return Get<TextMeshProUGUI>(Convert.ToInt32(idx)); }
 
-    protected Button GetButton(int idx) { return Get<Button>(idx); }
+    protected Button GetButton(Enum idx) { return Get<Button>(Convert.ToInt32(idx)); }
 
-    protected Image GetImage(int idx) { return Get<Image>(idx); }
+    protected Image GetImage(Enum idx) { return Get<Image>(Convert.ToInt32(idx)); }
 
     // go가 이벤트 콜백(입력)을 받아 이벤트 함수를 실행할 수 있게 만든다.
     public static void BindEvent(GameObject go, Action<PointerEventData> action,
