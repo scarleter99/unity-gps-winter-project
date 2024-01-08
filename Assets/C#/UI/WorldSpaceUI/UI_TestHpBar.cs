@@ -30,6 +30,6 @@ public class UI_TestHpBar : UI_Base
 
     public void SetHpRatio(float ratio)
     {
-        GetGameObject((int)GameObjects.HpBar).GetComponent<Slider>().value = ratio;
+        GetGameObject(GameObjects.HpBar).GetComponent<Slider>().value = ratio;
     }
 }

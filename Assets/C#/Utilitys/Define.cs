@@ -55,6 +55,7 @@
         UnknownScene,
         TestTitleScene,
         TestGameScene,
+        TownScene,
     }
     
     public enum Sound
@@ -81,5 +82,20 @@
     public enum CameraMode
     {
         QuarterView,
+    }
+
+    public enum MonsterName
+    {
+        Slime,
+    }
+
+    public enum ItemName
+    {
+        Sword,
+    }
+
+    public enum QuestReward
+    {
+        Money,
     }
 }
