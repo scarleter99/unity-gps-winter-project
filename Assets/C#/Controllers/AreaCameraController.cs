@@ -54,7 +54,7 @@ public class AreaCameraController : MonoBehaviour
     void Start()
     {
         _cameraTransform = transform.GetChild(0);
-        if (_cameraTransform?.GetComponent<Camera>() == null)
+        if (_cameraTransform == null || _cameraTransform.GetComponent<Camera>() == null)
         {
             Debug.LogError("No camera attached to AreaCameraController");
         }
