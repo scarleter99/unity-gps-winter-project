@@ -83,7 +83,12 @@
     {
         QuarterView,
     }
-
+   
+    public enum AreaName
+    {
+        Forest,
+    }
+   
     public enum MonsterName
     {
         Slime,
