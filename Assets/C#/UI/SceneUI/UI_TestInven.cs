@@ -15,7 +15,7 @@ public class UI_TestInven : UI_Scene
 
         Bind<GameObject>(typeof(GameObjects));
 
-        GameObject gridPanel = GetGameObject((int)GameObjects.GridPanel);
+        GameObject gridPanel = GetGameObject(GameObjects.GridPanel);
         foreach (Transform child in gridPanel.transform)
             Managers.ResourceMng.Destroy(child.gameObject);
 

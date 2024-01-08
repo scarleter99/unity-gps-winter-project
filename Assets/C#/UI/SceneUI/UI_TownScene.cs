@@ -37,10 +37,12 @@ public class UI_TownScene : UI_Scene
         Bind<UI_Page>(typeof(Pages));
         Bind<Button>(typeof(Buttons));
 
-        GetButton((int)Buttons.Button_Quest).gameObject.BindEvent(OnClickedQuestButton, Define.UIEvent.Click);
-        GetButton((int)Buttons.Button_ExitAtQuest).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
-        GetButton((int)Buttons.Button_Store).gameObject.BindEvent(OnClickedStoreButton, Define.UIEvent.Click);
-        GetButton((int)Buttons.Button_ExitAtStore).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
+        GetButton(Buttons.Button_Quest).gameObject.BindEvent(OnClickedQuestButton, Define.UIEvent.Click);
+        GetButton(Buttons.Button_ExitAtQuest).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
+        GetButton(Buttons.Button_Store).gameObject.BindEvent(OnClickedStoreButton, Define.UIEvent.Click);
+        GetButton(Buttons.Button_ExitAtStore).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
+
+        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(true);
     }
 
     private void OnClickedQuestButton(PointerEventData data)

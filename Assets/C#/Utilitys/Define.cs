@@ -54,4 +54,19 @@
     {
         QuarterView,
     }
+
+    public enum MonsterName
+    {
+        Slime,
+    }
+
+    public enum ItemName
+    {
+        Sword,
+    }
+
+    public enum QuestReward
+    {
+        Money,
+    }
 }
