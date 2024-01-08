@@ -1,0 +1,12 @@
+﻿{
+  "items": [
+    {
+      "name": "SampleItem",
+      "description": "This is sample item."
+    },
+    {
+      "name": "SampleItem2",
+      "description": "This is sample item2."
+    }
+  ]
+}

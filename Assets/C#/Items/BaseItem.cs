@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public abstract class BaseItem : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public abstract class BaseItem : MonoBehaviour
     public string Name { get => _name; set => _name = value; }
     public Define.ItemType ItemType { get => _itemType; set => _itemType = value; }
     public string Description { get => Managers.DataMng.ItemDict[_name].description; }
-    
+
+    private void Start()
+    {
+        Init();
+    }
+
+    protected virtual void Init() { }
     public abstract void Use();
 }
