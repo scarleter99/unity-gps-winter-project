@@ -1,8 +1,10 @@
 using DG.Tweening;
 using QuestExtention;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -16,32 +18,17 @@ public class UI_QuestBoard : UI_Base
             QuestName,
         }
 
-        private Quest _quest;
-        private UI_QuestBoard ui_QuestBoard;
-
         public override void Init()
         {
             Bind<TextMeshProUGUI>(typeof(Texts));
-
-            this.gameObject.BindEvent(OnClicked, Define.UIEvent.Click);
         }
 
-        public void SetQuest(Quest quest, UI_QuestBoard uI_QuestBoard)
+        public void SetQuest(Quest quest)
         {
-            _quest = quest;
-            ui_QuestBoard = uI_QuestBoard;
-
-            GetTextMeshProUGUI(Texts.QuestName).text = _quest.Name;
-        }
-
-        private void OnClicked(PointerEventData eventData)
-        {
-            GameObject ui_Quest = ui_QuestBoard.GetGameObject(UI_QuestBoard.GameObjects.UI_Quest);
-
-            ui_Quest.SetActive(true);
-            ui_Quest.GetOrAddComponent<UI_Quest>().SetQuest(_quest);
+            GetTextMeshProUGUI(Texts.QuestName).text = quest.Name;
         }
     }
+
     private class UI_Quest : UI_Base
     {
         enum Buttons
@@ -62,8 +49,8 @@ public class UI_QuestBoard : UI_Base
             Bind<Button>(typeof(Buttons));
             Bind<TextMeshProUGUI>(typeof(Texts));
 
-            GetButton(Buttons.AcceptButton).gameObject.BindEvent(OnClickedAccpetButton, Define.UIEvent.Click);
-            GetButton(Buttons.CancelButton).gameObject.BindEvent(OnClickedCancelButton, Define.UIEvent.Click);
+            GetButton(Buttons.AcceptButton).gameObject.BindEvent((PointerEventData) => OnClickedAccpetButton?.Invoke(PointerEventData), Define.UIEvent.Click);
+            GetButton(Buttons.CancelButton).gameObject.BindEvent((PointerEventData) => OnClickedCancelButton?.Invoke(PointerEventData), Define.UIEvent.Click);
         }
 
         public void SetQuest(Quest _quest)
@@ -74,15 +61,8 @@ public class UI_QuestBoard : UI_Base
             GetTextMeshProUGUI(Texts.Reward).text = "Reward: " + _quest.Reward.RewardToString();
         }
 
-        private void OnClickedAccpetButton(PointerEventData eventData)
-        {
-            this.gameObject.SetActive(false);
-        }
-
-        private void OnClickedCancelButton(PointerEventData eventData)
-        {
-            this.gameObject.SetActive(false);
-        }
+        public Action<PointerEventData> OnClickedAccpetButton;
+        public Action<PointerEventData> OnClickedCancelButton;
     }
 
     enum GameObjects
@@ -108,8 +88,23 @@ public class UI_QuestBoard : UI_Base
         for (int i = 0; i < 10; i++)
         {
             Quest quest = Managers.ResourceMng.Load<Quest>("ScriptableObjects/Quest/Quest"); // 테스트용 코드
+
             UI_QuestBoard_Quest questBoard_Quest = Managers.UIMng.MakeSubItemUI<UI_QuestBoard_Quest>(content.transform);
-            questBoard_Quest.SetQuest(quest, this);
+            questBoard_Quest.SetQuest(quest);
+
+            void OnClicked(PointerEventData eventData)
+            {
+                GameObject ui_QuestObj = GetGameObject(UI_QuestBoard.GameObjects.UI_Quest);
+
+                ui_QuestObj.SetActive(true);
+
+                UI_Quest ui_Quest = ui_QuestObj.GetOrAddComponent<UI_Quest>();
+                ui_Quest.SetQuest(quest);
+
+                ui_Quest.OnClickedAccpetButton = (eventData) => { ui_QuestObj.gameObject.SetActive(false); };
+                ui_Quest.OnClickedCancelButton = (eventData) => { ui_QuestObj.gameObject.SetActive(false); };
+            }
+            questBoard_Quest.gameObject.BindEvent(OnClicked, Define.UIEvent.Click);
         }
     }
 }
