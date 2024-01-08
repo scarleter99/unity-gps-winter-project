@@ -78,5 +78,5 @@ crashlytics-build.properties
 
 Sources/
 TestScene/
-Sources.meta
-TestScene.meta
+Assets/Scenes/TestScene.meta
+Assets/Resources/Sources.meta
