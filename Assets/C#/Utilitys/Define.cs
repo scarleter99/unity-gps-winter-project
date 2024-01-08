@@ -7,18 +7,47 @@
         Monster,
     }
     
-    public enum State
+    public enum AnimState
     {
+        Attack,
+        Defend,
+        DefendHit,
         Die,
+        Dizzy,
+        Hit,
         Idle,
-        Moving,
-        Skill
+        Skill,
+        Victory
     }
+
+    public enum TurnState
+    {
+        Wait,
+        Action,
+        End,
+        Dead
+    }
+
+    public enum ItemType
+    {
+        Attack,
+        Buff,
+        Debuff,
+        Recover,
+        None,
+    }
+
+    public enum Status
+    {
+        
+    }
+
     public enum Layer
     {
         Ground = 6,
         Block = 7,
         Monster = 8,
+        Player = 9,
     }
     
     public enum Scene
