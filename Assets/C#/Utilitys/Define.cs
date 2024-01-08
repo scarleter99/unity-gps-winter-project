@@ -7,18 +7,47 @@
         Monster,
     }
     
-    public enum State
+    public enum AnimState
     {
+        Attack,
+        Defend,
+        DefendHit,
         Die,
+        Dizzy,
+        Hit,
         Idle,
-        Moving,
-        Skill
+        Skill,
+        Victory
     }
+
+    public enum TurnState
+    {
+        Wait,
+        Action,
+        End,
+        Dead
+    }
+
+    public enum ItemType
+    {
+        Attack,
+        Buff,
+        Debuff,
+        Recover,
+        None,
+    }
+
+    public enum Status
+    {
+        
+    }
+
     public enum Layer
     {
         Ground = 6,
         Block = 7,
         Monster = 8,
+        Player = 9,
     }
     
     public enum Scene
@@ -26,6 +55,7 @@
         UnknownScene,
         TestTitleScene,
         TestGameScene,
+        TownScene,
     }
     
     public enum Sound
@@ -53,9 +83,24 @@
     {
         QuarterView,
     }
-
+   
     public enum AreaName
     {
         Forest,
+    }
+   
+    public enum MonsterName
+    {
+        Slime,
+    }
+
+    public enum ItemName
+    {
+        Sword,
+    }
+
+    public enum QuestReward
+    {
+        Money,
     }
 }

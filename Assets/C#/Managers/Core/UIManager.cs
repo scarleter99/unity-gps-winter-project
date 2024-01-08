@@ -77,8 +77,14 @@ public class UIManager
             name = typeof(T).Name;
 
         GameObject go = Managers.ResourceMng.Instantiate($"UI/SubItemUI/{name}");
+        RectTransform rectTransform = go.GetComponent<RectTransform>();
         if (parent != null)
+        {
+            // 부모 설정 후 스케일 변하는거 방지
+            Vector3 localScale = rectTransform.localScale;
             go.transform.SetParent(parent);
+            rectTransform.localScale = localScale;
+        }
         
         return go.GetOrAddComponent<T>();
     }

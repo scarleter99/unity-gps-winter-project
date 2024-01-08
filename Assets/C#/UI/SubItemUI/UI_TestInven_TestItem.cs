@@ -19,9 +19,9 @@ public class UI_TestInven_TestItem : UI_Base
     public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));
-        GetGameObject((int)GameObjects.ItemNameText).GetComponent<TextMeshProUGUI>().text = _itemName;
+        GetGameObject(GameObjects.ItemNameText).GetComponent<TextMeshProUGUI>().text = _itemName;
         
-        GetGameObject((int)GameObjects.ItemIcon).gameObject.BindEvent(OnButtonClicked, Define.UIEvent.Click);
+        GetGameObject(GameObjects.ItemIcon).gameObject.BindEvent(OnButtonClicked, Define.UIEvent.Click);
     }
 
     public void SetInfo(string itemName)
