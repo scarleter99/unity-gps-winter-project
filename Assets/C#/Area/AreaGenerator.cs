@@ -10,22 +10,18 @@ public abstract class AreaGenerator
 
     protected int _width;
     protected int _height;
-    protected Vector3 _originPosition;
+    private Vector3 _originPosition;
 
     protected HexGrid _grid;
     protected Transform _tileParent;
 
 
     // For test
-    protected string _testprefabPath = "Maptiles/Area_1/GrassBase";
-    protected string _testStartprefabPath = "Maptiles/Area_1/RockBase";
-    public AreaGenerator(int width, int height, Vector3 originPosition)
-    {   
-        if (width % 2 == 0 || height % 2 == 0)
-        {
-            Debug.LogError("Grid width and height must be odd number!");
-            return;
-        }
+    protected const string _testprefabPath = "Maptiles/Area_1/GrassBase";
+    private const string _testStartprefabPath = "Maptiles/Area_1/RockBase";
+
+    protected AreaGenerator(int width, int height, Vector3 originPosition)
+    {
         _width = width;
         _height = height;
         _originPosition = originPosition;

@@ -9,20 +9,16 @@ public class AreaManager : MonoBehaviour
     public AreaName _areaName;
     private AreaGenerator _areaGenerator;
 
-    void Start()
+    private void Start()
     {
-        switch (_areaName)
+        _areaGenerator = _areaName switch
         {
-            case AreaName.Forest:
-                _areaGenerator = new ForestAreaGenerator(7, 17, Vector3.zero);
-                break;
-            default:
-                _areaGenerator = new ForestAreaGenerator(5, 7, Vector3.zero);
-                break;
-        }
+            AreaName.Forest => new ForestAreaGenerator(7, 16, Vector3.zero),
+            _ => new ForestAreaGenerator(5, 7, Vector3.zero),
+        };
     }
 
-    void Update()
+    private void Update()
     {   
         // test
         if (Input.GetKeyDown(KeyCode.M))
