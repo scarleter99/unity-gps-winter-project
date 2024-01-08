@@ -13,8 +13,6 @@ public abstract class BaseController : MonoBehaviour
     [SerializeField] 
     protected Define.TurnState _turnState = Define.TurnState.Wait;
     [SerializeField]
-    protected Vector3 _destPos;
-    [SerializeField]
     protected GameObject _lockTarget;
 
     protected Animator _animator;

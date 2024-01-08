@@ -11,10 +11,12 @@ public interface IData<Key, Value>
 public class DataManager
 {
     public Dictionary<int, Data.Stat> StatDict { get; private set; }
+    public Dictionary<string, Data.Item> ItemDict { get; private set; }
 
     public void Init()
     {
         StatDict = LoadJson<Data.StatData, int, Data.Stat>("StatData").MakeDict();
+        ItemDict = LoadJson<Data.ItemData, string, Data.Item>("StatData").MakeDict();
     }
 
     // path 위치의 Json 파일을 TextAsset 타입으로 로드

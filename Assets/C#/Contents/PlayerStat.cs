@@ -73,7 +73,7 @@ public class PlayerStat : Stat
 
     public void SetStat(int level)
     {
-        Data.Stat stat = Managers.DataMng.StatDict[1];
+        Data.Stat stat = Managers.DataMng.StatDict[level];
 
         _hp = stat.maxHp;
         _maxHp = stat.maxHp;

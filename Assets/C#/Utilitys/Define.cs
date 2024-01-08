@@ -27,7 +27,21 @@
         End,
         Dead
     }
-    
+
+    public enum ItemType
+    {
+        Attack,
+        Buff,
+        Debuff,
+        Recover,
+        None,
+    }
+
+    public enum Status
+    {
+        
+    }
+
     public enum Layer
     {
         Ground = 6,

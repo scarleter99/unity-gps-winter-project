@@ -32,4 +32,26 @@ namespace Data
         }
     }
 #endregion
+
+#region Item
+    public class Item
+    {
+        public string name;
+        public string description;
+    }
+
+    public class ItemData : IData<string, Item>
+    {
+        public List<Item> items = new List<Item>();
+
+        public Dictionary<string, Item> MakeDict()
+        {
+            var dic = new Dictionary<string, Item>();
+            foreach (Item item in items)
+                dic.Add(item.name, item);
+
+            return dic;
+        }
+    }
+#endregion
 }
