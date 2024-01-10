@@ -49,7 +49,6 @@ public class UI_QuestBoard : UI_Base
             Bind<Button>(typeof(Buttons));
             Bind<TextMeshProUGUI>(typeof(Texts));
 
-            GetButton(Buttons.AcceptButton).gameObject.BindEvent((PointerEventData) => OnClickedAccpetButton?.Invoke(PointerEventData), Define.UIEvent.Click);
             GetButton(Buttons.CancelButton).gameObject.BindEvent(OnClickedCancelButton, Define.UIEvent.Click);
         }
 
@@ -66,10 +65,9 @@ public class UI_QuestBoard : UI_Base
                 this.gameObject.SetActive(false);
             }
 
-            this.OnClickedAccpetButton = OnClickedAccpetButton;
+            GetButton(Buttons.AcceptButton).gameObject.BindEvent(OnClickedAccpetButton, Define.UIEvent.Click);
         }
 
-        private event Action<PointerEventData> OnClickedAccpetButton;
         private void OnClickedCancelButton(PointerEventData eventData)
         {
             this.gameObject.SetActive(false);
