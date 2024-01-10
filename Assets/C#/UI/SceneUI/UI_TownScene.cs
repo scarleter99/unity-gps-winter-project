@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// ÆäÀÌÁö °ü¸® Å¬·¡½º. °¢ ÆäÀÌÁöµé³¢¸® ¿¬°á ½ÃÄÑÁÜ.
+// í˜ì´ì§€ ê´€ë¦¬ í´ë˜ìŠ¤. ê° í˜ì´ì§€ë“¤ë¼ë¦¬ ì—°ê²° ì‹œì¼œì¤Œ.
 public class UI_TownScene : UI_Scene
 {
     private UI_Page _currentPage;
 
 	enum GameObjects
 	{
-        Base, // ÆäÀÌÁö°¡ º¯°æµÇ¾îµµ Á¸ÀçÇÏ´Â UIµé
+        Base, // í˜ì´ì§€ê°€ ë³€ê²½ë˜ì–´ë„ ì¡´ì¬í•˜ëŠ” UIë“¤
     }
 
     enum Pages
@@ -37,6 +37,30 @@ public class UI_TownScene : UI_Scene
         Bind<UI_Page>(typeof(Pages));
         Bind<Button>(typeof(Buttons));
 
+        void OnClickedQuestButton(PointerEventData data)
+        {
+            Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
+
+            _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Quest);
+            _currentPage.gameObject.SetActive(true);
+        }
+
+        void OnClickedStoreButton(PointerEventData data)
+        {
+            Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
+
+            _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Store);
+            _currentPage.gameObject.SetActive(true);
+        }
+
+        void OnClickedExitButton(PointerEventData data)
+        {
+            _currentPage.gameObject.SetActive(false);
+
+            _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Main);
+            _currentPage.gameObject.SetActive(true);
+        }
+
         GetButton(Buttons.Button_Quest).gameObject.BindEvent(OnClickedQuestButton, Define.UIEvent.Click);
         GetButton(Buttons.Button_ExitAtQuest).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
         GetButton(Buttons.Button_Store).gameObject.BindEvent(OnClickedStoreButton, Define.UIEvent.Click);
@@ -45,27 +69,5 @@ public class UI_TownScene : UI_Scene
         Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(true);
     }
 
-    private void OnClickedQuestButton(PointerEventData data)
-    {
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
 
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Quest);
-        _currentPage.gameObject.SetActive(true);
-    }
-
-    private void OnClickedStoreButton(PointerEventData data)
-    {
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
-
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Store);
-        _currentPage.gameObject.SetActive(true);
-    }
-
-    private void OnClickedExitButton(PointerEventData data)
-    {
-        _currentPage.gameObject.SetActive(false);
-
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Main);
-        _currentPage.gameObject.SetActive(true);
-    }
 }

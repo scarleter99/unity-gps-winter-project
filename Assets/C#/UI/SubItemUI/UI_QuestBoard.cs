@@ -84,10 +84,10 @@ public class UI_QuestBoard : UI_Base
         foreach (Transform child in content.transform)
             Managers.ResourceMng.Destroy(child.gameObject);
 
-        // Äù½ºÆ® ¸ñ·Ï ¹Ş¾Æ¿À±â
+        // í€˜ìŠ¤íŠ¸ ëª©ë¡ ë°›ì•„ì˜¤ê¸°
         for (int i = 0; i < 10; i++)
         {
-            Quest quest = Managers.ResourceMng.Load<Quest>("ScriptableObjects/Quest/Quest"); // Å×½ºÆ®¿ë ÄÚµå
+            Quest quest = Managers.ResourceMng.Load<Quest>("ScriptableObjects/Quest/Quest"); // í…ŒìŠ¤íŠ¸ìš© ì½”ë“œ
 
             UI_QuestBoard_Quest questBoard_Quest = Managers.UIMng.MakeSubItemUI<UI_QuestBoard_Quest>(content.transform);
             questBoard_Quest.SetQuest(quest);
