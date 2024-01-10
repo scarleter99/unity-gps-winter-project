@@ -2246,7 +2246,7 @@ GameObject:
   - component: {fileID: 3891923349452803438}
   - component: {fileID: 3891923349461803650}
   m_Layer: 8
-  m_Name: FylingDemon
+  m_Name: FlyingDemon
   m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

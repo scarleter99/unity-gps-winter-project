@@ -103,4 +103,10 @@
     {
         Money,
     }
+
+    public enum GridOwner
+    {
+        Player,
+        Enemy
+    }
 }
