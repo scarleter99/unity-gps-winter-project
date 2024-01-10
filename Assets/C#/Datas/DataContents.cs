@@ -7,31 +7,63 @@ using UnityEngine.Serialization;
 
 namespace Data
 {
-#region Stat
+#region PlayerStat
     [Serializable]
-    public class Stat
+    public class PlayerStat
     {
-        public int level;
-        public int maxHp;
+        public string name;
+        public int hp;
         public int attack;
-        public int totalExp;
+        public int defense;
+        public int strength;
+        public int vitality;
+        public int intelligence;
+        public int speed;
     }
     
     [Serializable]
-    public class StatData : IData<int, Stat>
+    public class PlayerStatData : IData<string, PlayerStat>
     {
-        public List<Stat> stats = new List<Stat>();
+        public List<PlayerStat> stats = new List<PlayerStat>();
         
         // List형태의 Data를 Dictionary형태로 변환 후 반환
-        public Dictionary<int, Stat> MakeDict()
+        public Dictionary<string, PlayerStat> MakeDict()
         {
-            Dictionary<int, Stat> dic = new Dictionary<int, Stat>();
-            foreach (Stat stat in stats)
-                dic.Add(stat.level, stat);
+            Dictionary<string, PlayerStat> dic = new Dictionary<string, PlayerStat>();
+            foreach (PlayerStat stat in stats)
+                dic.Add(stat.name, stat);
             
             return dic;
         }
     }
+#endregion
+
+#region MonsterStat
+[Serializable]
+public class MonsterStat
+{
+    public string name;
+    public int hp;
+    public int attack;
+    public int defense;
+    public int speed;
+}
+    
+[Serializable]
+public class MonsterStatData : IData<string, MonsterStat>
+{
+    public List<MonsterStat> stats = new List<MonsterStat>();
+        
+    // List형태의 Data를 Dictionary형태로 변환 후 반환
+    public Dictionary<string, MonsterStat> MakeDict()
+    {
+        Dictionary<string, MonsterStat> dic = new Dictionary<string, MonsterStat>();
+        foreach (MonsterStat stat in stats)
+            dic.Add(stat.name, stat);
+
+        return dic;
+    }
+}
 #endregion
 
 #region Item

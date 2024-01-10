@@ -7,7 +7,8 @@ using UnityEngine.Assertions;
 public class PlayerController : BaseController
 {
     private int _layerMask = (1 << (int)Define.Layer.Monster);
-    private PlayerStat _stat;
+    protected PlayerStat _stat;
+    public PlayerStat Stat { get => _stat; }
 
     public override void Init()
     {

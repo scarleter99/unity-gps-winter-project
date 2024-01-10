@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class MonsterController : BaseController
 {
-    private Stat _stat;
+    protected Stat _stat;
+    public Stat Stat { get => _stat; }
     
     public override void Init()
     {
