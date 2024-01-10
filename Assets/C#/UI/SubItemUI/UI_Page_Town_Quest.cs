@@ -12,13 +12,11 @@ public class UI_Page_Town_Quest : UI_Page
     enum Buttons
     {
         Button_QuestBoard,
-        Button_MyQuest,
     }
 
     enum GameObjects
     {
         QuestBoard,
-        MyQuestBoard,
         UI_Quest,
     }
 
@@ -28,7 +26,6 @@ public class UI_Page_Town_Quest : UI_Page
         Bind<GameObject>(typeof(GameObjects));
 
         GetButton(Buttons.Button_QuestBoard).gameObject.BindEvent(OnClickedQuestBoard);
-        GetButton(Buttons.Button_MyQuest).gameObject.BindEvent(OnClickedMyQuestBoard);
     }
 
     private void OnClickedQuestBoard(PointerEventData data)
@@ -39,17 +36,6 @@ public class UI_Page_Town_Quest : UI_Page
         _currentOpenedObject?.SetActive(false);
 
         _currentOpenedObject = GetGameObject(GameObjects.QuestBoard);
-        _currentOpenedObject.SetActive(true);
-    }
-
-    private void OnClickedMyQuestBoard(PointerEventData data)
-    {
-        if (_currentOpenedObject == GetGameObject(GameObjects.MyQuestBoard))
-            return;
-
-        _currentOpenedObject?.SetActive(false);
-
-        _currentOpenedObject = GetGameObject(GameObjects.MyQuestBoard);
         _currentOpenedObject.SetActive(true);
     }
 

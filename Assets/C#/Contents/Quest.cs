@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 /*
 퀘스트 이름
 퀘스트 설명
+이동할 지구 이름
 퀘스트 표시 조건
 -
 퀘스트 클리어 조건
