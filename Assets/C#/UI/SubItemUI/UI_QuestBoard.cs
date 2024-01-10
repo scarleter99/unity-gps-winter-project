@@ -50,7 +50,7 @@ public class UI_QuestBoard : UI_Base
             Bind<TextMeshProUGUI>(typeof(Texts));
 
             GetButton(Buttons.AcceptButton).gameObject.BindEvent((PointerEventData) => OnClickedAccpetButton?.Invoke(PointerEventData), Define.UIEvent.Click);
-            GetButton(Buttons.CancelButton).gameObject.BindEvent((PointerEventData) => OnClickedCancelButton?.Invoke(PointerEventData), Define.UIEvent.Click);
+            GetButton(Buttons.CancelButton).gameObject.BindEvent(OnClickedCancelButton, Define.UIEvent.Click);
         }
 
         public void SetQuest(Quest _quest)
@@ -59,10 +59,21 @@ public class UI_QuestBoard : UI_Base
 
             GetTextMeshProUGUI(Texts.Description).text = _quest.Description + '\n';
             GetTextMeshProUGUI(Texts.Reward).text = "Reward: " + _quest.Reward.RewardToString();
+
+            void OnClickedAccpetButton(PointerEventData eventData)
+            {
+                // 지구 이동
+                this.gameObject.SetActive(false);
+            }
+
+            this.OnClickedAccpetButton = OnClickedAccpetButton;
         }
 
-        public Action<PointerEventData> OnClickedAccpetButton;
-        public Action<PointerEventData> OnClickedCancelButton;
+        private event Action<PointerEventData> OnClickedAccpetButton;
+        private void OnClickedCancelButton(PointerEventData eventData)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     enum GameObjects
@@ -100,10 +111,8 @@ public class UI_QuestBoard : UI_Base
 
                 UI_Quest ui_Quest = ui_QuestObj.GetOrAddComponent<UI_Quest>();
                 ui_Quest.SetQuest(quest);
-
-                ui_Quest.OnClickedAccpetButton = (eventData) => { ui_QuestObj.gameObject.SetActive(false); };
-                ui_Quest.OnClickedCancelButton = (eventData) => { ui_QuestObj.gameObject.SetActive(false); };
             }
+
             questBoard_Quest.gameObject.BindEvent(OnClicked, Define.UIEvent.Click);
         }
     }
