@@ -64,6 +64,7 @@ public class UI_PlayerStat : UI_Base
             GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
             GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
             GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
+            //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
         }
     }
 
