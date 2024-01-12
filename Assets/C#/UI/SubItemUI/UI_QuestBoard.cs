@@ -25,7 +25,7 @@ public class UI_QuestBoard : UI_Base
 
         public void SetQuest(Quest quest)
         {
-            GetTextMeshProUGUI(Texts.QuestName).text = quest.Name;
+            GetText(Texts.QuestName).text = quest.Name;
         }
     }
 
@@ -55,10 +55,10 @@ public class UI_QuestBoard : UI_Base
 
         public void SetQuest(Quest _quest)
         {
-            GetTextMeshProUGUI(Texts.Title).text = _quest.Name;
+            GetText(Texts.Title).text = _quest.Name;
 
-            GetTextMeshProUGUI(Texts.Description).text = _quest.Description + '\n';
-            GetTextMeshProUGUI(Texts.Reward).text = "Reward: " + _quest.Reward.RewardToString();
+            GetText(Texts.Description).text = _quest.Description + '\n';
+            GetText(Texts.Reward).text = "Reward: " + _quest.Reward.RewardToString();
         }
 
         public Action<PointerEventData> OnClickedAccpetButton;

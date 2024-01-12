@@ -46,7 +46,7 @@ public class UI_TestPopup : UI_Popup
     public void OnButtonClicked(PointerEventData data)
     {
         _money++;
-        GetTextMeshProUGUI(Texts.MoneyText).text = $"Money: {_money}!";
+        GetText(Texts.MoneyText).text = $"Money: {_money}!";
     }
 
     public void OnDrag(PointerEventData data)
