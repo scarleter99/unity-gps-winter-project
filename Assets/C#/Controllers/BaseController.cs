@@ -7,6 +7,9 @@ using Random = System.Random;
 public abstract class BaseController : MonoBehaviour
 {
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
+    protected ulong _id;
+    
+    public ulong Id { get => _id; set => _id = value; }
     
     [SerializeField]
     protected Define.AnimState _animState = Define.AnimState.Idle;
@@ -34,24 +37,24 @@ public abstract class BaseController : MonoBehaviour
             switch (_animState)
             {
                 case Define.AnimState.Attack:
-                    _animator.CrossFade("Attack1", 0.01f);
+                    _animator.Play("Attack1");
                     break;
                 case Define.AnimState.Defend:
-                    _animator.CrossFade("Defend", 0.01f);
+                    _animator.Play("Defend");
                     break;
                 case Define.AnimState.DefendHit:
-                    _animator.CrossFade("DefendHit", 0.01f);
+                    _animator.Play("DefendHit");
                     break;
                 case Define.AnimState.Die:
                     index = random.Next(minIndex, maxDieIndex);
-                    _animator.CrossFade($"Die{index}", 0.01f);
+                    _animator.Play($"Die{index}");
                     break;
                 case Define.AnimState.Dizzy:
-                    _animator.CrossFade("Dizzy", 0.01f);
+                    _animator.Play("Dizzy");
                     break;
                 case Define.AnimState.Hit:
                     index = random.Next(minIndex, maxHitIndex);
-                    _animator.CrossFade($"Hit{index}", 0.01f);
+                    _animator.Play($"Hit{index}");
                     break;
                 case Define.AnimState.Idle:
                     _animator.CrossFade("Idle", 0.2f);
@@ -59,7 +62,7 @@ public abstract class BaseController : MonoBehaviour
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
-                    _animator.CrossFade("Victory", 0.01f);
+                    _animator.Play("Victory");
                     break;
             }
         }

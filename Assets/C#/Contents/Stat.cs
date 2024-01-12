@@ -55,4 +55,9 @@ public class Stat : MonoBehaviour
         Defense = stat.defense;
         Speed = stat.speed;
     }
+
+    public void RecoverHp(int amount)
+    {
+        Hp = Mathf.Clamp(Hp + amount, 0, MaxHp);
+    }
 }

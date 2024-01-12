@@ -53,8 +53,10 @@
     public enum Scene
     {
         UnknownScene,
-        TestTitleScene,
+        GameScene,
         TestGameScene,
+        TestTitleScene,
+        TitleScene,
         TownScene,
     }
     

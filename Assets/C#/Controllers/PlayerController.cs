@@ -17,6 +17,11 @@ public class PlayerController : BaseController
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
+        Managers.InputMng.KeyAction -= OnKeyboard;
+        Managers.InputMng.KeyAction += OnKeyboard;
+        
+        // temp - for test
+        Managers.GameMng.Player = gameObject;
     }
 
     public override void OnDamage(Stat attackerStat)
@@ -44,6 +49,14 @@ public class PlayerController : BaseController
     {
         if (_lockTarget != null)
             _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+    }
+
+    protected void OnKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            Managers.GameMng.Bag.UseItem(0);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            Managers.GameMng.Bag.UseItem(1);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)
