@@ -45,7 +45,6 @@ public class Bag : MonoBehaviour
         
         selectedIndex.item.Use(Managers.GameMng.Player.GetComponent<BaseController>());
         selectedIndex.count--;
-        Debug.Log($"Debug : item Name = {Items[index].item.name}, Count = {Items[index].count}");
 
         DestroyItemIfPossible(index);
     }

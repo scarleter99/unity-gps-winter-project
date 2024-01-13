@@ -21,7 +21,6 @@ public class Item1 : BaseItem
             case Define.WorldObject.Player:
                 var playerStat = (control as PlayerController)?.Stat;
                 playerStat?.RecoverHp(40);
-                Debug.Log("Debug : Player HP Recovered.");
                 break;
         }
     }

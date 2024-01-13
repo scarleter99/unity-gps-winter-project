@@ -43,14 +43,16 @@ public class MonsterController : BaseController
         // temp - FOR TEST
         if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.33f && !attacked)
             OnAttackEvent();
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     

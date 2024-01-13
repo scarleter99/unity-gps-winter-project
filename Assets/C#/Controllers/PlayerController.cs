@@ -34,13 +34,15 @@ public class PlayerController : BaseController
 
     protected override void UpdateAttack()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     
@@ -88,7 +90,6 @@ public class PlayerController : BaseController
 
         //Debug.Assert(hit.collider.gameObject.layer == (int)Define.Layer.Monster);
         _lockTarget = hit.collider.gameObject;
-        OnAttackEvent(); // temp - for test
         
         AnimState = Define.AnimState.Attack;
         if (TurnState == Define.TurnState.Action)

@@ -8,7 +8,8 @@ public abstract class BaseController : MonoBehaviour
 {
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
     protected ulong _id;
-    
+    protected int _stateHash;
+
     public ulong Id { get => _id; set => _id = value; }
     
     [SerializeField]
@@ -33,38 +34,41 @@ public abstract class BaseController : MonoBehaviour
             int maxHitIndex = isPlayer ? 3 : 2;
             int maxDieIndex = isPlayer ? 3 : 2;
             int index;
-            
+
+            string stateName = "";
             switch (_animState)
             {
                 case Define.AnimState.Attack:
-                    _animator.Play("Attack1");
+                    _animator.Play(stateName = "Attack1");
                     break;
                 case Define.AnimState.Defend:
-                    _animator.Play("Defend");
+                    _animator.Play(stateName = "Defend");
                     break;
                 case Define.AnimState.DefendHit:
-                    _animator.Play("DefendHit");
+                    _animator.Play(stateName = "DefendHit");
                     break;
                 case Define.AnimState.Die:
                     index = random.Next(minIndex, maxDieIndex);
-                    _animator.Play($"Die{index}");
+                    _animator.Play(stateName = $"Die{index}");
                     break;
                 case Define.AnimState.Dizzy:
-                    _animator.Play("Dizzy");
+                    _animator.Play(stateName = "Dizzy");
                     break;
                 case Define.AnimState.Hit:
                     index = random.Next(minIndex, maxHitIndex);
-                    _animator.Play($"Hit{index}");
+                    _animator.Play(stateName = $"Hit{index}");
                     break;
                 case Define.AnimState.Idle:
-                    _animator.CrossFade("Idle", 0.2f);
+                    _animator.CrossFade(stateName = "Idle", 0.2f);
                     break;
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
-                    _animator.Play("Victory");
+                    _animator.Play(stateName = "Victory");
                     break;
             }
+
+            _stateHash = Animator.StringToHash(stateName);
         }
     }
 
