@@ -28,6 +28,18 @@
         Dead
     }
 
+    public enum WeaponType
+    {
+        NoWeapon,
+        Bow,
+        DoubleSword,
+        SingleSword,
+        Spear,
+        SwordAndShield,
+        TwoHandedSword,
+        Wand
+    }
+
     public enum ItemType
     {
         Attack,
@@ -37,6 +49,7 @@
         None,
     }
 
+    // 상태이상
     public enum Status
     {
         

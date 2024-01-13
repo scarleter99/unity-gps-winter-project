@@ -122,7 +122,7 @@ public abstract class BaseController : MonoBehaviour
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
 
-    public abstract void OnDamage(Stat attackerStat);
+    public abstract void OnDamage(Stat attackerStat, int amount = 1);
     
     protected virtual void UpdateAttack() { }
     protected virtual void UpdateDefend() { }
@@ -130,7 +130,8 @@ public abstract class BaseController : MonoBehaviour
     
     protected virtual void UpdateDie()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.98f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
             Managers.GameMng.Despawn(this.gameObject);
     }
     
@@ -138,6 +139,4 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateVictory() { }
-    
-    
 }

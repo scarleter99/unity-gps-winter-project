@@ -34,17 +34,14 @@ public class Stat : MonoBehaviour
         SetStat(gameObject.name);
     }
 
-    public virtual void OnAttacked(Stat attacker)
+    public virtual void OnDamage(Stat attacker, int attackCount = 1)
     {
-        Hp -= Mathf.Max(0, attacker.Attack - Defense);
-        if (Hp <= 0)
-        {
-            Hp = 0;
-            OnDead(attacker);
-        }
+        int damage = Mathf.Max(attacker.Attack - Defense, 1);
+        if (attackCount > 1)
+            damage = Mathf.Max(damage / attackCount, 1);
+
+        Hp = Mathf.Clamp(Hp - damage, 0, MaxHp);
     }
-    
-    protected virtual void OnDead(Stat attacker) { }
 
     public virtual void SetStat(string name)
     {
