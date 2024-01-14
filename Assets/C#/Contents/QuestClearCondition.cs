@@ -10,6 +10,7 @@ namespace QuestClearCondition
     {
         public abstract bool isClear();
         public abstract override string ToString(); // 현재 진행된 퀘스트 정보를 출력
+        public abstract bool isNull();
     }
 
     [System.Serializable] // 몬스터 종류에 상관없이 몬스터 처치
@@ -20,7 +21,7 @@ namespace QuestClearCondition
 
         public override bool isClear()
         {
-            return _currentCount >= _killCount || _killCount == 0;
+            return _currentCount >= _killCount;
         }
 
         // 해당 함수는 이벤트 콜백을 이용해서 호출
@@ -31,11 +32,10 @@ namespace QuestClearCondition
 
         public override string ToString()
         {
-            if (_killCount == 0)
-                return "";
-
             return $"{_currentCount} / {_killCount}";
         }
+
+        public override bool isNull() => _killCount == 0;
     }
 
     [System.Serializable] // 특정 몬스터 처치
@@ -46,9 +46,6 @@ namespace QuestClearCondition
 
         public override bool isClear()
         {
-            if (_killCount.Count == 0) 
-                return true;
-
             foreach (var counts in _killCount.Values)
                 if (counts[0] > counts[1])
                     return false;
@@ -66,9 +63,6 @@ namespace QuestClearCondition
 
         public override string ToString()
         {
-            if (_killCount.Count == 0)
-                return "";
-
             string toString = "";
 
             foreach (var item in _killCount)
@@ -76,6 +70,8 @@ namespace QuestClearCondition
 
             return toString;
         }
+
+        public override bool isNull() => _killCount.Count == 0;
     }
 
     [System.Serializable]
@@ -86,9 +82,6 @@ namespace QuestClearCondition
 
         public override bool isClear()
         {
-            if (_havingCount.Count == 0) 
-                return true;
-
             foreach (var counts in _havingCount.Values)
                 if (counts[0] > counts[1])
                     return false;
@@ -98,11 +91,10 @@ namespace QuestClearCondition
 
         public override string ToString()
         {
-            if (_havingCount.Count == 0)
-                return "";
-
             return "";
         }
+
+        public override bool isNull() => _havingCount.Count == 0;
     }
 }
 

@@ -103,4 +103,17 @@
     {
         Money,
     }
+
+    public enum GridSide
+    {
+        Player,
+        Enemy
+    }
+
+    public enum BattleState
+    {
+        Idle,
+        SelectingTargetPlayer,
+        SelectingTargetMonster,
+    }
 }

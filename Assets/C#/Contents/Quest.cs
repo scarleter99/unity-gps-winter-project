@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using QuestClearCondition;
+using System;
+using System.Runtime.InteropServices;
 
 /*
 Äù½ºÆ® ÀÌ¸§
@@ -33,24 +35,28 @@ public class Quest : ScriptableObject
     [SerializeField] private KillSpecificMonster _killSpecificMonster;
     [SerializeField] private KillMonsters _killMonsters;
     [SerializeField] private hasSpecificItem _hasSpecificItem;
-    public ClearCondition[] ClearCondition { get; private set; }
+
+    private ClearCondition[] _clearCondition;
+    public ReadOnlySpan<ClearCondition> ClearCondition { get => new ReadOnlySpan<ClearCondition>(_clearCondition); }
 
     [field: Header("Reward")]
     [field: SerializeField] public SerializedDictionary<Define.QuestReward, int> Reward { get; private set; }
 
     private void Awake()
     {
-        ClearCondition = new ClearCondition[]
+        List<ClearCondition> clearConditions = new List<ClearCondition>()
         {
             _killSpecificMonster,
             _killMonsters,
-            _hasSpecificItem
+            _hasSpecificItem,
         };
+
+        _clearCondition = clearConditions.FindAll(x => x.isNull() == false).ToArray();
     }
 
     public bool isClear()
     {
-        foreach (var condition in ClearCondition)
+        foreach (var condition in _clearCondition)
             if (!condition.isClear())
                 return false;
 
