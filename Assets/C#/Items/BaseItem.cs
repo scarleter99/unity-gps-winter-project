@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public abstract class BaseItem : MonoBehaviour
 {
@@ -15,6 +14,10 @@ public abstract class BaseItem : MonoBehaviour
         Init();
     }
 
-    protected virtual void Init() { }
-    public abstract void Use();
+    protected virtual void Init()
+    {
+        Name = name;
+    }
+    
+    public abstract void Use(BaseController control);
 }

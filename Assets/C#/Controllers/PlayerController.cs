@@ -8,7 +8,10 @@ public class PlayerController : BaseController
 {
     private int _layerMask = (1 << (int)Define.Layer.Monster);
     protected PlayerStat _stat;
+    protected Define.WeaponType _weaponType;
     public PlayerStat Stat { get => _stat; }
+
+    public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
 
     public override void Init()
     {
@@ -17,25 +20,32 @@ public class PlayerController : BaseController
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
+        Managers.InputMng.KeyAction -= OnKeyboard;
+        Managers.InputMng.KeyAction += OnKeyboard;
+        
+        // temp - for test
+        Managers.GameMng.Player = gameObject;
     }
 
-    public override void OnDamage(Stat attackerStat)
+    public override void OnDamage(Stat attackerStat, int amount = 1) 
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
-        _stat.OnAttacked(attackerStat);
+        _stat.OnDamage(attackerStat, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
 
     protected override void UpdateAttack()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     
@@ -43,7 +53,26 @@ public class PlayerController : BaseController
     protected override void OnAttackEvent()
     {
         if (_lockTarget != null)
-            _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+        {
+            switch (WeaponType)
+            {
+                case Define.WeaponType.DoubleSword:
+                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat, 2);
+                    break;
+                default:
+                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+                    break;
+            }
+        }
+    }
+
+    protected void OnKeyboard()
+    {
+        // temp - for test
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            Managers.GameMng.Bag.UseItem(0);
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+            Managers.GameMng.Bag.UseItem(1);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)
@@ -73,9 +102,7 @@ public class PlayerController : BaseController
         if (!raycastHit)
             return;
 
-        //Debug.Assert(hit.collider.gameObject.layer == (int)Define.Layer.Monster);
         _lockTarget = hit.collider.gameObject;
-        OnAttackEvent(); // temp - for test
         
         AnimState = Define.AnimState.Attack;
         if (TurnState == Define.TurnState.Action)
