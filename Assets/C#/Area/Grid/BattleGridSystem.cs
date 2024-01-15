@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class BattleGridManager
+public class BattleGridSystem
 {
     private Dictionary<GridSide, SquareGrid> _grids;
 
@@ -18,23 +18,29 @@ public class BattleGridManager
     // 최근 마우스 위치에 해당하는 월드 좌표
     private Vector3 _recentWorldposition;
 
-    public Action onMouseLeftClick;
-    public Action onMouseRightClick;
+    public Action OnMouseLeftClick;
+    public Action OnMouseRightClick;
 
     private SquareGridCell _selectedCell;
 
-    public BattleGridManager(Vector3 playerOriginPos, Vector3 enemyOriginPos)
+    public BattleGridSystem(Vector3 playerOriginPos, Vector3 enemyOriginPos)
     {   
+        Init(playerOriginPos, enemyOriginPos);
+    }
+
+    private void Init(Vector3 playerOriginPos, Vector3 enemyOriginPos)
+    {
         PlayerGrid = new SquareGrid(playerOriginPos, GridSide.Player);
         EnemyGrid = new SquareGrid(enemyOriginPos, GridSide.Enemy);
-        _grids = new Dictionary<GridSide, SquareGrid> { {GridSide.Player, PlayerGrid}, { GridSide.Enemy, EnemyGrid} };
+        _grids = new Dictionary<GridSide, SquareGrid> { { GridSide.Player, PlayerGrid }, { GridSide.Enemy, EnemyGrid } };
         _mainCamera = Camera.main;
+        OnMouseLeftClick -= SelectCell;
+        OnMouseLeftClick += SelectCell;
     }
 
     public void HandleMouseHover()
     {
-        bool success = TryGetGridInformation();
-        if (success)
+        if (TryGetGridInformation())
         {
             _grids[_recentSide].HandleMouseHover(_recentWorldposition);
         }
@@ -78,6 +84,11 @@ public class BattleGridManager
     private void SelectCell()
     {
         _selectedCell = _grids[_recentSide].GetGridCell(_recentWorldposition);
+
+        // test code //
+        _grids[_recentSide].GetGridPosition(_recentWorldposition, out int x, out int z);
+        Debug.Log($"{z}, {x}");
+        ///////////////
     }
 
     public void OnBattleStateChange(BattleState from, BattleState to)
@@ -87,10 +98,10 @@ public class BattleGridManager
             case BattleState.Idle:
                 break;
             case BattleState.SelectingTargetPlayer:
-                onMouseLeftClick -= SelectCell;
+                OnMouseLeftClick -= SelectCell;
                 break;
             case BattleState.SelectingTargetMonster:
-                onMouseLeftClick -= SelectCell;
+                OnMouseLeftClick -= SelectCell;
                 break;
         }
 
@@ -99,10 +110,10 @@ public class BattleGridManager
             case BattleState.Idle:
                 break;
             case BattleState.SelectingTargetPlayer:
-                onMouseLeftClick += SelectCell;
+                OnMouseLeftClick += SelectCell;
                 break;
             case BattleState.SelectingTargetMonster:
-                onMouseLeftClick += SelectCell;
+                OnMouseLeftClick += SelectCell;
                 break;
         }
     }
