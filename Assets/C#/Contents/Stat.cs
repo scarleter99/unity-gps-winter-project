@@ -18,11 +18,13 @@ public class Stat : MonoBehaviour
     [SerializeField]
     protected int _speed;
 
-    public int Hp { get => _hp; set => _hp = value; }
-    public int MaxHp { get => _maxHp; set => _maxHp = value; }
-    public int Attack { get => _attack; set => _attack = value; }
-    public int Defense { get => _defense; set => _defense = value; }
-    public int Speed { get => _speed; set => _speed = value; }
+    public int Hp { get => _hp; set { _hp = value; OnStatChanged?.Invoke(this); } }
+    public int MaxHp { get => _maxHp; set { _maxHp = value; OnStatChanged?.Invoke(this); } }
+    public int Attack { get => _attack; set { _attack = value; OnStatChanged?.Invoke(this); } }
+    public int Defense { get => _defense; set { _defense = value; OnStatChanged?.Invoke(this); } }
+    public int Speed { get => _speed; set { _speed = value; OnStatChanged?.Invoke(this); } }
+
+    public Action<Stat> OnStatChanged;
 
     private void Start()
     {

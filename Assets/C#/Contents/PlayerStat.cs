@@ -14,10 +14,10 @@ public class PlayerStat : Stat
     [SerializeField] 
     protected int _intelligence;
     
-    public int Gold { get => _gold; set => _gold = value; }
-    public int Strength { get => _strength; set => _strength = value; }
-    public int Vitality { get => _vitality; set => _vitality = value; }
-    public int Intelligence { get => _intelligence; set => _intelligence = value; }
+    public int Gold { get => _gold; set { _gold = value; OnStatChanged?.Invoke(this); } }
+    public int Strength { get => _strength; set { _strength = value; OnStatChanged?.Invoke(this); } }
+    public int Vitality { get => _vitality; set { _vitality = value; OnStatChanged?.Invoke(this); } }
+    public int Intelligence { get => _intelligence; set { _intelligence = value; OnStatChanged?.Invoke(this); } }
     
     protected override void Init()
     {
