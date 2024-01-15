@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class Managers : MonoBehaviour
     private SceneManagerEx _sceneMng = new SceneManagerEx();
     private SoundManager _soundMng = new SoundManager();
     private UIManager _uiMng = new UIManager();
+    private NetworkManagerEx _networkMng = new NetworkManagerEx();
+    private ServerManager _serverMng = new ServerManager();
     
     public static DataManager DataMng => Instance._dataMng;
     public static InputManager InputMng => Instance._inputMng;
@@ -29,6 +32,8 @@ public class Managers : MonoBehaviour
     public static SceneManagerEx SceneMng => Instance._sceneMng;
     public static SoundManager SoundMng => Instance._soundMng;
     public static UIManager UIMng => Instance._uiMng;
+    public static NetworkManagerEx NetworkMng => Instance._networkMng;
+    public static ServerManager ServerMng => Instance._serverMng;
 #endregion
 
     private void Start()
@@ -56,6 +61,8 @@ public class Managers : MonoBehaviour
             s_instance = go.GetComponent<Managers>();
 
             s_instance._dataMng.Init();
+            s_instance._networkMng.Init();
+            s_instance._serverMng.Init();
             s_instance._soundMng.Init();
             s_instance._poolMng.Init();
         }

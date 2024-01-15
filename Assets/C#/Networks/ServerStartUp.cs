@@ -13,7 +13,7 @@ using UnityEngine;
 /// Server side script that handles starting the server and connecting to Unity Gaming Services.
 /// It is important to note that you cannot call a ServerRPC from a server.
 /// </summary>
-public class ServerStartUp : MonoBehaviour
+public class ServerStartUp
 {
     // This event is invoked when a client instance is detected
     public static event System.Action ClientInstance;
@@ -37,12 +37,12 @@ public class ServerStartUp : MonoBehaviour
     private bool _backfilling = false;
     
     #endregion Private Variables
-    
+
     /// <summary>
     /// Reads the command line arguments and starts the server if the dedicated server flag is set.
     /// Else, it starts the client.
     /// </summary>
-    async void Start()
+    public async void Init()
     {
         bool server = false;
         var args = System.Environment.GetCommandLineArgs();
