@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using static Define;
 public class SquareGrid
 {   
     // player or enemy
-    private GridOwner _owner;
+    private GridSide _side;
     private int _width;
     private int _height;
     public int Width 
@@ -34,10 +35,10 @@ public class SquareGrid
 
     private SquareGridCell _currentMouseoverCell;
 
-    public SquareGrid(Vector3 originposition, GridOwner owner, int width = 3, int height = 2, float cellsize = 2.5f, float cellgap = 0.1f)
+    public SquareGrid(Vector3 originposition, GridSide side, int width = 3, int height = 2, float cellsize = 2.5f, float cellgap = 0.1f)
     {
         _originPosition = originposition;
-        _owner = owner;
+        _side = side;
         _width = width;
         _height = height;
         _cellsize = cellsize;
@@ -47,6 +48,7 @@ public class SquareGrid
         InitializeGridObject();
     }
 
+    // 그리드 나타내는 사각형 타일 생성
     private void InitializeGridObject()
     {
         for (int z = 0; z < _height; z++)
@@ -56,7 +58,7 @@ public class SquareGrid
                 GameObject gridCellObject = Managers.ResourceMng.Instantiate(_gridObjectPath, _cellParent);
                 gridCellObject.transform.position = GetWorldPosition(x, z);
                 SquareGridCell gridCell =
-                    new(x, z, _cellsize, gridCellObject.GetComponent<SpriteRenderer>());
+                    new(x, z, _cellsize, gridCellObject.GetComponent<SpriteRenderer>(), _side);
                 SetGridCell(x, z, gridCell);
             }
         }
@@ -80,11 +82,18 @@ public class SquareGrid
         _gridArray[z, x] = gridCell;
     }
 
+    public SquareGridCell GetGridCell(Vector3 worldPosition)
+    {   
+        GetGridPosition(worldPosition, out int x, out int z);
+        return GetGridCell(x, z);
+    }
+
     public SquareGridCell GetGridCell(int x, int z)
     {
         return _gridArray[z, x];
     }
 
+    // 게임오브젝트 부모 설정
     private void InitializeParent()
     {
         Transform grandparent = GameObject.Find("Grid")?.transform;
@@ -94,15 +103,16 @@ public class SquareGrid
             grandparent = new GameObject("Grid").transform;
         }
 
-        _cellParent = GameObject.Find(_owner.ToString() + "grid")?.transform;
+        _cellParent = GameObject.Find(_side.ToString() + "grid")?.transform;
 
         if (_cellParent == null)
         {
-            _cellParent = new GameObject(_owner.ToString() + "grid").transform;
+            _cellParent = new GameObject(_side.ToString() + "grid").transform;
             _cellParent.SetParent(grandparent);
         }
     }
 
+    // 마우스를 그리드 셀 위로 가져다 대면 해당 셀 색을 바꿈
     public void HandleMouseHover(Vector3 worldPosition)
     {
         GetGridPosition(worldPosition, out int x, out int z);
@@ -111,7 +121,7 @@ public class SquareGrid
         {
             _currentMouseoverCell?.OnMouseExit();
             _currentMouseoverCell = _gridArray[z, x];
-            _currentMouseoverCell?.OnMouseEnter(_owner);
+            _currentMouseoverCell?.OnMouseEnter();
         }
         else
         {
@@ -123,6 +133,15 @@ public class SquareGrid
     {
         _currentMouseoverCell?.OnMouseExit();
         _currentMouseoverCell = null;
+    }
+
+    // 해당 grid 좌표에 프리팹 생성
+    public void InstantiatePrefab(string prefabPath, int x, int z, float rotationY = 0)
+    {
+        GameObject prefab = Managers.ResourceMng.Instantiate(prefabPath);
+        prefab.transform.position = GetWorldPosition(x, z);
+        prefab.transform.rotation = Quaternion.Euler(0, rotationY, 0);
+        GetGridCell(x, z).OnCellObject = prefab;
     }
     
 }
