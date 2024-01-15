@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public class TargetFPS : MonoBehaviour
+public class TargetFPS
 {
-    [SerializeField] private int target = 60;
+    private int target = 60;
 
-    void Awake()
+    public void Init()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = target;

@@ -9,7 +9,7 @@ using Unity.Netcode;
 /// </summary>
 public class ConnectionApprovalHandler : MonoBehaviour
 {
-    public static int MaxPlayers = 10;
+    public static int MaxPlayers = 3;
 
     private void Awake()
     {
