@@ -11,12 +11,14 @@ public interface IData<Key, Value>
 // 시작하면 바로 데이터를 Load하여 Dict로 관리
 public class DataManager
 {
-    public Dictionary<int, Data.Stat> StatDict { get; private set; }
+    public Dictionary<string, Data.PlayerStat> PlayerStatDict { get; private set; }
+    public Dictionary<string, Data.MonsterStat> MonsterStatDict { get; private set; }
     public Dictionary<string, Data.Item> ItemDict { get; private set; }
 
     public void Init()
     {
-        StatDict = LoadJson<Data.StatData, int, Data.Stat>("StatData").MakeDict();
+        PlayerStatDict = LoadJson<Data.PlayerStatData, string, Data.PlayerStat>("PlayerStatData").MakeDict();
+        MonsterStatDict = LoadJson<Data.MonsterStatData, string, Data.MonsterStat>("MonsterStatData").MakeDict();
         ItemDict = LoadJson<Data.ItemData, string, Data.Item>("ItemData").MakeDict();
     }
 
