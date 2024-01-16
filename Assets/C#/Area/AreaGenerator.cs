@@ -17,8 +17,9 @@ public abstract class AreaGenerator
 
 
     // For test
-    protected const string _testprefabPath = "Maptiles/Area_1/GrassBase";
-    private const string _testStartprefabPath = "Maptiles/Area_1/RockBase";
+    //protected const string _testprefabPath = "Map/Area_1/GrassBase";
+    protected const string _testprefabPath = "Map/grid_hex";
+    private const string _testStartprefabPath = "Map/Area_1/RockBase";
 
     protected AreaGenerator(int width, int height, Vector3 originPosition)
     {

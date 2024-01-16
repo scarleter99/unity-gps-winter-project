@@ -15,7 +15,7 @@ public class HexGrid
     private GameObject[,] _gridArray;
     private bool[,] _isValid;
 
-    public HexGrid(int width, int height, Vector3 originposition, float cellwidth = 4f, float cellheight = 3.25f)
+    public HexGrid(int width, int height, Vector3 originposition, float cellwidth = 1.875f * 2, float cellheight = 1.625f * 2)
     {
         if (width % 2 == 0)
         {
@@ -75,7 +75,6 @@ public class HexGrid
                 else endoffset += 1;
             }
         }
-        Debug.Log(_isValid);
         #region legacy: for point-top hex, diamond-shaped grid
         //int startoffset = (_width - 3) / 2;
         //int endoffset = (_width - 3) / 2;
