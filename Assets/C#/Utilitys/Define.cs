@@ -66,7 +66,8 @@
     public enum Scene
     {
         UnknownScene,
-        GameScene,
+        AreaScene,
+        BattleScene,
         TestGameScene,
         TestTitleScene,
         TitleScene,
