@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class MonsterController : BaseController
 {
-    private Stat _stat;
+    protected Stat _stat;
+    public Stat Stat { get => _stat; }
     
     public override void Init()
     {
@@ -21,35 +22,31 @@ public class MonsterController : BaseController
 
     protected void OnKeyboard()
     {
-        attacked = false;
         if (Input.GetKeyDown(KeyCode.A))
             AnimState = Define.AnimState.Attack;
     }
     //////////////////////////////////////////
     //}
     
-    public override void OnDamage(Stat attackerStat)
+    public override void OnDamage(Stat attackerStat, int amount = 1)
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.DefendHit : Define.AnimState.Hit;
-        _stat.OnAttacked(attackerStat);
+        _stat.OnDamage(attackerStat, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
 
-    private bool attacked = false; // temp - FOR TEST
     protected override void UpdateAttack()
     {
-        // temp - FOR TEST
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.33f && !attacked)
-            OnAttackEvent();
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     
@@ -58,8 +55,6 @@ public class MonsterController : BaseController
     {
         if (_lockTarget != null)
             _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
-
-        attacked = true;
     }
     
 }

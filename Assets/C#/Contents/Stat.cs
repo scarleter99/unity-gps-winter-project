@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class Stat : MonoBehaviour
 {
-    [SerializeField]
-    protected int _level;
     [SerializeField]
     protected int _hp;
     [SerializeField]
@@ -17,41 +16,47 @@ public class Stat : MonoBehaviour
     [SerializeField]
     protected int _defense;
     [SerializeField]
-    protected float _moveSpeed;
+    protected int _speed;
 
-    public int Level { get => _level; set => _level = value; }
-    public int Hp { get => _hp; set => _hp = value; }
-    public int MaxHp { get => _maxHp; set => _maxHp = value; }
-    public int Attack { get => _attack; set => _attack = value; }
-    public int Defense { get => _defense; set => _defense = value; }
-    public float MoveSpeed { get => _moveSpeed; set => _moveSpeed = value; }
+    public int Hp { get => _hp; set { _hp = value; OnStatChanged?.Invoke(this); } }
+    public int MaxHp { get => _maxHp; set { _maxHp = value; OnStatChanged?.Invoke(this); } }
+    public int Attack { get => _attack; set { _attack = value; OnStatChanged?.Invoke(this); } }
+    public int Defense { get => _defense; set { _defense = value; OnStatChanged?.Invoke(this); } }
+    public int Speed { get => _speed; set { _speed = value; OnStatChanged?.Invoke(this); } }
+
+    public Action<Stat> OnStatChanged;
 
     private void Start()
     {
-        _level = 1;
-        _hp = 100;
-        _maxHp = 100;
-        _attack = 10;
-        _defense = 5;
-        _moveSpeed = 5.0f;
+        Init();
     }
 
-    public virtual void OnAttacked(Stat attacker)
+    protected virtual void Init()
     {
-        Hp -= Mathf.Max(0, attacker.Attack - Defense);
-        if (Hp <= 0)
-        {
-            Hp = 0;
-            OnDead(attacker);
-        }
+        SetStat(gameObject.name);
     }
 
-    protected virtual void OnDead(Stat attacker)
+    public virtual void OnDamage(Stat attacker, int attackCount = 1)
     {
-        PlayerStat playerStat = attacker as PlayerStat;
-        if (playerStat != null)
-        {
-            playerStat.Exp += 15;
-        }
+        int damage = Mathf.Max(attacker.Attack - Defense, 1);
+        if (attackCount > 1)
+            damage = Mathf.Max(damage / attackCount, 1);
+
+        Hp = Mathf.Clamp(Hp - damage, 0, MaxHp);
+    }
+
+    public virtual void SetStat(string name)
+    {
+        Data.MonsterStat stat = Managers.DataMng.MonsterStatDict[name];
+        Hp = stat.hp;
+        MaxHp = stat.hp;
+        Attack = stat.attack;
+        Defense = stat.defense;
+        Speed = stat.speed;
+    }
+
+    public void RecoverHp(int amount)
+    {
+        Hp = Mathf.Clamp(Hp + amount, 0, MaxHp);
     }
 }

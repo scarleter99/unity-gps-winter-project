@@ -42,22 +42,22 @@ public class UI_TownScene : UI_Scene
         GetButton(Buttons.Button_Store).gameObject.BindEvent(OnClickedStoreButton, Define.UIEvent.Click);
         GetButton(Buttons.Button_ExitAtStore).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
 
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(true);
+        Get<UI_Page>(Pages.UI_Page_Town_Main).gameObject.SetActive(true);
     }
 
     private void OnClickedQuestButton(PointerEventData data)
     {
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
+        Get<UI_Page>(Pages.UI_Page_Town_Main).gameObject.SetActive(false);
 
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Quest);
+        _currentPage = Get<UI_Page>(Pages.UI_Page_Town_Quest);
         _currentPage.gameObject.SetActive(true);
     }
 
     private void OnClickedStoreButton(PointerEventData data)
     {
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(false);
+        Get<UI_Page>(Pages.UI_Page_Town_Main).gameObject.SetActive(false);
 
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Store);
+        _currentPage = Get<UI_Page>(Pages.UI_Page_Town_Store);
         _currentPage.gameObject.SetActive(true);
     }
 
@@ -65,7 +65,7 @@ public class UI_TownScene : UI_Scene
     {
         _currentPage.gameObject.SetActive(false);
 
-        _currentPage = Get<UI_Page>((int)Pages.UI_Page_Town_Main);
+        _currentPage = Get<UI_Page>(Pages.UI_Page_Town_Main);
         _currentPage.gameObject.SetActive(true);
     }
 }

@@ -1,19 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1109 &-945897392763593816
-AnimatorTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_Conditions: []
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 1102063001559692752}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 1
 --- !u!91 &9100000
 AnimatorController:
   m_ObjectHideFlags: 0
@@ -502,7 +488,7 @@ AnimatorStateMachine:
     m_Position: {x: 520, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102822994629829428}
-    m_Position: {x: 520, y: 150, z: 0}
+    m_Position: {x: 520, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102258077919656092}
     m_Position: {x: 520, y: 220, z: 0}
@@ -511,8 +497,7 @@ AnimatorStateMachine:
     m_Position: {x: 30, y: 310, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
-  m_EntryTransitions:
-  - {fileID: -945897392763593816}
+  m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}

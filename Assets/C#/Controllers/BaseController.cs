@@ -7,6 +7,10 @@ using Random = System.Random;
 public abstract class BaseController : MonoBehaviour
 {
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
+    protected ulong _id;
+    protected int _stateHash;
+
+    public ulong Id { get => _id; set => _id = value; }
     
     [SerializeField]
     protected Define.AnimState _animState = Define.AnimState.Idle;
@@ -30,38 +34,41 @@ public abstract class BaseController : MonoBehaviour
             int maxHitIndex = isPlayer ? 3 : 2;
             int maxDieIndex = isPlayer ? 3 : 2;
             int index;
-            
+
+            string stateName = "";
             switch (_animState)
             {
                 case Define.AnimState.Attack:
-                    _animator.CrossFade("Attack1", 0.01f);
+                    _animator.Play(stateName = "Attack1");
                     break;
                 case Define.AnimState.Defend:
-                    _animator.CrossFade("Defend", 0.01f);
+                    _animator.Play(stateName = "Defend");
                     break;
                 case Define.AnimState.DefendHit:
-                    _animator.CrossFade("DefendHit", 0.01f);
+                    _animator.Play(stateName = "DefendHit");
                     break;
                 case Define.AnimState.Die:
                     index = random.Next(minIndex, maxDieIndex);
-                    _animator.CrossFade($"Die{index}", 0.01f);
+                    _animator.Play(stateName = $"Die{index}");
                     break;
                 case Define.AnimState.Dizzy:
-                    _animator.CrossFade("Dizzy", 0.01f);
+                    _animator.Play(stateName = "Dizzy");
                     break;
                 case Define.AnimState.Hit:
                     index = random.Next(minIndex, maxHitIndex);
-                    _animator.CrossFade($"Hit{index}", 0.01f);
+                    _animator.Play(stateName = $"Hit{index}");
                     break;
                 case Define.AnimState.Idle:
-                    _animator.CrossFade("Idle", 0.2f);
+                    _animator.CrossFade(stateName = "Idle", 0.2f);
                     break;
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
-                    _animator.CrossFade("Victory", 0.01f);
+                    _animator.Play(stateName = "Victory");
                     break;
             }
+
+            _stateHash = Animator.StringToHash(stateName);
         }
     }
 
@@ -115,7 +122,7 @@ public abstract class BaseController : MonoBehaviour
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
 
-    public abstract void OnDamage(Stat attackerStat);
+    public abstract void OnDamage(Stat attackerStat, int amount = 1);
     
     protected virtual void UpdateAttack() { }
     protected virtual void UpdateDefend() { }
@@ -123,7 +130,8 @@ public abstract class BaseController : MonoBehaviour
     
     protected virtual void UpdateDie()
     {
-        if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.98f)
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
             Managers.GameMng.Despawn(this.gameObject);
     }
     
@@ -131,6 +139,4 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateVictory() { }
-    
-    
 }
