@@ -16,6 +16,7 @@ namespace Data
         public int hp;
         public int attack;
         public int defense;
+        public int dexterity;
         public int strength;
         public int vitality;
         public int intelligence;
