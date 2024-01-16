@@ -9,14 +9,17 @@ public class PlayerController : BaseController
     private int _layerMask = (1 << (int)Define.Layer.Monster);
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
+    protected Bag _bag;
     public PlayerStat Stat { get => _stat; }
 
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
-
+    public Bag Bag { get => _bag; }
+    
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
         _stat = GetComponent<PlayerStat>();
+        _bag = new Bag(transform);
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
@@ -70,9 +73,9 @@ public class PlayerController : BaseController
     {
         // temp - for test
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Managers.GameMng.Bag.UseItem(0);
+            Bag.UseItem(0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Managers.GameMng.Bag.UseItem(1);
+            Bag.UseItem(1);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)

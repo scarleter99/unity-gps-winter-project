@@ -7,13 +7,11 @@ using UnityEngine;
 public class GameManager
 {
     private GameObject _player;
-    private Bag _bag;
     private HashSet<GameObject> _monsters = new HashSet<GameObject>();
 
     public Action<int> OnSpawnEvent;
 
     public GameObject Player { get => _player; set => _player = value; }
-    public Bag Bag { get => _bag; set => _bag = value; }
 
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
