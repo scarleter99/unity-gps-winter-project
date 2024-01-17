@@ -7,12 +7,13 @@ using Unity.Netcode;
 /// Here you can do all sorts of pre-processing such as selecting different prefabs for the player to spawn with depending on some condition.
 /// https://docs-multiplayer.unity3d.com/netcode/current/basics/connection-approval/
 /// </summary>
-public class ConnectionApprovalHandler : MonoBehaviour
+public class ConnectionApprovalHandler
 {
     public static int MaxPlayers = 3;
 
-    private void Awake()
+    public void Init()
     {
+        Debug.Log("4");
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
     }
 
