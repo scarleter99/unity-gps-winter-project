@@ -68,44 +68,22 @@ public class AreaCameraController : MonoBehaviour
         _zoomLevel = CalculateZoomlevel();
 
         Managers.InputMng.KeyAction += HandleKeyScreenMove;
-        Managers.InputMng.MouseAction += HandleMouseInput;
+        //Managers.InputMng.MouseAction += HandleMouseInput;
     }
 
     void Update()
     {
         HandleZoom();
-        //HandleMouseInput();
+        HandleMouseInput();
         _zoomLevel = CalculateZoomlevel();
         HandleMouseScreenMove();
         UpdateCamera();
     }
 
-    // old: 클릭 + 드래그를 통한 카메라 이동
-    //private void HandleMouseInput()
-    //{   
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //        if (_plane.Raycast(ray, out _entry)){
-    //            _dragStartPosition = ray.GetPoint(_entry);
-    //        }
-    //    }
-
-    //    if (Input.GetMouseButton(0))
-    //    {
-    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //        if (_plane.Raycast(ray, out _entry))
-    //        {
-    //            _dragCurrentPosition = ray.GetPoint(_entry);
-    //            _newPosition = transform.position + _dragStartPosition - _dragCurrentPosition;
-    //        }
-    //    }
-    //}
-
-    // Inputmanager 사용한 클릭+드래그로 화면 이동
-    private void HandleMouseInput(Define.MouseEvent mouseEvent)
+    // 클릭 + 드래그를 통한 카메라 이동
+    private void HandleMouseInput()
     {
-        if (mouseEvent == Define.MouseEvent.PointerDown)
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (_plane.Raycast(ray, out _entry))
@@ -113,7 +91,8 @@ public class AreaCameraController : MonoBehaviour
                 _dragStartPosition = ray.GetPoint(_entry);
             }
         }
-        if (mouseEvent == Define.MouseEvent.Press)
+
+        if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (_plane.Raycast(ray, out _entry))
@@ -123,6 +102,28 @@ public class AreaCameraController : MonoBehaviour
             }
         }
     }
+
+    // Inputmanager 사용한 클릭+드래그로 화면 이동: 제대로 작동하지 않음
+    //private void HandleMouseInput(Define.MouseEvent mouseEvent)
+    //{
+    //    if (mouseEvent == Define.MouseEvent.PointerDown)
+    //    {
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        if (_plane.Raycast(ray, out _entry))
+    //        {
+    //            _dragStartPosition = ray.GetPoint(_entry);
+    //        }
+    //    }
+    //    if (mouseEvent == Define.MouseEvent.Press)
+    //    {
+    //        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //        if (_plane.Raycast(ray, out _entry))
+    //        {
+    //            _dragCurrentPosition = ray.GetPoint(_entry);
+    //            _newPosition = transform.position + _dragStartPosition - _dragCurrentPosition;
+    //        }
+    //    }
+    //}
 
     // 마우스 휠을 이용한 zoom
     private void HandleZoom()
