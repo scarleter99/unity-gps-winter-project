@@ -131,4 +131,16 @@
         SelectingTargetPlayer,
         SelectingTargetMonster,
     }
+
+    public enum AreaTileType
+    {   
+        Invalid,
+        Obstacle,
+        Empty,
+        Start,
+        Normal,
+        Battle,
+        Encounter,
+        Boss,
+    }
 }

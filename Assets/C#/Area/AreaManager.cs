@@ -13,16 +13,23 @@ public class AreaManager : MonoBehaviour
     {
         _areaGenerator = _areaName switch
         {
-            AreaName.Forest => new ForestAreaGenerator(7, 16, Vector3.zero),
-            _ => new ForestAreaGenerator(5, 7, Vector3.zero),
+            AreaName.Forest => new ForestAreaGenerator(7, 16, 12, 5, Vector3.zero),
+            _ => new ForestAreaGenerator(5, 7, 1, 1,Vector3.zero),
         };
+        _areaGenerator.GenerateMap();
     }
 
     private void Update()
     {   
         // test
         if (Input.GetKeyDown(KeyCode.M))
-        {
+        {   
+            Destroy(GameObject.Find("Area_1_Map"));
+            _areaGenerator = _areaName switch
+            {
+                AreaName.Forest => new ForestAreaGenerator(7, 16, 12, 5, Vector3.zero),
+                _ => new ForestAreaGenerator(5, 7, 1, 1, Vector3.zero),
+            };
             _areaGenerator.GenerateMap();
         }
     }
