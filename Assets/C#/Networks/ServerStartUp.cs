@@ -16,7 +16,7 @@ using UnityEngine;
 public class ServerStartUp
 {
     // This event is invoked when a client instance is detected
-    public static event System.Action ClientInstance;
+    public static event Action ClientInstance;
     
     #region Private Variables
     
@@ -71,8 +71,14 @@ public class ServerStartUp
         }
         else
         {
+            Debug.Log("2");
             ClientInstance?.Invoke();
         }
+    }
+
+    public void InitClientInstance()
+    {
+        ClientInstance = null;
     }
 
     /// <summary>
