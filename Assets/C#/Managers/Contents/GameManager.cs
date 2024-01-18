@@ -11,7 +11,7 @@ public class GameManager
 
     public Action<int> OnSpawnEvent;
 
-    public GameObject Player => _player;
+    public GameObject Player { get => _player; set => _player = value; }
 
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {

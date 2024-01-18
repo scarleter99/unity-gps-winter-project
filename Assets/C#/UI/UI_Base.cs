@@ -38,22 +38,22 @@ public abstract class UI_Base : MonoBehaviour
     }
 
     // T컴포넌트를 가지고 있으며 파라미터로 넘긴 idx에 해당하는 GameObject 검색 후 반환
-    protected T Get<T>(int idx) where T : UnityEngine.Object
+    protected T Get<T>(Enum idx) where T : UnityEngine.Object
     {
         UnityEngine.Object[] objects;
         if (_objectDic.TryGetValue(typeof(T), out objects) == false)
             return null;
 
-        return objects[idx] as T;
+        return objects[Convert.ToInt32(idx)] as T;
     }
 
-    protected GameObject GetGameObject(Enum idx) { return Get<GameObject>(Convert.ToInt32(idx)); }
+    protected GameObject GetGameObject(Enum idx) { return Get<GameObject>(idx); }
 
-    protected TextMeshProUGUI GetTextMeshProUGUI(Enum idx) { return Get<TextMeshProUGUI>(Convert.ToInt32(idx)); }
+    protected TextMeshProUGUI GetText(Enum idx) { return Get<TextMeshProUGUI>(idx); }
 
-    protected Button GetButton(Enum idx) { return Get<Button>(Convert.ToInt32(idx)); }
+    protected Button GetButton(Enum idx) { return Get<Button>(idx); }
 
-    protected Image GetImage(Enum idx) { return Get<Image>(Convert.ToInt32(idx)); }
+    protected Image GetImage(Enum idx) { return Get<Image>(idx); }
 
     // go가 이벤트 콜백(입력)을 받아 이벤트 함수를 실행할 수 있게 만든다.
     public static void BindEvent(GameObject go, Action<PointerEventData> action,

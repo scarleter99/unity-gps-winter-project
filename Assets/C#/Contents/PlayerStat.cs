@@ -6,60 +6,39 @@ using UnityEngine;
 public class PlayerStat : Stat
 {
     [SerializeField]
-    protected int _exp;
-    [SerializeField]
     protected int _gold;
-
-    public int Exp
-    {
-        get => _exp;
-        set
-        {
-            _exp = value;
-
-            int level = Level;
-            while (true)
-            {
-                Data.Stat stat;
-                if (Managers.DataMng.StatDict.TryGetValue(level + 1, out stat) == false)
-                    break;
-                if (_exp < stat.totalExp)
-                    break;
-                level++;
-            }
-
-            if (level != Level)
-            {
-                Level = level;
-                SetStat(Level);
-                Debug.Log($"Level Up!: {Level}");
-            }
-        }
-    }
-    public int Gold { get => _gold; set => _gold = value; }
+    [SerializeField]
+    protected int _dexterity;
+    [SerializeField] 
+    protected int _strength;
+    [SerializeField]
+    protected int _vitality;
+    [SerializeField] 
+    protected int _intelligence;
     
-    private void Start()
-    {
-        _level = 1;
-        _defense = 5;
-        _moveSpeed = 5.0f;
-        _exp = 0;
-        _gold = 0;
-        
-        SetStat(_level);
-    }
-
-    public void SetStat(int level)
-    {
-        Data.Stat stat = Managers.DataMng.StatDict[1];
-
-        _hp = stat.maxHp;
-        _maxHp = stat.maxHp;
-        _attack = stat.attack;
-    }
+    public int Gold { get => _gold; set { _gold = value; OnStatChanged?.Invoke(this); } }
+    public int Dexterity { get => _dexterity; set { _dexterity = value; OnStatChanged?.Invoke(this); } }
+    public int Strength { get => _strength; set { _strength = value; OnStatChanged?.Invoke(this); } }
+    public int Vitality { get => _vitality; set { _vitality = value; OnStatChanged?.Invoke(this); } }
+    public int Intelligence { get => _intelligence; set { _intelligence = value; OnStatChanged?.Invoke(this); } }
     
-    protected override void OnDead(Stat attacker)
+    protected override void Init()
     {
-        
+        base.Init();
+        Gold = 0;
+    }
+
+    public override void SetStat(string name)
+    {
+        Data.PlayerStat stat = Managers.DataMng.PlayerStatDict[name];
+        Hp = stat.hp;
+        MaxHp = stat.hp;
+        Attack = stat.attack;
+        Defense = stat.defense;
+        Dexterity = stat.dexterity;
+        Speed = stat.speed;
+        Strength = stat.strength;
+        Vitality = stat.vitality;
+        Intelligence = stat.intelligence;
     }
 }

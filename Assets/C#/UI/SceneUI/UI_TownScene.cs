@@ -66,8 +66,6 @@ public class UI_TownScene : UI_Scene
         GetButton(Buttons.Button_Store).gameObject.BindEvent(OnClickedStoreButton, Define.UIEvent.Click);
         GetButton(Buttons.Button_ExitAtStore).gameObject.BindEvent(OnClickedExitButton, Define.UIEvent.Click);
 
-        Get<UI_Page>((int)Pages.UI_Page_Town_Main).gameObject.SetActive(true);
+        Get<UI_Page>(Pages.UI_Page_Town_Main).gameObject.SetActive(true);
     }
-
-
 }

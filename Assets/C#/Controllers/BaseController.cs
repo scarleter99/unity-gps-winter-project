@@ -2,70 +2,141 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = System.Random;
 
 public abstract class BaseController : MonoBehaviour
 {
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
+    protected ulong _id;
+    protected int _stateHash;
+
+    public ulong Id { get => _id; set => _id = value; }
     
     [SerializeField]
-    protected Define.State _state = Define.State.Idle;
-    [SerializeField]
-    protected Vector3 _destPos;
+    protected Define.AnimState _animState = Define.AnimState.Idle;
+    [SerializeField] 
+    protected Define.TurnState _turnState = Define.TurnState.Wait;
     [SerializeField]
     protected GameObject _lockTarget;
-    
-    public Define.State State
+
+    protected Animator _animator;
+
+    public Define.AnimState AnimState
     {
-        get => _state;
+        get => _animState;
         set
         {
-            _state = value;
+            _animState = value;
+            Random random = new Random();
 
-            Animator anim = GetComponent<Animator>();
-            switch (_state)
+            bool isPlayer = WorldObjectType == Define.WorldObject.Player;
+            int minIndex = 1;
+            int maxHitIndex = isPlayer ? 3 : 2;
+            int maxDieIndex = isPlayer ? 3 : 2;
+            int index;
+
+            string stateName = "";
+            switch (_animState)
             {
-                case Define.State.Die:
+                case Define.AnimState.Attack:
+                    _animator.Play(stateName = "Attack1");
                     break;
-                case Define.State.Idle:
-                    anim.CrossFade("WAIT", 0.1f);
+                case Define.AnimState.Defend:
+                    _animator.Play(stateName = "Defend");
                     break;
-                case Define.State.Moving:
-                    anim.CrossFade("RUN", 0.1f);
+                case Define.AnimState.DefendHit:
+                    _animator.Play(stateName = "DefendHit");
                     break;
-                case Define.State.Skill:
-                    anim.CrossFade("ATTACK", 0.1f, -1, 0);
+                case Define.AnimState.Die:
+                    index = random.Next(minIndex, maxDieIndex);
+                    _animator.Play(stateName = $"Die{index}");
+                    break;
+                case Define.AnimState.Dizzy:
+                    _animator.Play(stateName = "Dizzy");
+                    break;
+                case Define.AnimState.Hit:
+                    index = random.Next(minIndex, maxHitIndex);
+                    _animator.Play(stateName = $"Hit{index}");
+                    break;
+                case Define.AnimState.Idle:
+                    _animator.CrossFade(stateName = "Idle", 0.2f);
+                    break;
+                //case Define.AnimState.Skill:
+                //    break;
+                case Define.AnimState.Victory:
+                    _animator.Play(stateName = "Victory");
                     break;
             }
+
+            _stateHash = Animator.StringToHash(stateName);
         }
+    }
+
+    public Define.TurnState TurnState
+    {
+        get => _turnState;
+        set => _turnState = value;
     }
 
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         Init();
     }
     
     private void Update()
     {
-        switch (State)
+        switch (AnimState)
         {
-            case Define.State.Die:
+            case Define.AnimState.Attack:
+                UpdateAttack();
+                break;
+            case Define.AnimState.Defend:
+                UpdateDefend();
+                break;
+            case Define.AnimState.DefendHit:
+                UpdateDefendHit();
+                break;
+            case Define.AnimState.Die:
                 UpdateDie();
                 break;
-            case Define.State.Moving:
-                UpdateMoving();
+            case Define.AnimState.Dizzy:
+                UpdateDizzy();
                 break;
-            case Define.State.Idle:
+            case Define.AnimState.Hit:
+                UpdateHit();
+                break;
+            case Define.AnimState.Idle:
                 UpdateIdle();
                 break;
-            case Define.State.Skill:
-                UpdateSkill();
+            //case Define.AnimState.Skill:
+            //    break;
+            case Define.AnimState.Victory:
+                UpdateVictory();
                 break;
         }
     }
-
+    
     public abstract void Init();
-    protected virtual void UpdateDie() { }
-    protected virtual void UpdateMoving() { }
+    
+    // Animation의 적절한 타이밍에서 호출
+    protected abstract void OnAttackEvent();
+
+    public abstract void OnDamage(Stat attackerStat, int amount = 1);
+    
+    protected virtual void UpdateAttack() { }
+    protected virtual void UpdateDefend() { }
+    protected virtual void UpdateDefendHit() { }
+    
+    protected virtual void UpdateDie()
+    {
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
+            Managers.GameMng.Despawn(this.gameObject);
+    }
+    
+    protected virtual void UpdateDizzy() { }
+    protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
-    protected virtual void UpdateSkill() { }
+    protected virtual void UpdateVictory() { }
 }

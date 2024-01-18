@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Data;
 
 public class TestGameScene : BaseScene
 {
@@ -11,7 +12,7 @@ public class TestGameScene : BaseScene
         SceneType = Define.Scene.TestGameScene;
 
         // DataManager test
-        Dictionary<int, Data.Stat> statDic = Managers.DataMng.StatDict;
+        Dictionary<string, Data.PlayerStat> statDic = Managers.DataMng.PlayerStatDict;
         
         gameObject.GetOrAddComponent<CursorController>();
         

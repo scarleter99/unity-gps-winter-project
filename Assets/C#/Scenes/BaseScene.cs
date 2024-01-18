@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -15,8 +16,12 @@ public abstract class BaseScene : MonoBehaviour
     
     protected virtual void Init()
     {
-        Object obj = GameObject.FindObjectOfType(typeof(EventSystem));
-        if (obj == null)
+        Object obj1 = GameObject.FindObjectOfType(typeof(NetworkManager));
+        Object obj3 = GameObject.FindObjectOfType(typeof(EventSystem));
+        
+        if (obj1 == null)
+            Managers.ResourceMng.Instantiate("Network/NetworkManager").name = "@NetworkManager";
+        if (obj3 == null)
             Managers.ResourceMng.Instantiate("UI/EventSystem").name = "@EventSystem";
     }
     
