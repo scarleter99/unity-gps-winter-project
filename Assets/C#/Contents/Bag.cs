@@ -46,7 +46,7 @@ public class Bag
         if (selectedIndex.IsNull())
             return;
         
-        selectedIndex.item.Use(Managers.GameMng.Player.GetComponent<BaseController>());
+        //selectedIndex.item.Use(Managers.GameMng.Player.GetComponent<BaseController>()); // TODO - 주석 풀기
         selectedIndex.count--;
         
         // debug

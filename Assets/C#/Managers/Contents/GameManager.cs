@@ -6,12 +6,13 @@ using UnityEngine;
 
 public class GameManager
 {
-    private GameObject _player;
-    private HashSet<GameObject> _monsters = new HashSet<GameObject>();
+    private List<GameObject> _players = new List<GameObject>();
+    private List<GameObject> _monsters = new List<GameObject>();
 
     public Action<int> OnSpawnEvent;
 
-    public GameObject Player { get => _player; set => _player = value; }
+    public List<GameObject> Players { get => _players; }
+    public List<GameObject> Monsters { get => _monsters; }
 
     public GameObject Spawn(Define.WorldObject type, string path, Transform parent = null)
     {
@@ -20,12 +21,12 @@ public class GameManager
         switch (type)
         {
             case Define.WorldObject.Monster:
-                _monsters.Add(go);
+                Monsters.Add(go);
                 if (OnSpawnEvent != null)
                     OnSpawnEvent.Invoke(1);
                 break;
             case Define.WorldObject.Player:
-                _player = go;
+                Players.Add(go);
                 break;
         }
 
@@ -48,16 +49,16 @@ public class GameManager
         switch (type)
         {
             case Define.WorldObject.Monster:
-                if (_monsters.Contains(go))
+                if (Monsters.Contains(go))
                 {
-                    _monsters.Remove(go);
+                    Monsters.Remove(go);
                     if (OnSpawnEvent != null)
                         OnSpawnEvent.Invoke(-1);
                 }
                 break;
             case Define.WorldObject.Player:
-                if (_player == go)
-                    _player = null;
+                if (Players.Contains(go))
+                    Players.Remove(go);
                 break;
         }
         

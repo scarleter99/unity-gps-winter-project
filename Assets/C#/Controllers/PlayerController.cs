@@ -25,9 +25,6 @@ public class PlayerController : BaseController
         Managers.InputMng.MouseAction += OnMouseEvent;
         Managers.InputMng.KeyAction -= OnKeyboard;
         Managers.InputMng.KeyAction += OnKeyboard;
-        
-        // temp - for test
-        Managers.GameMng.Player = gameObject;
     }
 
     public override void OnDamage(Stat attackerStat, int amount = 1) 
