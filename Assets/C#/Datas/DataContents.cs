@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.FullSerializer;
+using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Data
 {
@@ -108,4 +107,16 @@ namespace Data
     }
 
     #endregion
+    
+    public struct TestStruct : INetworkSerializable
+    {
+        public Vector3 Position;
+        public int Hp;
+        
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Position);
+            serializer.SerializeValue(ref Hp);
+        }
+    }
 }
