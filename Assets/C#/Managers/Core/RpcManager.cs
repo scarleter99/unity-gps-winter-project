@@ -6,57 +6,43 @@ using UnityEngine;
 
 public class RpcManager
 {
-    [ServerRpc]
-    public void UpdatePositionServerRpc(Transform transform, Vector3 dest, float speed)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, dest,
-            NetworkManager.Singleton.ServerTime.FixedDeltaTime * speed);
-
-        if (dest != transform.position)
-        {
-            Vector3 targetDirection = dest - transform.position;
-            targetDirection.y = 0f; // 오브젝트 평행 유지
-            transform.forward = targetDirection;
-        }
-    }
+    #region Managers
 
     [ServerRpc]
-    public void UpdateTestStructServerRpc(ulong gameObjectId, TestStruct testStruct, Define.WorldObject gameObjectType)
+    public void StatChangeServerRpc(Define.WorldObject type, ulong id, TestStruct testStruct)
     {
-        UpdateTestStructClientRpc(gameObjectId, testStruct, gameObjectType);
+        StatChangeClientRpc(type, id, testStruct);
     }
     
     [ClientRpc]
-    private void UpdateTestStructClientRpc(ulong gameObjectId, TestStruct testStruct, Define.WorldObject gameObjectType)
+    private void StatChangeClientRpc(Define.WorldObject type, ulong id, TestStruct testStruct)
     {
         // TODO
-        //Managers.GameMng.UpdateStat(gameObjectId, testStruct, gameObjectType);
+        Managers.GameMng.StatChange(type, id, testStruct);
     }
     
     [ServerRpc]
-    public void InstantiateObjectServerRpc(string path, ulong parentId = 0, string name = null)
+    public void SpawnServerRpc(string path, Define.WorldObject parentType = Define.WorldObject.Unknown, ulong parentId = 0)
     {
-        InstantiateObjectClientRpc(path, parentId, name);
+        SpawnClientRpc(path, parentType, parentId);
     }
     
     [ClientRpc]
-    private void InstantiateObjectClientRpc(string path, ulong parentId = 0, string name = null)
+    private void SpawnClientRpc(string path, Define.WorldObject parentType = Define.WorldObject.Unknown, ulong parentId = 0)
     {
-        // TODO
-        //Managers.ResourceMng.Instantiate(path, parentId, name);
+        Managers.GameMng.Spawn(path, parentType, parentId);
     }
     
     [ServerRpc]
-    public void DestroyObjectServerRpc(ulong gameObjectId, Define.WorldObject gameObjectType)
+    public void DespawnServerRpc(Define.WorldObject type, ulong id)
     {
-        DestroyObjectClientRpc(gameObjectId, gameObjectType);
+        DespawnClientRpc(type, id);
     }
     
     [ClientRpc]
-    private void DestroyObjectClientRpc(ulong gameObjectId, Define.WorldObject gameObjectType)
+    private void DespawnClientRpc(Define.WorldObject type, ulong id)
     {
-        // TODO
-        //Managers.ResourceMng.Destroy(gameObjectId);
+        Managers.GameMng.Despawn(type, id);
     }
 
     [ServerRpc]
@@ -70,6 +56,8 @@ public class RpcManager
     {
         Managers.SceneMng.LoadScene(type);
     }
+    
+    #endregion
     
     #region UI RPC
     
