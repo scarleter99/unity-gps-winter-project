@@ -2,9 +2,9 @@
 {
     public enum WorldObject
     {
-        Unknown,
         Player,
         Monster,
+        Unknown,
     }
     
     public enum AnimState

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 using Random = System.Random;
 
@@ -131,12 +132,17 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateDie()
     {
         var currentState = _animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
-            Managers.GameMng.Despawn(this.gameObject);
+        // if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
+        //     Managers.GameMng.Despawn(this.gameObject);
     }
     
     protected virtual void UpdateDizzy() { }
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateVictory() { }
+
+    public void StatChange(TestStruct testStruct)
+    {
+        
+    }
 }
