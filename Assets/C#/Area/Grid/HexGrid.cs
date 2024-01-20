@@ -45,7 +45,7 @@ public class HexGrid
         {
             for (int x = 0; x < _width; x++)
             {
-                switch (source[z, x])
+                switch (source[z,x])
                 {
                     case -1:
                         _tileTypeArray[z, x] = AreaTileType.Invalid;
@@ -102,30 +102,40 @@ public class HexGrid
     }
 
     // 해당 셀의 이웃 6개 타일을 보며 tileType인 타일이 하나라도 있다면 true, 하나도 없다면 false 반환
-    public bool CheckNeighbor(int x, int z, AreaTileType tileType)
+    public bool CheckNeighborType(int x, int z, AreaTileType tileType)
     {
-        int[,] dir;
-        if (x % 2 == 0) dir = new[,] { { 0, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
-        else dir = new[,] { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, 1 } };
-
-        for (int i = 0; i < 6; i++)
+        List<Vector2Int> neighbors = GetAllNeighbors(x, z);
+        foreach (var neighbor in neighbors)
         {
-            int newx = x + dir[i,0];
-            int newz = z + dir[i,1];
-            if (IsPositionValid(newx, newz))
-            {
-                if (_tileTypeArray[newz, newx] == tileType)
-                {   
-                    return true;
-                }
-            }
+            if (_tileTypeArray[neighbor.y, neighbor.x] == tileType) return true;
         }
+
         return false;
     }
 
     private bool IsPositionValid(int x, int z)
     {
         return x >= 0 && x < _width && z >= 0 && z < _height;
+    }
+
+    private List<Vector2Int> GetAllNeighbors(int x, int z)
+    {
+        int[,] dir;
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+        if (x % 2 == 0) dir = new[,] { { 0, 1 }, { 1, 0 }, { 1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
+        else dir = new[,] { { 0, 1 }, { 1, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }, { -1, 1 } };
+
+        for (int i = 0; i < 6; i++)
+        {
+            int newx = x + dir[i, 0];
+            int newz = z + dir[i, 1];
+            if (IsPositionValid(newx, newz))
+            {
+                neighbors.Add(new Vector2Int(newx, newz));
+            }
+        }
+
+        return neighbors;
     }
 }
 

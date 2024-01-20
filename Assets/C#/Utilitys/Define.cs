@@ -100,7 +100,7 @@
     }
    
     public enum AreaName
-    {
+    {   
         Forest,
     }
    

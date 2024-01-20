@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6864713973372728173}
   - component: {fileID: 2343644236679233157}
   m_Layer: 0
-  m_Name: battleIcon
+  m_Name: icon_battle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

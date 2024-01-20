@@ -15,11 +15,14 @@ public class DataManager
     public Dictionary<string, Data.MonsterStat> MonsterStatDict { get; private set; }
     public Dictionary<string, Data.Item> ItemDict { get; private set; }
 
+    public Dictionary<Define.AreaName, Data.AreaData> AreaDataDict { get; private set; }
+
     public void Init()
     {
         PlayerStatDict = LoadJson<Data.PlayerStatData, string, Data.PlayerStat>("PlayerStatData").MakeDict();
         MonsterStatDict = LoadJson<Data.MonsterStatData, string, Data.MonsterStat>("MonsterStatData").MakeDict();
         ItemDict = LoadJson<Data.ItemData, string, Data.Item>("ItemData").MakeDict();
+        AreaDataDict = LoadJson<Data.AreaDataSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
     }
 
     // path 위치의 Json 파일을 TextAsset 타입으로 로드

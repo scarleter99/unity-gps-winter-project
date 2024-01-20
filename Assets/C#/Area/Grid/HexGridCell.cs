@@ -62,9 +62,4 @@ public abstract class HexGridCell
     }
 
     public abstract void Init();
-
-    private void InitIcon()
-    {
-
-    }
 }
