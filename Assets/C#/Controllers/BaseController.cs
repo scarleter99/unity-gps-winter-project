@@ -145,4 +145,10 @@ public abstract class BaseController : MonoBehaviour
     {
         
     }
+    
+    public void LockAndAttack(GameObject target)
+    {
+        _lockTarget = target;
+        AnimState = Define.AnimState.Attack;
+    }
 }

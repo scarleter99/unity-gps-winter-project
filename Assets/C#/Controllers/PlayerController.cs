@@ -70,9 +70,9 @@ public class PlayerController : BaseController
     {
         // temp - for test
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Bag.UseItem(0);
+            Bag.UseItem(this, 0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Bag.UseItem(1);
+            Bag.UseItem(this, 1);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)
@@ -86,26 +86,7 @@ public class PlayerController : BaseController
         switch (evt)
         {
             case Define.MouseEvent.PointerDown:
-                OnMouseEvent_Attack();
                 break;
         }
-    }
-
-    private void OnMouseEvent_Attack()
-    {
-        if (AnimState != Define.AnimState.Idle)
-            return;
-        
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool raycastHit = Physics.Raycast(ray, out hit, 100.0f, _layerMask);
-        if (!raycastHit)
-            return;
-
-        _lockTarget = hit.collider.gameObject;
-        
-        AnimState = Define.AnimState.Attack;
-        if (TurnState == Define.TurnState.Action)
-            TurnState = Define.TurnState.End;
     }
 }

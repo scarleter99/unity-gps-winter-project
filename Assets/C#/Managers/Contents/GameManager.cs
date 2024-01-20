@@ -12,8 +12,6 @@ public class GameManager
     private List<GameObject> _players = new List<GameObject>();
     private List<GameObject> _monsters = new List<GameObject>();
 
-    public Action<int> OnSpawnEvent;
-
     public void Init()
     {
         for (int i = 0; i < Enum.GetNames(typeof(Define.WorldObject)).Length - 1; i++)

@@ -126,10 +126,20 @@
         Enemy
     }
 
+    public enum ActionType
+    {
+        Attack,
+        Defend,
+        ItemUse,
+        SkillUse
+    }
+    
     public enum BattleState
     {
         Idle,
         SelectingTargetPlayer,
         SelectingTargetMonster,
+        SelectingPlayerSideEmptyCell,
+        ActionProceeding,
     }
 }

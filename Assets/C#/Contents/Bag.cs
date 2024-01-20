@@ -40,13 +40,13 @@ public class Bag
     }
     
     // 아이템 사용
-    public void UseItem(int index)
+    public void UseItem(BaseController user, int index)
     {
         var selectedIndex = Items[index];
         if (selectedIndex.IsNull())
             return;
         
-        //selectedIndex.item.Use(Managers.GameMng.Player.GetComponent<BaseController>()); // TODO - 주석 풀기
+        selectedIndex.item.Use(user);
         selectedIndex.count--;
         
         // debug
