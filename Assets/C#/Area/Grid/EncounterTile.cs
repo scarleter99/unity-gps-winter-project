@@ -13,7 +13,7 @@ public sealed class EncounterTile : HexGridCell
     // 타일에 다시 왔을 때 이벤트 재발생 방지
     private bool _eventTriggered = false;
 
-    public EncounterTile(int x, int z, float size, GameObject cellObject) : base(x, z, size, cellObject)
+    public EncounterTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
     {
         Init();
     }

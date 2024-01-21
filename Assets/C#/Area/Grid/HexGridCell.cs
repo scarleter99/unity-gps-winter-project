@@ -47,7 +47,7 @@ public abstract class HexGridCell
     // 이를 통해 작업을 도중에 취소할 수 있음
     protected Tweener _colorTween;
 
-    protected HexGridCell(int x, int z, float size, GameObject cellObject)
+    protected HexGridCell(int x, int z, GameObject cellObject, float size = 1)
     {
         _posx = x;
         _posz = z;

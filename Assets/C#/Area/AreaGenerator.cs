@@ -119,16 +119,19 @@ public class AreaGenerator
         switch (tileType)
         {
             case AreaTileType.Normal:
-                cell = new NormalTile(x, z, 1, tile);
+                cell = new NormalTile(x, z, tile);
                 break;
             case AreaTileType.Battle:
-                cell = new BattleTile(x, z, 1, tile);
+                cell = new BattleTile(x, z, tile);
                 break;
             case AreaTileType.Encounter:
-                cell = new EncounterTile(x, z, 1, tile);
+                cell = new EncounterTile(x, z, tile);
+                break;
+            case AreaTileType.Boss:
+                cell = new BossTile(x, z, tile);
                 break;
             default:
-                cell = new NormalTile(x, z, 1, tile);
+                cell = new NormalTile(x, z, tile);
                 break;
         }
 
