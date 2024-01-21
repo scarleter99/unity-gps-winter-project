@@ -9,24 +9,19 @@ public class AreaManager : MonoBehaviour
     public AreaName _areaName;
     private AreaGenerator _areaGenerator;
 
-    void Start()
+    private void Start()
     {
-        switch (_areaName)
-        {
-            case AreaName.Forest:
-                _areaGenerator = new ForestAreaGenerator(7, 17, Vector3.zero);
-                break;
-            default:
-                _areaGenerator = new ForestAreaGenerator(5, 7, Vector3.zero);
-                break;
-        }
+        _areaGenerator = new AreaGenerator(_areaName, Vector3.zero);
+        _areaGenerator.GenerateMap();
     }
 
-    void Update()
+    private void Update()
     {   
         // test
         if (Input.GetKeyDown(KeyCode.M))
-        {
+        {   
+            Destroy(GameObject.Find("Area_1_Map"));
+            _areaGenerator = new AreaGenerator(_areaName, Vector3.zero);
             _areaGenerator.GenerateMap();
         }
     }

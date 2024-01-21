@@ -101,7 +101,7 @@
     }
    
     public enum AreaName
-    {
+    {   
         Forest,
     }
    
@@ -131,5 +131,17 @@
         Idle,
         SelectingTargetPlayer,
         SelectingTargetMonster,
+    }
+
+    public enum AreaTileType
+    {   
+        Invalid,
+        Obstacle,
+        Empty,
+        Start,
+        Normal,
+        Battle,
+        Encounter,
+        Boss,
     }
 }
