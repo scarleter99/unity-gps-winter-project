@@ -21,28 +21,29 @@ public class SquareGridCell
     // 크기. 기본 1x1
     private float _size;
 
-    // 그리드 셀 나타내는 사각형 스프라이트
+    // 셀 나타내는 사각형 스프라이트
     // 그리드의 y좌표를 지면보다 약간 높게 설정해야 보임
     private SpriteRenderer _indicator;
     private Color _originalColor;
+
     // DoTween을 통해 스프라이트 색을 바꾸는데, 이 작업을 의미함.
     // 이를 통해 작업을 도중에 취소할 수 있음
     private Tweener _colorTween;
 
-    public SquareGridCell(int x, int z, float size, SpriteRenderer indicator, Define.GridSide side)
+    public SquareGridCell(int x, int z, float size, GameObject cellObject, Define.GridSide side)
     {
         _posx = x;
         _posz = z;
         _size = size;
-        _indicator = indicator;
-        _originalColor = indicator.color;
-        _cellObject = indicator.gameObject;
+        _cellObject = cellObject;
         _side = side;
         Init();
     }
 
     private void Init()
     {
+        _indicator = _cellObject.GetComponent<SpriteRenderer>();
+        _originalColor = _indicator.color;
         _cellObject.transform.localScale = new Vector3(_size, _size, 1);
         switch (_side)
         {

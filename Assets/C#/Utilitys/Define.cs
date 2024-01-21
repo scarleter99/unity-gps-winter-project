@@ -101,7 +101,7 @@
     }
    
     public enum AreaName
-    {
+    {   
         Forest,
     }
    
@@ -141,5 +141,17 @@
         SelectingTargetMonster,
         SelectingPlayerSideEmptyCell,
         ActionProceeding,
+    }
+
+    public enum AreaTileType
+    {   
+        Invalid,
+        Obstacle,
+        Empty,
+        Start,
+        Normal,
+        Battle,
+        Encounter,
+        Boss,
     }
 }

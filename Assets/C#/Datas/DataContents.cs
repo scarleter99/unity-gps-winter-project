@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+
 using UnityEngine;
 
 namespace Data
@@ -85,7 +85,7 @@ namespace Data
         public List<Item> items = new List<Item>();
 
         public Dictionary<string, Item> MakeDict()
-        {
+        {   
             var dic = new Dictionary<string, Item>();
             foreach (Item item in items)
                 dic.Add(item.name, item);
@@ -107,6 +107,44 @@ namespace Data
     }
 
     #endregion
+
+    #region AreaData
+    [Serializable]
+    public class AreaData
+    {
+        public string name; // AreaName enum의 값과 같아야 함
+        public string basemap;
+        public int width;
+        public int height;
+        public int battleTileNum;
+        public int encounterTileNum;
+        public string mapPrefabPath;
+    }
+
+    [Serializable]
+    public class AreaDataSet : IData<Define.AreaName, AreaData>
+    {
+        public List<AreaData> areadatas = new();
+
+        public Dictionary<Define.AreaName, AreaData> MakeDict()
+        {   
+            var dic = new Dictionary<Define.AreaName, AreaData>();
+            foreach (AreaData areadata in areadatas)
+            {   
+                if (Enum.TryParse(areadata.name, out Define.AreaName areaName))
+                {   
+                    dic.Add(areaName, areadata);
+                }
+                else
+                {
+                    Debug.LogError($"{areadata.name} - No such area name in enum!");
+                }
+            }
+            return dic; 
+        }
+    }
+    #endregion
+
     
     public struct TestStruct : INetworkSerializable
     {
@@ -119,4 +157,5 @@ namespace Data
             serializer.SerializeValue(ref Hp);
         }
     }
+
 }

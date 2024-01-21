@@ -58,7 +58,7 @@ public class SquareGrid
                 GameObject gridCellObject = Managers.ResourceMng.Instantiate(_gridObjectPath, _cellParent);
                 gridCellObject.transform.position = GetWorldPosition(x, z);
                 SquareGridCell gridCell =
-                    new(x, z, _cellsize, gridCellObject.GetComponent<SpriteRenderer>(), _side);
+                    new(x, z, _cellsize, gridCellObject, _side);
                 SetGridCell(x, z, gridCell);
             }
         }
