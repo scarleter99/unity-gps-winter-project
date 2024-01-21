@@ -8,8 +8,6 @@ using UnityEngine.Timeline;
 
 public class BattleSystem : MonoBehaviour
 {   
-    public static BattleSystem Instance { get; private set; }
-
     [SerializeField] // <----- temp - for test
     private BattleState _battleState;
     private Define.ActionType _actionType;
@@ -38,11 +36,6 @@ public class BattleSystem : MonoBehaviour
 
     private const string _playerPrefabPath = "Players/Player";
     private const string _monsterPrefabPath = "Monsters/Bat";
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {
