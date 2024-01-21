@@ -2,27 +2,20 @@ using AYellowpaper.SerializedCollections;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using QuestClearCondition;
 using System;
 using System.Runtime.InteropServices;
 
 /*
-Äù½ºÆ® ÀÌ¸§
-Äù½ºÆ® ¼³¸í
-Äù½ºÆ® Ç¥½Ã Á¶°Ç
-- Æ¯Á¤ ·¹º§ µµ´Ş
-- Æ¯Á¤ Äù½ºÆ® Å¬¸®¾î
-- Æ¯Á¤ Áö¿ª µµ´Ş
-Äù½ºÆ® Å¬¸®¾î Á¶°Ç
-- ¸ó½ºÅÍ n¸¶¸® Àâ±â
-- Æ¯Á¤ ¸ó½ºÅÍ n¸¶¸® Àâ±â
-- Æ¯Á¤ ¾ÆÀÌÅÛ ¼ÒÁö
-- Æ¯Á¤ Áö¿ª Á¶»ç
-Äù½ºÆ® º¸»ó
-- µ·
-- °æÇèÄ¡
-- ¾ÆÀÌÅÛ
-- ½ºÅ³
+í€˜ìŠ¤íŠ¸ ì´ë¦„
+í€˜ìŠ¤íŠ¸ ì„¤ëª…
+ì´ë™í•  ì§€êµ¬ ì´ë¦„
+í€˜ìŠ¤íŠ¸ í‘œì‹œ ì¡°ê±´
+- ë¯¸ì • 
+í€˜ìŠ¤íŠ¸ í´ë¦¬ì–´ ì¡°ê±´
+- íŠ¹ì • ì§€êµ¬ í´ë¦¬ì–´
+í€˜ìŠ¤íŠ¸ ë³´ìƒ
+- ëˆ
+- ì•„ì´í…œ
  */
 [CreateAssetMenu(fileName = "Quest", menuName = "Scriptable Object/Quest")]
 public class Quest : ScriptableObject
@@ -31,37 +24,8 @@ public class Quest : ScriptableObject
     [field: SerializeField] public string Name { get; private set; }
     [field: SerializeField, TextArea(3, 10)] public string Description { get; private set; }
 
-    [field: Header("Condition")]
-    [SerializeField] private KillSpecificMonster _killSpecificMonster;
-    [SerializeField] private KillMonsters _killMonsters;
-    [SerializeField] private hasSpecificItem _hasSpecificItem;
-
-    private ClearCondition[] _clearCondition;
-    public ReadOnlySpan<ClearCondition> ClearCondition { get => new ReadOnlySpan<ClearCondition>(_clearCondition); }
-
     [field: Header("Reward")]
     [field: SerializeField] public SerializedDictionary<Define.QuestReward, int> Reward { get; private set; }
-
-    private void Awake()
-    {
-        List<ClearCondition> clearConditions = new List<ClearCondition>()
-        {
-            _killSpecificMonster,
-            _killMonsters,
-            _hasSpecificItem,
-        };
-
-        _clearCondition = clearConditions.FindAll(x => x.isNull() == false).ToArray();
-    }
-
-    public bool isClear()
-    {
-        foreach (var condition in _clearCondition)
-            if (!condition.isClear())
-                return false;
-
-        return true;
-    }
 }
 
 namespace QuestExtention

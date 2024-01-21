@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
+
 using UnityEngine;
 
 namespace Data
@@ -13,6 +15,7 @@ namespace Data
         public int hp;
         public int attack;
         public int defense;
+        public int dexterity;
         public int strength;
         public int vitality;
         public int intelligence;
@@ -141,4 +144,18 @@ namespace Data
         }
     }
     #endregion
+
+    
+    public struct TestStruct : INetworkSerializable
+    {
+        public Vector3 Position;
+        public int Hp;
+        
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref Position);
+            serializer.SerializeValue(ref Hp);
+        }
+    }
+
 }

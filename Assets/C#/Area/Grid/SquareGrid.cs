@@ -136,12 +136,15 @@ public class SquareGrid
     }
 
     // 해당 grid 좌표에 프리팹 생성
-    public void InstantiatePrefab(string prefabPath, int x, int z, float rotationY = 0)
+    public void InstantiatePrefab(string prefabPath, int x, int z, float rotationY = 0, Transform parent = null)
     {
         GameObject prefab = Managers.ResourceMng.Instantiate(prefabPath);
         prefab.transform.position = GetWorldPosition(x, z);
         prefab.transform.rotation = Quaternion.Euler(0, rotationY, 0);
         GetGridCell(x, z).OnCellObject = prefab;
+
+        if (parent != null)
+            prefab.transform.SetParent(parent);
     }
     
 }

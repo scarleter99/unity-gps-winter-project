@@ -16,12 +16,13 @@ using ParrelSync;
 /// <summary>
 /// Client-side script that signs the client in anonymously, connects to the matchmaker service, creates a ticket, and attempts to find a match given the passed in properties.
 /// </summary>
-public class MatchmakerClient : MonoBehaviour
+public class MatchmakerClient
 {
     private string _ticketId;
     
-    private void OnEnable()
+    public void Init()
     {
+        Debug.Log("1");
         ServerStartUp.ClientInstance += SignIn;
     }
 
@@ -35,6 +36,7 @@ public class MatchmakerClient : MonoBehaviour
     /// </summary>
     private async void SignIn()
     {
+        Debug.Log("3");
         await ClientSignIn("SnakePlayer");
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         

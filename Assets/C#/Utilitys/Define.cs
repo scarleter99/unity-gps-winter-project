@@ -2,9 +2,9 @@
 {
     public enum WorldObject
     {
-        Unknown,
         Player,
         Monster,
+        Unknown,
     }
     
     public enum AnimState
@@ -66,7 +66,8 @@
     public enum Scene
     {
         UnknownScene,
-        GameScene,
+        AreaScene,
+        BattleScene,
         TestGameScene,
         TestTitleScene,
         TitleScene,

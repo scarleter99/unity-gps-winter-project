@@ -7,6 +7,8 @@ public class PlayerStat : Stat
 {
     [SerializeField]
     protected int _gold;
+    [SerializeField]
+    protected int _dexterity;
     [SerializeField] 
     protected int _strength;
     [SerializeField]
@@ -15,6 +17,7 @@ public class PlayerStat : Stat
     protected int _intelligence;
     
     public int Gold { get => _gold; set { _gold = value; OnStatChanged?.Invoke(this); } }
+    public int Dexterity { get => _dexterity; set { _dexterity = value; OnStatChanged?.Invoke(this); } }
     public int Strength { get => _strength; set { _strength = value; OnStatChanged?.Invoke(this); } }
     public int Vitality { get => _vitality; set { _vitality = value; OnStatChanged?.Invoke(this); } }
     public int Intelligence { get => _intelligence; set { _intelligence = value; OnStatChanged?.Invoke(this); } }
@@ -32,6 +35,7 @@ public class PlayerStat : Stat
         MaxHp = stat.hp;
         Attack = stat.attack;
         Defense = stat.defense;
+        Dexterity = stat.dexterity;
         Speed = stat.speed;
         Strength = stat.strength;
         Vitality = stat.vitality;

@@ -12,21 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6da566b6d53d441bcee63f989f03f6, type: 3}
   m_Name: Quest
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: 'Catching slime '
-  <Description>k__BackingField: 'I think there''s too much slime in town.
-
-    Kill
-    10 slime.'
-  _killSpecificMonster:
-    _killCount:
-      _serializedList:
-      - Key: 0
-        Value: 0a00000000000000
-  _killMonsters:
-    _killCount: 0
-  _hasSpecificItem:
-    _havingCount:
-      _serializedList: []
+  <Name>k__BackingField: Clear Area-1
+  <Description>k__BackingField: Clear Area-1
   <Reward>k__BackingField:
     _serializedList:
     - Key: 0
