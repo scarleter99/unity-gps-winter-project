@@ -6,9 +6,9 @@ using static Define;
 using UnityEngine;
 using UnityEngine.Timeline;
 
-public class BattlefieldSystem : MonoBehaviour
+public class BattleSystem : MonoBehaviour
 {   
-    public static BattlefieldSystem Instance { get; private set; }
+    public static BattleSystem Instance { get; private set; }
 
     [SerializeField] // <----- temp - for test
     private BattleState _battleState;

@@ -94,7 +94,8 @@ public class BattleGridSystem
         Debug.Log($"{z}, {x}");
         ///////////////
 
-        BattlefieldSystem.Instance.BattleState = Define.BattleState.ActionProceeding;
+        // TODO - FIX
+        // BattleSystem.Instance.BattleState = Define.BattleState.ActionProceeding;
     }
     
     public void OnMouseEvent_HandleMouseHover()

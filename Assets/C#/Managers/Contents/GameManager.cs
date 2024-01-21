@@ -9,8 +9,6 @@ public class GameManager
 {
     private List<Dictionary<ulong, GameObject>> _gameObjectDics = new List<Dictionary<ulong, GameObject>>(); // Unknown타입의 Dic은 생성하지 않음
     private List<ulong> _lastIds = new List<ulong>(); // id는 1부터 시작
-    private List<GameObject> _players = new List<GameObject>();
-    private List<GameObject> _monsters = new List<GameObject>();
 
     public void Init()
     {
