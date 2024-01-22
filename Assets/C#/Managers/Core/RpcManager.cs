@@ -2,35 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using Data;
 using Unity.Netcode;
-using UnityEngine;
 
 public class RpcManager
 {
     #region Managers
 
     [ServerRpc]
-    public void StatChangeServerRpc(Define.WorldObject type, ulong id, TestStruct testStruct)
+    public void StatChangeServerRpc(Define.WorldObject type, ulong id, StatStruct statStruct)
     {
-        StatChangeClientRpc(type, id, testStruct);
+        StatChangeClientRpc(type, id, statStruct);
     }
     
     [ClientRpc]
-    private void StatChangeClientRpc(Define.WorldObject type, ulong id, TestStruct testStruct)
+    private void StatChangeClientRpc(Define.WorldObject type, ulong id, StatStruct statStruct)
     {
-        // TODO
-        Managers.GameMng.StatChange(type, id, testStruct);
+        Managers.GameMng.StatChange(type, id, statStruct);
     }
     
     [ServerRpc]
-    public void SpawnServerRpc(string path, Define.WorldObject parentType = Define.WorldObject.Unknown, ulong parentId = 0)
+    public void PlayerStatChangeServerRpc(ulong id, PlayerStatStruct playerStatStruct)
     {
-        SpawnClientRpc(path, parentType, parentId);
+        PlayerStatChangeClientRpc(id, playerStatStruct);
     }
     
     [ClientRpc]
-    private void SpawnClientRpc(string path, Define.WorldObject parentType = Define.WorldObject.Unknown, ulong parentId = 0)
+    private void PlayerStatChangeClientRpc(ulong id, PlayerStatStruct playerStatStruct)
     {
-        Managers.GameMng.Spawn(path, parentType, parentId);
+        Managers.GameMng.PlayerStatChange(id, playerStatStruct);
+    }
+    
+    [ServerRpc]
+    public void SpawnServerRpc(Define.WorldObject type, string path)
+    {
+        SpawnClientRpc(type, path);
+    }
+    
+    [ClientRpc]
+    private void SpawnClientRpc(Define.WorldObject type, string path)
+    {
+        Managers.GameMng.Spawn(type, path);
     }
     
     [ServerRpc]
