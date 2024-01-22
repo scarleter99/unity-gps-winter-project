@@ -12,11 +12,20 @@ public class PlayerController : BaseController
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
+    protected Weapon _weapon;
+    
     public PlayerStat Stat { get => _stat; }
-
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
     public Bag Bag { get => _bag; }
-    
+    public Weapon Weapon { 
+        get => _weapon; 
+        set { 
+            _weapon?.UnEquip(); 
+            value.Equip();
+            _weapon = value;
+        }
+    }
+
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
@@ -75,6 +84,8 @@ public class PlayerController : BaseController
             Bag.UseItem(this, 0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
             Bag.UseItem(this, 1);
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+            Weapon = new SampleSingleSword(this);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)

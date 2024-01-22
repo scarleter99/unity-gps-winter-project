@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
+using UnityEngine;
+using UnityEngine.XR;
 
 [System.Serializable]
 public class PlayerStat : Stat
@@ -39,4 +42,44 @@ public class PlayerStat : Stat
         Vitality = stat.vitality;
         Intelligence = stat.intelligence;
     }
+    
+    public void AttachEquipment(Dictionary<string, int> equipmentStats)
+    {
+        foreach (var currentStat in equipmentStats)
+        {
+            var prop = GetType().GetProperty(currentStat.Key);
+            if (prop != null)
+                prop.SetValue(this, (int)prop.GetValue(this) + currentStat.Value);
+        }
+    }
+
+    public void DetachEquipment(Dictionary<string, int> equipmentStats)
+    {
+        foreach (var currentStat in equipmentStats)
+        {
+            var prop = GetType().GetProperty(currentStat.Key);
+            if (prop != null)
+                prop.SetValue(this, (int)prop.GetValue(this) - currentStat.Value);
+        }
+    }
+    
+    /*public override void AddStat(Define.StatType statType, int amount)
+    {
+        switch (statType)
+        {
+            case Define.StatType.Attack:
+                Attack += amount;
+                break;
+        }
+    }
+
+    public override void MultiplyStat(Define.StatType statType, float rate)
+    {
+        switch (statType)
+        {
+            case Define.StatType.Attack:
+            Attack *= amount;
+            break;
+        }
+    }*/
 }

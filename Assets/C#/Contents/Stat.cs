@@ -54,4 +54,24 @@ public class Stat
     {
         Hp = Mathf.Clamp(Hp + amount, 0, MaxHp);
     }
-}
+
+    /*public virtual void AddStat(Define.StatType statType, int amount)
+    {
+        switch (statType)
+        {
+            case Define.StatType.Attack:
+                Attack += amount;
+                break;
+        }
+    }
+    
+    public virtual void MultiplyStat(Define.StatType statType, float rate)
+    {
+        switch (statType)
+        {
+            case Define.StatType.Attack:
+                Attack *= amount;
+                break;
+        }
+    }*/
+} 
