@@ -5,13 +5,14 @@ using UnityEngine;
 
 public class MonsterController : BaseController
 {
+    [ReadOnly(false), SerializeField]
     protected Stat _stat;
     public Stat Stat { get => _stat; }
     
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Monster;
-        _stat = GetComponent<Stat>();
+        _stat = new Stat(gameObject.name);
         
     //////////////////////////////////////////
     // TEST CODE
@@ -54,7 +55,7 @@ public class MonsterController : BaseController
     protected override void OnAttackEvent()
     {
         if (_lockTarget != null)
-            _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+            _lockTarget.GetComponent<BaseController>().OnDamage(Stat);
     }
     
 }

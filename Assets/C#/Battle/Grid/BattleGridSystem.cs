@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
@@ -7,6 +6,7 @@ using static Define;
 public class BattleGridSystem
 {
     private Dictionary<GridSide, SquareGrid> _grids;
+    private BattleSystem _battleSystem;
 
     public SquareGrid PlayerGrid { get; set; }
 
@@ -36,6 +36,7 @@ public class BattleGridSystem
         EnemyGrid = new SquareGrid(enemyOriginPos, GridSide.Enemy);
         _grids = new Dictionary<GridSide, SquareGrid> { { GridSide.Player, PlayerGrid }, { GridSide.Enemy, EnemyGrid } };
         _mainCamera = Camera.main;
+        _battleSystem = GameObject.Find("@BattleSystem").GetComponent<BattleSystem>();
     }
 
     public void OnUpdate()
@@ -94,8 +95,7 @@ public class BattleGridSystem
         Debug.Log($"{z}, {x}");
         ///////////////
 
-        // TODO - FIX
-        // BattleSystem.Instance.BattleState = Define.BattleState.ActionProceeding;
+       _battleSystem.BattleState = Define.BattleState.ActionProceeding;
     }
     
     public void OnMouseEvent_HandleMouseHover()

@@ -12,7 +12,7 @@ public class BattleScene : BaseScene
         base.Init();
         SceneType = Define.Scene.BattleScene;
 
-        GameObject go = Managers.ResourceMng.Instantiate("Etc/@BattleSystem");
+        GameObject go = Managers.ResourceMng.Instantiate("Battle/@BattleSystem");
         _battleSystem = go.GetOrAddComponent<BattleSystem>();
     }
     

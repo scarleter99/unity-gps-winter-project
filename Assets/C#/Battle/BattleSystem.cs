@@ -1,14 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using static Define;
 using UnityEngine;
-using UnityEngine.Timeline;
 
 public class BattleSystem : MonoBehaviour
 {   
-    [SerializeField] // <----- temp - for test
+    [ReadOnly(false), SerializeField]
     private BattleState _battleState;
     private Define.ActionType _actionType;
     private BaseController _actingEntity;

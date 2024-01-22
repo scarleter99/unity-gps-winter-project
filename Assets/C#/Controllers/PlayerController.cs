@@ -7,6 +7,8 @@ using UnityEngine.Assertions;
 public class PlayerController : BaseController
 {
     private int _layerMask = (1 << (int)Define.Layer.Monster);
+    
+    [ReadOnly(false), SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
@@ -18,8 +20,8 @@ public class PlayerController : BaseController
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
-        _stat = GetComponent<PlayerStat>();
         _bag = new Bag(transform);
+        _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
@@ -30,7 +32,7 @@ public class PlayerController : BaseController
     public override void OnDamage(Stat attackerStat, int amount = 1) 
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
-        _stat.OnDamage(attackerStat, amount);
+        Stat.OnDamage(attackerStat, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
@@ -52,15 +54,16 @@ public class PlayerController : BaseController
     // 적절한 Animation Timing에서 호출
     protected override void OnAttackEvent()
     {
+        print("why?? attack no happening?");
         if (_lockTarget != null)
         {
             switch (WeaponType)
             {
                 case Define.WeaponType.DoubleSword:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat, 2);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat, 2);
                     break;
                 default:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat);
                     break;
             }
         }
