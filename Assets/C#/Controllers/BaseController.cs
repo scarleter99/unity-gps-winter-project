@@ -87,6 +87,11 @@ public abstract class BaseController : MonoBehaviour
     
     private void Update()
     {
+        ChangeAnim();
+    }
+
+    public void ChangeAnim()
+    {
         switch (AnimState)
         {
             case Define.AnimState.Attack:
@@ -120,11 +125,23 @@ public abstract class BaseController : MonoBehaviour
     
     public abstract void Init();
     
+    public void StatChange(StatStruct statStruct)
+    {
+        // TODO
+    }
+
+    #region Event
+
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
 
     public abstract void OnDamage(Stat attackerStat, int amount = 1);
     
+
+    #endregion
+    
+    #region Update
+
     protected virtual void UpdateAttack() { }
     protected virtual void UpdateDefend() { }
     protected virtual void UpdateDefendHit() { }
@@ -141,10 +158,7 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateIdle() { }
     protected virtual void UpdateVictory() { }
 
-    public void StatChange(TestStruct testStruct)
-    {
-        
-    }
+    #endregion
     
     public void LockAndAttack(GameObject target)
     {
