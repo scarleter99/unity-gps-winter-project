@@ -1,9 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-#if UNITY_EDITOR
 [System.Serializable]
-#endif
 public class Stat
 {
     protected string _name;

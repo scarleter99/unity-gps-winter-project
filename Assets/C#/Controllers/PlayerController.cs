@@ -54,7 +54,6 @@ public class PlayerController : BaseController
     // 적절한 Animation Timing에서 호출
     protected override void OnAttackEvent()
     {
-        print("why?? attack no happening?");
         if (_lockTarget != null)
         {
             switch (WeaponType)

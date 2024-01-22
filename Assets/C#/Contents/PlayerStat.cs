@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 
-#if UNITY_EDITOR
 [System.Serializable]
-#endif
 public class PlayerStat : Stat
 {
     [SerializeField]
