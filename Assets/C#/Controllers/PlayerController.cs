@@ -28,29 +28,14 @@ public class PlayerController : BaseController
         Managers.InputMng.KeyAction -= OnKeyboard;
         Managers.InputMng.KeyAction += OnKeyboard;
     }
-
-    public override void OnDamage(Stat attackerStat, int amount = 1) 
-    {
-        var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
-        Stat.OnDamage(attackerStat, amount);
-        nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
-        AnimState = nextState;
-    }
-
-    protected override void UpdateAttack()
-    {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
-
-    protected override void UpdateHit()
-    {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
     
+    public void PlayerStatChange(PlayerStatStruct statStruct)
+    {
+        // TODO
+    }
+
+    #region Event
+
     // 적절한 Animation Timing에서 호출
     protected override void OnAttackEvent()
     {
@@ -91,4 +76,33 @@ public class PlayerController : BaseController
                 break;
         }
     }
+    
+    public override void OnDamage(Stat attackerStat, int amount = 1) 
+    {
+        var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
+        Stat.OnDamage(attackerStat, amount);
+        nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
+        AnimState = nextState;
+    }
+
+    #endregion
+    
+    #region Update
+    
+    protected override void UpdateAttack()
+    {
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
+            AnimState = Define.AnimState.Idle;
+    }
+
+    protected override void UpdateHit()
+    {
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
+            AnimState = Define.AnimState.Idle;
+    }
+
+    #endregion
+
 }
