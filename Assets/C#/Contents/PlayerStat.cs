@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+[System.Serializable]
 public class PlayerStat : Stat
 {
     [SerializeField]
@@ -21,16 +19,16 @@ public class PlayerStat : Stat
     public int Strength { get => _strength; set { _strength = value; OnStatChanged?.Invoke(this); } }
     public int Vitality { get => _vitality; set { _vitality = value; OnStatChanged?.Invoke(this); } }
     public int Intelligence { get => _intelligence; set { _intelligence = value; OnStatChanged?.Invoke(this); } }
-    
-    protected override void Init()
+
+    public PlayerStat(string name) : base(name)
     {
-        base.Init();
         Gold = 0;
     }
 
     public override void SetStat(string name)
     {
         Data.PlayerStat stat = Managers.DataMng.PlayerStatDict[name];
+        _name = name;
         Hp = stat.hp;
         MaxHp = stat.hp;
         Attack = stat.attack;

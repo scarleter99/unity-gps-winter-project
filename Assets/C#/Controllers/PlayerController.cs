@@ -7,6 +7,8 @@ using UnityEngine.Assertions;
 public class PlayerController : BaseController
 {
     private int _layerMask = (1 << (int)Define.Layer.Monster);
+    
+    [ReadOnly(false), SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
@@ -18,22 +20,19 @@ public class PlayerController : BaseController
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
-        _stat = GetComponent<PlayerStat>();
         _bag = new Bag(transform);
+        _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
         Managers.InputMng.KeyAction -= OnKeyboard;
         Managers.InputMng.KeyAction += OnKeyboard;
-        
-        // temp - for test
-        Managers.GameMng.Player = gameObject;
     }
 
     public override void OnDamage(Stat attackerStat, int amount = 1) 
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
-        _stat.OnDamage(attackerStat, amount);
+        Stat.OnDamage(attackerStat, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
@@ -60,10 +59,10 @@ public class PlayerController : BaseController
             switch (WeaponType)
             {
                 case Define.WeaponType.DoubleSword:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat, 2);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat, 2);
                     break;
                 default:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(_stat);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat);
                     break;
             }
         }
@@ -73,9 +72,9 @@ public class PlayerController : BaseController
     {
         // temp - for test
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Bag.UseItem(0);
+            Bag.UseItem(this, 0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Bag.UseItem(1);
+            Bag.UseItem(this, 1);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)
@@ -89,26 +88,7 @@ public class PlayerController : BaseController
         switch (evt)
         {
             case Define.MouseEvent.PointerDown:
-                OnMouseEvent_Attack();
                 break;
         }
-    }
-
-    private void OnMouseEvent_Attack()
-    {
-        if (AnimState != Define.AnimState.Idle)
-            return;
-        
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool raycastHit = Physics.Raycast(ray, out hit, 100.0f, _layerMask);
-        if (!raycastHit)
-            return;
-
-        _lockTarget = hit.collider.gameObject;
-        
-        AnimState = Define.AnimState.Attack;
-        if (TurnState == Define.TurnState.Action)
-            TurnState = Define.TurnState.End;
     }
 }

@@ -10,10 +10,6 @@ public class GameManager
     private List<Dictionary<ulong, GameObject>> _gameObjectDics = new List<Dictionary<ulong, GameObject>>(); // Unknown타입의 Dic은 생성하지 않음
     private List<ulong> _lastIds = new List<ulong>(); // id는 1부터 시작
 
-    private GameObject _player;
-
-    public Action<int> OnSpawnEvent;
-
     public void Init()
     {
         for (int i = 0; i < Enum.GetNames(typeof(Define.WorldObject)).Length - 1; i++)
@@ -23,8 +19,6 @@ public class GameManager
         }
     }
     
-    public GameObject Player { get => _player; set => _player = value; }
-
     public void StatChange(Define.WorldObject type, ulong id, TestStruct testStruct)
     {
         _gameObjectDics[(int)type][id].GetOrAddComponent<BaseController>().StatChange(testStruct);
@@ -60,7 +54,7 @@ public class GameManager
         _gameObjectDics[(int)type].Remove(id);
         Managers.ResourceMng.Destroy(go);
     }
-    
+
     public Define.WorldObject GetWorldObjectType(GameObject go)
     {
         BaseController bc = go.GetComponent<BaseController>();

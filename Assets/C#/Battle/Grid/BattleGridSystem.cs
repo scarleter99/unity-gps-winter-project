@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
@@ -7,6 +6,7 @@ using static Define;
 public class BattleGridSystem
 {
     private Dictionary<GridSide, SquareGrid> _grids;
+    private BattleSystem _battleSystem;
 
     public SquareGrid PlayerGrid { get; set; }
 
@@ -18,10 +18,12 @@ public class BattleGridSystem
     // 최근 마우스 위치에 해당하는 월드 좌표
     private Vector3 _recentWorldposition;
 
+    public Action OnMouseHover;
     public Action OnMouseLeftClick;
     public Action OnMouseRightClick;
 
     private SquareGridCell _selectedCell;
+    public SquareGridCell SelectedCell { get => _selectedCell; set => _selectedCell = value; }
 
     public BattleGridSystem(Vector3 playerOriginPos, Vector3 enemyOriginPos)
     {   
@@ -34,20 +36,13 @@ public class BattleGridSystem
         EnemyGrid = new SquareGrid(enemyOriginPos, GridSide.Enemy);
         _grids = new Dictionary<GridSide, SquareGrid> { { GridSide.Player, PlayerGrid }, { GridSide.Enemy, EnemyGrid } };
         _mainCamera = Camera.main;
-        OnMouseLeftClick -= SelectCell;
-        OnMouseLeftClick += SelectCell;
+        _battleSystem = GameObject.Find("@BattleSystem").GetComponent<BattleSystem>();
     }
 
-    public void HandleMouseHover()
+    public void OnUpdate()
     {
-        if (TryGetGridInformation())
-        {
-            _grids[_recentSide].HandleMouseHover(_recentWorldposition);
-        }
-        else
-        {
-            _grids[_recentSide].ResetMouseHover();
-        }
+        if (OnMouseHover != null)
+            OnMouseHover();
     }
 
     // 마우스 위치의 그리드 탐지. 해당 그리드의 side와 마우스 위치의 world position 얻어냄.
@@ -80,15 +75,39 @@ public class BattleGridSystem
         return false;
     }
 
-    // 마우스 위치의 그리드 셀 선택
-    private void SelectCell()
+    private void ResetGridCellColors()
     {
-        _selectedCell = _grids[_recentSide].GetGridCell(_recentWorldposition);
+        PlayerGrid.ResetMouseHover();
+        EnemyGrid.ResetMouseHover();
+    }
+    
+    /// <summary>
+    /// Mouse Events
+    /// </summary>
+
+    // 마우스 위치의 그리드 셀 선택
+    private void OnMouseEvent_SelectCell()
+    {
+        SelectedCell = _grids[_recentSide].GetGridCell(_recentWorldposition);
 
         // test code //
         _grids[_recentSide].GetGridPosition(_recentWorldposition, out int x, out int z);
         Debug.Log($"{z}, {x}");
         ///////////////
+
+       _battleSystem.BattleState = Define.BattleState.ActionProceeding;
+    }
+    
+    public void OnMouseEvent_HandleMouseHover()
+    {
+        if (TryGetGridInformation())
+        {
+            _grids[_recentSide].HandleMouseHover(_recentWorldposition);
+        }
+        else
+        {
+            _grids[_recentSide].ResetMouseHover();
+        }
     }
 
     public void OnBattleStateChange(BattleState from, BattleState to)
@@ -98,10 +117,15 @@ public class BattleGridSystem
             case BattleState.Idle:
                 break;
             case BattleState.SelectingTargetPlayer:
-                OnMouseLeftClick -= SelectCell;
+                OnMouseLeftClick -= OnMouseEvent_SelectCell;
+                OnMouseHover -= OnMouseEvent_HandleMouseHover;
+                ResetGridCellColors();
                 break;
             case BattleState.SelectingTargetMonster:
-                OnMouseLeftClick -= SelectCell;
+                OnMouseLeftClick -= OnMouseEvent_SelectCell;
+                OnMouseHover -= OnMouseEvent_HandleMouseHover;
+                ResetGridCellColors();
+                SelectedCell.OnMouseExit();
                 break;
         }
 
@@ -110,10 +134,12 @@ public class BattleGridSystem
             case BattleState.Idle:
                 break;
             case BattleState.SelectingTargetPlayer:
-                OnMouseLeftClick += SelectCell;
+                OnMouseLeftClick += OnMouseEvent_SelectCell;
+                OnMouseHover += OnMouseEvent_HandleMouseHover;
                 break;
             case BattleState.SelectingTargetMonster:
-                OnMouseLeftClick += SelectCell;
+                OnMouseLeftClick += OnMouseEvent_SelectCell;
+                OnMouseHover += OnMouseEvent_HandleMouseHover;
                 break;
         }
     }

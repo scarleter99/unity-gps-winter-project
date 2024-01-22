@@ -1,15 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using static Define;
 using UnityEngine;
 
-public class BattlefieldSystem : MonoBehaviour
+public class BattleSystem : MonoBehaviour
 {   
-    public static BattlefieldSystem Instance { get; private set; }
-
+    [ReadOnly(false), SerializeField]
     private BattleState _battleState;
+    private Define.ActionType _actionType;
+    private BaseController _actingEntity;
+    
     public BattleState BattleState
     {
         get => _battleState;
@@ -20,6 +18,8 @@ public class BattlefieldSystem : MonoBehaviour
             OnBattleStateChange(tmp, _battleState);
         }
     }
+    public Define.ActionType ActionType { get => _actionType; set => _actionType = value; }
+    public BaseController ActingEntity { get => _actingEntity; set => _actingEntity = value; }
 
     private BattleGridSystem _gridSystem;
 
@@ -32,19 +32,9 @@ public class BattlefieldSystem : MonoBehaviour
     private const string _playerPrefabPath = "Players/Player";
     private const string _monsterPrefabPath = "Monsters/Bat";
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-
     void Start()
     {
         Init();
-    }
-
-    void Update()
-    {
-        _gridSystem.HandleMouseHover();
     }
 
     private void Init()
@@ -53,11 +43,25 @@ public class BattlefieldSystem : MonoBehaviour
         _playergridOriginPos = new Vector3(-3f, 0.1f, -4.75f);
         _enemygridOriginPos = new Vector3(-3f, 0.1f, 2.25f);
         
+        
         _gridSystem = new BattleGridSystem(_playergridOriginPos, _enemygridOriginPos);
-        BattleState = BattleState.Idle;
+        //BattleState = BattleState.Idle; // TODO - 아래 test code 없애면 주석 풀기
+        Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
         
         GeneratePrefabs();
+        
+        ////////////////////////////////////////////////
+        // temp - for test
+        BattleState = BattleState.SelectingTargetMonster;
+        ActionType = Define.ActionType.Attack;
+        ActingEntity = GameObject.Find("@Players").transform.GetChild(0).GetComponent<BaseController>();
+        ////////////////////////////////////////////////
+    }
+
+    void Update()
+    {
+        _gridSystem.OnUpdate();
     }
 
     private void GeneratePrefabs()
@@ -114,40 +118,35 @@ public class BattlefieldSystem : MonoBehaviour
         switch (to)
         {
             case BattleState.Idle:
+                TriggerAction(_gridSystem.SelectedCell);
                 break;
             case BattleState.SelectingTargetPlayer:
                 break;
             case BattleState.SelectingTargetMonster:
                 break;
+            case BattleState.ActionProceeding:
+                TriggerAction(_gridSystem.SelectedCell);
+                break;
         }
-
-        ///////////////////////////////////////////////
-        // Or....?
-        //
-        //switch (from)
-        //{
-        //    case BattleState.Idle:
-        //        switch (to)
-        //        {
-        //            case BattleState.SelectingTargetMonster:
-        //                break;
-        //        }
-        //        break;
-        //    case BattleState.SelectingTargetPlayer:
-        //        switch (to)
-        //        {
-        //            case BattleState.Idle:
-        //                break;
-        //        }
-        //        break;
-        //    case BattleState.SelectingTargetMonster:
-        //        switch (to)
-        //        {
-        //            case BattleState.SelectingTargetPlayer:
-        //                break;
-        //        }
-        //        break;
-        //}
-        ////////////////////////////////////////////////
+    }
+    
+    // Attack, Heal, Skill etc. 핸들링 : XXXController로 형변환 후 각 함수 호출
+    private void TriggerAction(SquareGridCell selectedCell)
+    {
+        switch (ActionType)
+        {
+            case Define.ActionType.Attack:
+                ActingEntity.LockAndAttack(selectedCell.OnCellObject);
+                // 만약 각 클래스에 구현된 함수라면
+                // (ActingEntity as PlayerController)?.Attack();
+                // (ActingEntity as MonsterController)?.Attack();
+                break;
+            case Define.ActionType.Defend:
+                break;
+            case Define.ActionType.ItemUse:
+                break;
+            case Define.ActionType.SkillUse:
+                break;
+        }
     }
 }

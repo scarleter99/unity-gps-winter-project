@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
-public class Stat : MonoBehaviour
+[System.Serializable]
+public class Stat
 {
+    protected string _name;
     [SerializeField]
     protected int _hp;
     [SerializeField]
@@ -18,6 +16,7 @@ public class Stat : MonoBehaviour
     [SerializeField]
     protected int _speed;
 
+    public string Name { get => _name; }
     public int Hp { get => _hp; set { _hp = value; OnStatChanged?.Invoke(this); } }
     public int MaxHp { get => _maxHp; set { _maxHp = value; OnStatChanged?.Invoke(this); } }
     public int Attack { get => _attack; set { _attack = value; OnStatChanged?.Invoke(this); } }
@@ -26,14 +25,9 @@ public class Stat : MonoBehaviour
 
     public Action<Stat> OnStatChanged;
 
-    private void Start()
+    public Stat(string name)
     {
-        Init();
-    }
-
-    protected virtual void Init()
-    {
-        SetStat(gameObject.name);
+        SetStat(name);
     }
 
     public virtual void OnDamage(Stat attacker, int attackCount = 1)
@@ -48,6 +42,7 @@ public class Stat : MonoBehaviour
     public virtual void SetStat(string name)
     {
         Data.MonsterStat stat = Managers.DataMng.MonsterStatDict[name];
+        _name = name;
         Hp = stat.hp;
         MaxHp = stat.hp;
         Attack = stat.attack;
