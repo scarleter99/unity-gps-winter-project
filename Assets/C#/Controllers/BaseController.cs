@@ -125,7 +125,7 @@ public abstract class BaseController : MonoBehaviour
     
     public abstract void Init();
     
-    public void StatChange(StatStruct statStruct)
+    public void StatChange(MonsterStat statStruct)
     {
         // TODO
     }
@@ -135,8 +135,7 @@ public abstract class BaseController : MonoBehaviour
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
 
-    public abstract void OnDamage(Stat attackerStat, int amount = 1);
-    
+    public abstract void OnDamage(BaseController attacker, int amount = 1);
 
     #endregion
     

@@ -42,7 +42,7 @@ public class UI_PlayerStat : UI_Base
         Bind<Image>(typeof(Images));
     }
 
-    public void ConnectPlayerStat(Stat stat)
+    public void ConnectPlayerStat(PlayerStat stat)
     {
         stat.OnStatChanged += ChangePlayerStatUI;
 
@@ -51,21 +51,16 @@ public class UI_PlayerStat : UI_Base
         OnClaer += () => stat.OnStatChanged -= ChangePlayerStatUI;
     }
 
-    private void ChangePlayerStatUI(Stat stat)
+    private void ChangePlayerStatUI(PlayerStat playerStat)
     {
-        PlayerStat playerStat = stat as PlayerStat;
-
-        if (playerStat != null) 
-        {
-            Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
-            GetText(Texts.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
-            GetText(Texts.Text_Name).text = playerStat.Name;
-            GetText(Texts.Text_Strength).text = playerStat.Strength.ToString();
-            GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
-            GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
-            GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
-            //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
-        }
+        Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
+        GetText(Texts.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
+        GetText(Texts.Text_Name).text = playerStat.Name;
+        GetText(Texts.Text_Strength).text = playerStat.Strength.ToString();
+        GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
+        GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
+        //GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
+        //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
     }
 
     private void OnDestroy()

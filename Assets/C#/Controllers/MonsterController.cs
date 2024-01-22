@@ -6,13 +6,13 @@ using UnityEngine;
 public class MonsterController : BaseController
 {
     [ReadOnly(false), SerializeField]
-    protected Stat _stat;
-    public Stat Stat { get => _stat; }
+    protected MonsterStat _stat;
+    public ref MonsterStat Stat { get => ref _stat; }
     
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Monster;
-        _stat = new Stat(gameObject.name);
+        _stat = new MonsterStat(gameObject.name);
         
     //////////////////////////////////////////
     // TEST CODE
@@ -29,13 +29,27 @@ public class MonsterController : BaseController
     //////////////////////////////////////////
     //}
     
-    public override void OnDamage(Stat attackerStat, int amount = 1)
+    #region Event
+    
+    public override void OnDamage(BaseController attacker, int amount = 1)
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.DefendHit : Define.AnimState.Hit;
-        _stat.OnDamage(attackerStat, amount);
+        var playerAttacker = attacker as PlayerController;
+        Stat.OnDamage(playerAttacker.Stat.Attack, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
+    
+    // 적절한 Animation Timing에서 호출
+    protected override void OnAttackEvent()
+    {
+        if (_lockTarget != null)
+            _lockTarget.GetComponent<BaseController>().OnDamage(this);
+    }
+    
+    #endregion
+    
+    #region Update
 
     protected override void UpdateAttack()
     {
@@ -51,11 +65,5 @@ public class MonsterController : BaseController
             AnimState = Define.AnimState.Idle;
     }
     
-    // 적절한 Animation Timing에서 호출
-    protected override void OnAttackEvent()
-    {
-        if (_lockTarget != null)
-            _lockTarget.GetComponent<BaseController>().OnDamage(Stat);
-    }
-    
+    #endregion
 }

@@ -19,12 +19,12 @@ public class GameManager
         }
     }
     
-    public void StatChange(Define.WorldObject type, ulong id, StatStruct statStruct)
+    public void StatChange(Define.WorldObject type, ulong id, MonsterStat statStruct)
     {
         _gameObjectDics[(int)type][id].GetOrAddComponent<BaseController>().StatChange(statStruct);
     }
     
-    public void PlayerStatChange(ulong id, PlayerStatStruct playerStatStruct)
+    public void PlayerStatChange(ulong id, PlayerStat playerStatStruct)
     {
         _gameObjectDics[(int)Define.WorldObject.Player][id].GetOrAddComponent<PlayerController>().PlayerStatChange(playerStatStruct);
     }

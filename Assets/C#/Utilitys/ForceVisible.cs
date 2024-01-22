@@ -1,7 +1,7 @@
 using UnityEditor;
 
 #if UNITY_EDITOR
-[CustomEditor(typeof(Stat))]
+[CustomEditor(typeof(MonsterStat))]
 public class StatOnInspector : Editor
 {
     public override void OnInspectorGUI()
