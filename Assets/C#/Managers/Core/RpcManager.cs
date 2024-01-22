@@ -8,25 +8,25 @@ public class RpcManager
     #region Managers
 
     [ServerRpc]
-    public void StatChangeServerRpc(Define.WorldObject type, ulong id, StatStruct statStruct)
+    public void StatChangeServerRpc(Define.WorldObject type, ulong id, MonsterStat statStruct)
     {
         StatChangeClientRpc(type, id, statStruct);
     }
     
     [ClientRpc]
-    private void StatChangeClientRpc(Define.WorldObject type, ulong id, StatStruct statStruct)
+    private void StatChangeClientRpc(Define.WorldObject type, ulong id, MonsterStat statStruct)
     {
         Managers.GameMng.StatChange(type, id, statStruct);
     }
     
     [ServerRpc]
-    public void PlayerStatChangeServerRpc(ulong id, PlayerStatStruct playerStatStruct)
+    public void PlayerStatChangeServerRpc(ulong id, PlayerStat playerStatStruct)
     {
         PlayerStatChangeClientRpc(id, playerStatStruct);
     }
     
     [ClientRpc]
-    private void PlayerStatChangeClientRpc(ulong id, PlayerStatStruct playerStatStruct)
+    private void PlayerStatChangeClientRpc(ulong id, PlayerStat playerStatStruct)
     {
         Managers.GameMng.PlayerStatChange(id, playerStatStruct);
     }

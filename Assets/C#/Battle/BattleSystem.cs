@@ -66,23 +66,19 @@ public class BattleSystem : MonoBehaviour
 
     private void GeneratePrefabs()
     {   
-        // temp - for test
-        GameObject players = new GameObject { name = "@Players" };
-        GameObject monsters = new GameObject { name = "@Monsters" };
-        
         // 현재는 테스트를 위해 그리드의 모든 셀에 프리팹을 생성하지만 추후 수정을 통해 특정 위치만 생성하도록 해야함.
         for (int z = 0; z < _gridSystem.PlayerGrid.Height; z += 2) // temp - for test
         {
             for (int x = 0; x < _gridSystem.PlayerGrid.Width; x++)
             {
-                _gridSystem.PlayerGrid.InstantiatePrefab(_playerPrefabPath, x, z, parent: players.transform);
+                _gridSystem.PlayerGrid.InstantiatePrefab(_playerPrefabPath, Define.WorldObject.Player, x, z);
             }
         }
         for (int z = 0; z < _gridSystem.EnemyGrid.Height; z += 2) // temp - for test
         {
             for (int x = 0; x < _gridSystem.EnemyGrid.Width; x++)
             {
-                _gridSystem.EnemyGrid.InstantiatePrefab(_monsterPrefabPath, x, z, 180, monsters.transform);
+                _gridSystem.EnemyGrid.InstantiatePrefab(_monsterPrefabPath, WorldObject.Monster, x, z, 180);
             }
         }
     }

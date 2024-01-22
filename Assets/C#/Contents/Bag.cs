@@ -7,7 +7,10 @@ using UnityEngine;
 public class Bag
 {
     private List<Data.BagItem> _items;
+    private int _gold;
+    
     public List<Data.BagItem> Items { get => _items; set => _items = value; }
+    public int Gold { get => _gold; set => _gold = value; }
 
     public Bag(Transform player)
     {

@@ -6,18 +6,17 @@ using UnityEngine.Assertions;
 
 public class PlayerController : BaseController
 {
-    private int _layerMask = (1 << (int)Define.Layer.Monster);
-    
     [ReadOnly(false), SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
     protected Weapon _weapon;
     
-    public PlayerStat Stat { get => _stat; }
+    public ref PlayerStat Stat { get => ref _stat; }
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
     public Bag Bag { get => _bag; }
-    public Weapon Weapon { 
+    public Weapon Weapon 
+    { 
         get => _weapon; 
         set { 
             _weapon?.UnEquip(); 
@@ -38,7 +37,7 @@ public class PlayerController : BaseController
         Managers.InputMng.KeyAction += OnKeyboard;
     }
     
-    public void PlayerStatChange(PlayerStatStruct statStruct)
+    public void PlayerStatChange(PlayerStat statStruct)
     {
         // TODO
     }
@@ -53,10 +52,10 @@ public class PlayerController : BaseController
             switch (WeaponType)
             {
                 case Define.WeaponType.DoubleSword:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat, 2);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(this, 2);
                     break;
                 default:
-                    _lockTarget.GetComponent<BaseController>().OnDamage(Stat);
+                    _lockTarget.GetComponent<BaseController>().OnDamage(this);
                     break;
             }
         }
@@ -88,13 +87,15 @@ public class PlayerController : BaseController
         }
     }
     
-    public override void OnDamage(Stat attackerStat, int amount = 1) 
+    public override void OnDamage(BaseController attacker, int amount = 1) 
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.Defend : Define.AnimState.Hit;
-        Stat.OnDamage(attackerStat, amount);
+        var monsterAttacker = attacker as MonsterController;
+        Stat.OnDamage(monsterAttacker.Stat.Attack, amount);
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
+
 
     #endregion
     
