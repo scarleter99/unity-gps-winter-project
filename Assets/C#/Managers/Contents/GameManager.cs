@@ -19,20 +19,42 @@ public class GameManager
         }
     }
     
-    public void StatChange(Define.WorldObject type, ulong id, TestStruct testStruct)
+    public void StatChange(Define.WorldObject type, ulong id, StatStruct statStruct)
     {
-        _gameObjectDics[(int)type][id].GetOrAddComponent<BaseController>().StatChange(testStruct);
+        _gameObjectDics[(int)type][id].GetOrAddComponent<BaseController>().StatChange(statStruct);
     }
     
-    public GameObject Spawn(string path, Define.WorldObject parentType = Define.WorldObject.Unknown, ulong parentId = 0)
+    public void PlayerStatChange(ulong id, PlayerStatStruct playerStatStruct)
     {
-        Transform parent = null;
-        if (parentType == Define.WorldObject.Unknown)
-            parent = _gameObjectDics[(int)parentType][parentId].transform;
-
-        GameObject go = Managers.ResourceMng.Instantiate(path, parent);
+        _gameObjectDics[(int)Define.WorldObject.Player][id].GetOrAddComponent<PlayerController>().PlayerStatChange(playerStatStruct);
+    }
+    
+    public GameObject Spawn(Define.WorldObject type, string path)
+    {
+        GameObject parent = null;
+        switch (type)
+        {
+            case Define.WorldObject.Player:
+                parent = GameObject.Find("@Players");
+                if (parent == null)
+                {
+                    parent = Managers.ResourceMng.Instantiate("@Players");
+                    parent.name = "@Players";
+                }
+                break;
+            case Define.WorldObject.Monster:
+                parent = GameObject.Find("@Monsters");
+                if (parent == null)
+                {
+                    parent = Managers.ResourceMng.Instantiate("@Monsters");
+                    parent.name = "@Monsters";
+                }
+                break;
+        }
         
-        int typeNum = (int)GetWorldObjectType(go);
+        GameObject go = Managers.ResourceMng.Instantiate(path, parent.transform);
+        
+        int typeNum = (int)type;
         ulong id = ++_lastIds[typeNum];
         
         // TODO
