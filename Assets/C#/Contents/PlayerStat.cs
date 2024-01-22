@@ -1,6 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.Netcode;
+using UnityEngine;
 
-[System.Serializable]
+public struct PlayerStatStruct : INetworkSerializable
+{
+    public int Dexterity;
+    public int Strength;
+    public int Vitality;
+    public int Intelligence;
+    
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref Dexterity);
+        serializer.SerializeValue(ref Strength);
+        serializer.SerializeValue(ref Vitality);
+        serializer.SerializeValue(ref Intelligence);
+    }
+}
+
+[Serializable]
 public class PlayerStat : Stat
 {
     [SerializeField]

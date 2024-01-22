@@ -1,7 +1,28 @@
 ﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
-[System.Serializable]
+public struct StatStruct : INetworkSerializable
+{
+    public string Name;
+    public int Hp;
+    public int MaxHp;
+    public int Attack;
+    public int Defense;
+    public int Speed;
+    
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref Name);
+        serializer.SerializeValue(ref Hp);
+        serializer.SerializeValue(ref MaxHp);
+        serializer.SerializeValue(ref Attack);
+        serializer.SerializeValue(ref Defense);
+        serializer.SerializeValue(ref Speed);
+    }
+}
+
+[Serializable]
 public class Stat
 {
     protected string _name;
