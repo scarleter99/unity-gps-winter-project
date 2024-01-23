@@ -100,6 +100,8 @@ public class PlayerController : BaseController
             Bag.UseItem(this, 1);
         else if (Input.GetKeyDown(KeyCode.Alpha5))
             Weapon = new SampleSingleSword(this);
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+            Weapon = new SampleSwordAndShield(this);
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)

@@ -8,6 +8,14 @@
       "Speed": 5,
       "Strength": 3,
       "Right": 1
+    },
+    {
+      "Name": "SampleSwordAndShield",
+      "Attack": 15,
+      "Speed": 10,
+      "Strength": 5,
+      "Left" : 17,
+      "Right": 3
     }
   ]
 }
