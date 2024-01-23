@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 public class PlayerController : BaseController
 {
-    [ReadOnly(false), SerializeField]
+    [SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;

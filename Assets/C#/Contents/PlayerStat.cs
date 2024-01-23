@@ -96,9 +96,34 @@ public override void MultiplyStat(Define.StatType statType, float rate)
     {
         foreach (var currentStat in equipmentStats)
         {
-            var prop = GetType().GetProperty(currentStat.Key);
-            if (prop != null)
-                prop.SetValue(this, (int)prop.GetValue(this) + currentStat.Value);
+            switch (currentStat.Key)
+            {
+                case "Hp":
+                    Hp += currentStat.Value;
+                    MaxHp += currentStat.Value;
+                    break;
+                case "Attack":
+                    Attack += currentStat.Value;
+                    break;
+                case "Defense":
+                    Defense += currentStat.Value;
+                    break;
+                case "Dexterity":
+                    Dexterity += currentStat.Value;
+                    break;
+                case "Speed":
+                    Speed += currentStat.Value;
+                    break;
+                case "Strength":
+                    Strength += currentStat.Value;
+                    break;
+                case "Vitality":
+                    Vitality += currentStat.Value;
+                    break;
+                case "Intelligence":
+                    Intelligence += currentStat.Value;
+                    break;
+            }
         }
     }
 
@@ -106,9 +131,34 @@ public override void MultiplyStat(Define.StatType statType, float rate)
     {
         foreach (var currentStat in equipmentStats)
         {
-            var prop = GetType().GetProperty(currentStat.Key);
-            if (prop != null)
-                prop.SetValue(this, (int)prop.GetValue(this) - currentStat.Value);
+            switch (currentStat.Key)
+            {
+                case "Hp":
+                    Hp = Mathf.Max(Hp - currentStat.Value, 1);
+                    MaxHp -= currentStat.Value;
+                    break;
+                case "Attack":
+                    Attack -= currentStat.Value;
+                    break;
+                case "Defense":
+                    Defense -= currentStat.Value;
+                    break;
+                case "Dexterity":
+                    Dexterity -= currentStat.Value;
+                    break;
+                case "Speed":
+                    Speed -= currentStat.Value;
+                    break;
+                case "Strength":
+                    Strength -= currentStat.Value;
+                    break;
+                case "Vitality":
+                    Vitality -= currentStat.Value;
+                    break;
+                case "Intelligence":
+                    Intelligence -= currentStat.Value;
+                    break;
+            }
         }
     }
     #endregion

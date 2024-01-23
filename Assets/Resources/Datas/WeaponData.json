@@ -1,0 +1,12 @@
+﻿{
+  "weapons": [
+    {
+      "Name": "SampleSingleSword",
+      "Attack": 3,
+      "Defense": 2,
+      "Dexterity": 10,
+      "Speed": 5,
+      "Strength": 3
+    }
+  ]
+}
