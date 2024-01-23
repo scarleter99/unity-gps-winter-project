@@ -43,8 +43,54 @@
     }
 
     #endregion
+    
+    #region NonGameObjectType
+    
+    public enum ActionType
+    {
+        Attack,
+        Defend,
+        ItemUse,
+        SkillUse
+    }
+    
+    public enum GridSide
+    {
+        Player,
+        Enemy
+    }
 
+    public enum WeaponSide
+    {
+        Left,
+        Right
+    }
+    
+    #endregion
+    
     #region State
+    
+    public enum BattleState
+    {
+        Idle,
+        SelectingTargetPlayer,
+        SelectingTargetMonster,
+        SelectingPlayerSideEmptyCell,
+        ActionProceeding,
+    }
+    
+    public enum AnimState
+    {
+        Attack,
+        Defend,
+        DefendHit,
+        Die,
+        Dizzy,
+        Hit,
+        Idle,
+        Skill,
+        Victory
+    }
     
     // 상태이상
     public enum Status
@@ -132,45 +178,9 @@
         Intelligence
     }
     
-    public enum AnimState
-    {
-        Attack,
-        Defend,
-        DefendHit,
-        Die,
-        Dizzy,
-        Hit,
-        Idle,
-        Skill,
-        Victory
-    }
-    
-    public enum ActionType
-    {
-        Attack,
-        Defend,
-        ItemUse,
-        SkillUse
-    }
-    
-    public enum BattleState
-    {
-        Idle,
-        SelectingTargetPlayer,
-        SelectingTargetMonster,
-        SelectingPlayerSideEmptyCell,
-        ActionProceeding,
-    }
-    
     public enum QuestReward
     {
         Money,
-    }
-
-    public enum GridSide
-    {
-        Player,
-        Enemy
     }
     
     public enum Scene

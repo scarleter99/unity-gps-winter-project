@@ -15,12 +15,10 @@ public class Item1 : BaseItem
         switch (control.WorldObjectType)
         {
             case Define.WorldObject.Monster:
-                var monsterStat = (control as MonsterController)?.Stat;
-                monsterStat?.RecoverHp(40);
+                (control as MonsterController)?.Stat.RecoverHp(40);
                 break;
             case Define.WorldObject.Player:
-                var playerStat = (control as PlayerController)?.Stat;
-                playerStat?.RecoverHp(40);
+                (control as PlayerController)?.Stat.RecoverHp(40);
                 break;
         }
     }

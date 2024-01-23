@@ -92,23 +92,73 @@ public override void MultiplyStat(Define.StatType statType, float rate)
     #endregion
     
     #region Equipment
-    public void AttachEquipment(Dictionary<string, int> equipmentStats)
+    public void AttachEquipment(Dictionary<Define.Stat, int> equipmentStats)
     {
         foreach (var currentStat in equipmentStats)
         {
-            var prop = GetType().GetProperty(currentStat.Key);
-            if (prop != null)
-                prop.SetValue(this, (int)prop.GetValue(this) + currentStat.Value);
+            switch (currentStat.Key)
+            {
+                case Define.Stat.Hp:
+                    Hp += currentStat.Value;
+                    MaxHp += currentStat.Value;
+                    break;
+                case Define.Stat.Attack:
+                    Attack += currentStat.Value;
+                    break;
+                case Define.Stat.Defense:
+                    Defense += currentStat.Value;
+                    break;
+                case Define.Stat.Dexterity:
+                    Dexterity += currentStat.Value;
+                    break;
+                case Define.Stat.Speed:
+                    Speed += currentStat.Value;
+                    break;
+                case Define.Stat.Strength:
+                    Strength += currentStat.Value;
+                    break;
+                case Define.Stat.Vitality:
+                    Vitality += currentStat.Value;
+                    break;
+                case Define.Stat.Intelligence:
+                    Intelligence += currentStat.Value;
+                    break;
+            }
         }
     }
 
-    public void DetachEquipment(Dictionary<string, int> equipmentStats)
+    public void DetachEquipment(Dictionary<Define.Stat, int> equipmentStats)
     {
         foreach (var currentStat in equipmentStats)
         {
-            var prop = GetType().GetProperty(currentStat.Key);
-            if (prop != null)
-                prop.SetValue(this, (int)prop.GetValue(this) - currentStat.Value);
+            switch (currentStat.Key)
+            {
+                case Define.Stat.Hp:
+                    Hp = Math.Max(Hp - currentStat.Value, 1);
+                    MaxHp -= currentStat.Value;
+                    break;
+                case Define.Stat.Attack:
+                    Attack -= currentStat.Value;
+                    break;
+                case Define.Stat.Defense:
+                    Defense -= currentStat.Value;
+                    break;
+                case Define.Stat.Dexterity:
+                    Dexterity -= currentStat.Value;
+                    break;
+                case Define.Stat.Speed:
+                    Speed -= currentStat.Value;
+                    break;
+                case Define.Stat.Strength:
+                    Strength -= currentStat.Value;
+                    break;
+                case Define.Stat.Vitality:
+                    Vitality -= currentStat.Value;
+                    break;
+                case Define.Stat.Intelligence:
+                    Intelligence -= currentStat.Value;
+                    break;
+            }
         }
     }
     #endregion

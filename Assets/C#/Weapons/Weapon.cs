@@ -1,30 +1,67 @@
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Weapon
 {
     protected Define.WeaponType _weaponType;
     protected PlayerController _equipper;
+    protected int _leftWeaponIndex;
+    protected int _rightWeaponIndex;
     
-    public Dictionary<string, int> StatData { get; } // TODO : Network 쪽에서 enum Stat 만들어지면 교체
+    public Dictionary<Define.Stat, int> StatData { get; protected set; }
     public Define.WeaponType WeaponType { get => _weaponType; }
     
-    public abstract void EffectAfterAttack(PlayerController controller);
-    public abstract void Skill1(PlayerController controller);
-    public abstract void Skill2(PlayerController controller);
+    public abstract void EffectAfterAttack();
+    public abstract void Skill1();
+    public abstract void Skill2();
 
     public Weapon(PlayerController equipper)
     {
-        StatData = new Dictionary<string, int>();
+        StatData = new Dictionary<Define.Stat, int>();
         _equipper = equipper;
     }
+
+    protected void LoadDataFromJson(string className)
+    {
+        var data = Managers.DataMng.WeaponDataDict[className];
+        if (data.Hp != 0) StatData.TryAdd(Define.Stat.Hp, data.Hp);
+        if (data.Attack != 0) StatData.TryAdd(Define.Stat.Attack, data.Attack);
+        if (data.Defense != 0) StatData.TryAdd(Define.Stat.Defense, data.Defense);
+        if (data.Speed != 0) StatData.TryAdd(Define.Stat.Speed, data.Speed);
+        if (data.Dexterity != 0) StatData.TryAdd(Define.Stat.Dexterity, data.Dexterity);
+        if (data.Strength != 0) StatData.TryAdd(Define.Stat.Strength, data.Strength);
+        if (data.Vitality != 0) StatData.TryAdd(Define.Stat.Vitality, data.Vitality);
+        if (data.Intelligence != 0) StatData.TryAdd(Define.Stat.Intelligence, data.Intelligence);
+        if (data.Left != 0) _leftWeaponIndex = data.Left;
+        if (data.Right != 0) _rightWeaponIndex = data.Right;
+    }
     
-    public virtual void Equip()
+    public void Equip()
     {
         _equipper.Stat.AttachEquipment(StatData);
+        
+        if (_leftWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, true);
+        if (_rightWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, true);
+        
+        _equipper.ChangeAnimator();
+        
+        // debug
+        Debug.Log($"Equipped Weapon");
     }
 
-    public virtual void UnEquip()
+    public void UnEquip()
     {
         _equipper.Stat.DetachEquipment(StatData);
+        
+        if (_leftWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, false);
+        if (_rightWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, false);
+        
+        // debug
+        Debug.Log($"Unequipped Weapon");
     }
 }

@@ -144,7 +144,39 @@ namespace Data
         }
     }
     #endregion
+    
+    #region WeaponData
+    [Serializable]
+    public class Weapon
+    {
+        public string Name;
+        public int Hp;
+        public int Attack;
+        public int Defense;
+        public int Speed;
+        public int Dexterity;
+        public int Strength;
+        public int Vitality;
+        public int Intelligence;
+        public int Left;
+        public int Right;
+    }
 
+    [Serializable]
+    public class WeaponData : IData<string, Weapon>
+    {
+        public List<Weapon> weapons = new List<Weapon>();
+
+        public Dictionary<string, Weapon> MakeDict()
+        {   
+            var dic = new Dictionary<string, Weapon>();
+            foreach (var weapon in weapons)
+                dic.Add(weapon.Name, weapon);
+
+            return dic;
+        }
+    }
+    #endregion
     
     public struct TestStruct : INetworkSerializable
     {
