@@ -4298,6 +4298,16 @@ MonoBehaviour:
   _animState: 6
   _turnState: 0
   _lockTarget: {fileID: 0}
+  _stat:
+    _hp: 0
+    _maxHp: 0
+    _attack: 0
+    _defense: 0
+    _speed: 0
+    _dexterity: 0
+    _strength: 0
+    _vitality: 0
+    _intelligence: 0
 --- !u!54 &923524702142873111
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10783,7 +10793,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4427626998580809568, guid: 97a81ef93f40fd44d97c853fb7565bee, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97a81ef93f40fd44d97c853fb7565bee, type: 3}
@@ -13725,7 +13735,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8692619622981138938, guid: 2fa60857586233043ab8a3235b6166d4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2fa60857586233043ab8a3235b6166d4, type: 3}

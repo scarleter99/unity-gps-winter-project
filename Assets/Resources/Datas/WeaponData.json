@@ -6,7 +6,8 @@
       "Defense": 2,
       "Dexterity": 10,
       "Speed": 5,
-      "Strength": 3
+      "Strength": 3,
+      "Right": 1
     }
   ]
 }

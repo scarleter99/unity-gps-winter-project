@@ -6,8 +6,10 @@ public abstract class Weapon
 {
     protected Define.WeaponType _weaponType;
     protected PlayerController _equipper;
+    protected int _leftWeaponIndex;
+    protected int _rightWeaponIndex;
     
-    public Dictionary<string, int> StatData { get; protected set; } // TODO : Network 쪽에서 enum Stat 만들어지면 교체
+    public Dictionary<Define.Stat, int> StatData { get; protected set; }
     public Define.WeaponType WeaponType { get => _weaponType; }
     
     public abstract void EffectAfterAttack();
@@ -16,27 +18,35 @@ public abstract class Weapon
 
     public Weapon(PlayerController equipper)
     {
-        StatData = new Dictionary<string, int>();
+        StatData = new Dictionary<Define.Stat, int>();
         _equipper = equipper;
     }
 
     protected void LoadDataFromJson(string className)
     {
         var data = Managers.DataMng.WeaponDataDict[className];
-        if (data.Hp != 0) StatData.TryAdd("Hp", data.Hp);
-        if (data.Attack != 0) StatData.TryAdd("Attack", data.Attack);
-        if (data.Defense != 0) StatData.TryAdd("Defense", data.Defense);
-        if (data.Speed != 0) StatData.TryAdd("Speed", data.Speed);
-        if (data.Dexterity != 0) StatData.TryAdd("Dexterity", data.Dexterity);
-        if (data.Strength != 0) StatData.TryAdd("Strength", data.Strength);
-        if (data.Vitality != 0) StatData.TryAdd("Vitality", data.Vitality);
-        if (data.Intelligence != 0) StatData.TryAdd("Intelligence", data.Intelligence);
-        
+        if (data.Hp != 0) StatData.TryAdd(Define.Stat.Hp, data.Hp);
+        if (data.Attack != 0) StatData.TryAdd(Define.Stat.Attack, data.Attack);
+        if (data.Defense != 0) StatData.TryAdd(Define.Stat.Defense, data.Defense);
+        if (data.Speed != 0) StatData.TryAdd(Define.Stat.Speed, data.Speed);
+        if (data.Dexterity != 0) StatData.TryAdd(Define.Stat.Dexterity, data.Dexterity);
+        if (data.Strength != 0) StatData.TryAdd(Define.Stat.Strength, data.Strength);
+        if (data.Vitality != 0) StatData.TryAdd(Define.Stat.Vitality, data.Vitality);
+        if (data.Intelligence != 0) StatData.TryAdd(Define.Stat.Intelligence, data.Intelligence);
+        if (data.Left != 0) _leftWeaponIndex = data.Left;
+        if (data.Right != 0) _rightWeaponIndex = data.Right;
     }
     
     public void Equip()
     {
         _equipper.Stat.AttachEquipment(StatData);
+        
+        if (_leftWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, true);
+        if (_rightWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, true);
+        
+        _equipper.ChangeAnimator();
         
         // debug
         Debug.Log($"Equipped Weapon");
@@ -45,6 +55,11 @@ public abstract class Weapon
     public void UnEquip()
     {
         _equipper.Stat.DetachEquipment(StatData);
+        
+        if (_leftWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, false);
+        if (_rightWeaponIndex != 0)
+            _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, false);
         
         // debug
         Debug.Log($"Unequipped Weapon");

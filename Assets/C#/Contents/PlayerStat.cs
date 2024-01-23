@@ -92,70 +92,70 @@ public override void MultiplyStat(Define.StatType statType, float rate)
     #endregion
     
     #region Equipment
-    public void AttachEquipment(Dictionary<string, int> equipmentStats)
+    public void AttachEquipment(Dictionary<Define.Stat, int> equipmentStats)
     {
         foreach (var currentStat in equipmentStats)
         {
             switch (currentStat.Key)
             {
-                case "Hp":
+                case Define.Stat.Hp:
                     Hp += currentStat.Value;
                     MaxHp += currentStat.Value;
                     break;
-                case "Attack":
+                case Define.Stat.Attack:
                     Attack += currentStat.Value;
                     break;
-                case "Defense":
+                case Define.Stat.Defense:
                     Defense += currentStat.Value;
                     break;
-                case "Dexterity":
+                case Define.Stat.Dexterity:
                     Dexterity += currentStat.Value;
                     break;
-                case "Speed":
+                case Define.Stat.Speed:
                     Speed += currentStat.Value;
                     break;
-                case "Strength":
+                case Define.Stat.Strength:
                     Strength += currentStat.Value;
                     break;
-                case "Vitality":
+                case Define.Stat.Vitality:
                     Vitality += currentStat.Value;
                     break;
-                case "Intelligence":
+                case Define.Stat.Intelligence:
                     Intelligence += currentStat.Value;
                     break;
             }
         }
     }
 
-    public void DetachEquipment(Dictionary<string, int> equipmentStats)
+    public void DetachEquipment(Dictionary<Define.Stat, int> equipmentStats)
     {
         foreach (var currentStat in equipmentStats)
         {
             switch (currentStat.Key)
             {
-                case "Hp":
-                    Hp = Mathf.Max(Hp - currentStat.Value, 1);
+                case Define.Stat.Hp:
+                    Hp = Math.Max(Hp - currentStat.Value, 1);
                     MaxHp -= currentStat.Value;
                     break;
-                case "Attack":
+                case Define.Stat.Attack:
                     Attack -= currentStat.Value;
                     break;
-                case "Defense":
+                case Define.Stat.Defense:
                     Defense -= currentStat.Value;
                     break;
-                case "Dexterity":
+                case Define.Stat.Dexterity:
                     Dexterity -= currentStat.Value;
                     break;
-                case "Speed":
+                case Define.Stat.Speed:
                     Speed -= currentStat.Value;
                     break;
-                case "Strength":
+                case Define.Stat.Strength:
                     Strength -= currentStat.Value;
                     break;
-                case "Vitality":
+                case Define.Stat.Vitality:
                     Vitality -= currentStat.Value;
                     break;
-                case "Intelligence":
+                case Define.Stat.Intelligence:
                     Intelligence -= currentStat.Value;
                     break;
             }

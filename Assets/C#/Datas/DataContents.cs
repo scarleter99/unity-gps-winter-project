@@ -158,6 +158,8 @@ namespace Data
         public int Strength;
         public int Vitality;
         public int Intelligence;
+        public int Left;
+        public int Right;
     }
 
     [Serializable]

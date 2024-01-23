@@ -6,7 +6,10 @@ using UnityEngine.Assertions;
 
 public class PlayerController : BaseController
 {
-    [SerializeField]
+    private GameObject _leftHand;
+    private GameObject _rightHand;
+    
+    [ReadOnly(false), SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
@@ -30,6 +33,8 @@ public class PlayerController : BaseController
         WorldObjectType = Define.WorldObject.Player;
         _bag = new Bag(transform);
         _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
+        _leftHand = Util.FindChild(gameObject, "weapon_l", true);
+        _rightHand = Util.FindChild(gameObject, "weapon_r", true);
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
@@ -41,6 +46,31 @@ public class PlayerController : BaseController
     {
         // TODO
     }
+    
+   
+    #region Weapon
+
+    public void ChangeAnimator()
+    {
+        string path = "Animator Controllers/Players/" + WeaponType.ToString();
+        _animator.runtimeAnimatorController = Resources.Load(path) as RuntimeAnimatorController; 
+    }
+    
+    public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
+    {
+        string prefabPath = "Animator Controllers";
+        switch (weaponSide)
+        {
+            case Define.WeaponSide.Left:
+                _leftHand.transform.GetChild(index).gameObject.SetActive(isActive);
+                break;
+            case Define.WeaponSide.Right:
+                _rightHand.transform.GetChild(index).gameObject.SetActive(isActive);
+                break;
+        }
+    }
+    
+    #endregion
 
     #region Event
 
@@ -95,8 +125,6 @@ public class PlayerController : BaseController
         nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
-
-
     #endregion
     
     #region Update
