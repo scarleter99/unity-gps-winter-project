@@ -1,0 +1,15 @@
+﻿{
+  "armors": [
+    {
+      "Name": "SampleBody1",
+      "Defense": 200,
+      "Index": 5
+    },
+    {
+      "Name": "SampleBody2",
+      "Defense": 6,
+      "Speed": 10,
+      "Index": 6
+    }
+  ]
+}

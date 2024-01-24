@@ -2,31 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon
+public abstract class Weapon: Equipment
 {
     protected Define.WeaponType _weaponType;
-    protected PlayerController _equipper;
     protected int _leftWeaponIndex;
     protected int _rightWeaponIndex;
     
-    public Dictionary<Define.Stat, int> StatData { get; protected set; }
     public Define.WeaponType WeaponType { get => _weaponType; }
     
     public abstract void EffectAfterAttack();
     public abstract void Skill1();
     public abstract void Skill2();
 
-    public Weapon(PlayerController equipper)
-    {
-        StatData = new Dictionary<Define.Stat, int>();
-        _equipper = equipper;
-    }
+    public Weapon(PlayerController equipper): base(equipper) { }
 
-    protected void LoadDataFromJson(string className)
+    protected override void LoadDataFromJson(string className)
     {
         var data = Managers.DataMng.WeaponDataDict[className];
         if (data.Hp != 0) StatData.TryAdd(Define.Stat.Hp, data.Hp);
-        if (data.Attack != 0) StatData.TryAdd(Define.Stat.Attack, data.Attack);
+        if (data.Attack != 0) 
+            StatData.TryAdd(Define.Stat.Attack, data.Attack);
         if (data.Defense != 0) StatData.TryAdd(Define.Stat.Defense, data.Defense);
         if (data.Speed != 0) StatData.TryAdd(Define.Stat.Speed, data.Speed);
         if (data.Dexterity != 0) StatData.TryAdd(Define.Stat.Dexterity, data.Dexterity);
@@ -37,7 +32,7 @@ public abstract class Weapon
         if (data.Right != 0) _rightWeaponIndex = data.Right;
     }
     
-    public void Equip()
+    public override void Equip()
     {
         _equipper.Stat.AttachEquipment(StatData);
         
@@ -47,12 +42,9 @@ public abstract class Weapon
             _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, true);
         
         _equipper.ChangeAnimator();
-        
-        // debug
-        Debug.Log($"Equipped Weapon");
     }
 
-    public void UnEquip()
+    public override void UnEquip()
     {
         _equipper.Stat.DetachEquipment(StatData);
         
@@ -60,8 +52,5 @@ public abstract class Weapon
             _equipper.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, false);
         if (_rightWeaponIndex != 0)
             _equipper.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, false);
-        
-        // debug
-        Debug.Log($"Unequipped Weapon");
     }
 }
