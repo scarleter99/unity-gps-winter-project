@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -14,6 +15,7 @@ public class PlayerController : BaseController
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
     protected Weapon _weapon;
+    protected Dictionary<Define.ArmorType, Armor> _armors;
     
     public ref PlayerStat Stat { get => ref _stat; }
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
@@ -27,7 +29,7 @@ public class PlayerController : BaseController
             _weapon = value;
         }
     }
-
+    
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
@@ -35,6 +37,8 @@ public class PlayerController : BaseController
         _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
         _leftHand = Util.FindChild(gameObject, "weapon_l", true);
         _rightHand = Util.FindChild(gameObject, "weapon_r", true);
+        foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
+            _armors.TryAdd(type, null);
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
@@ -58,7 +62,6 @@ public class PlayerController : BaseController
     
     public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
     {
-        string prefabPath = "Animator Controllers";
         switch (weaponSide)
         {
             case Define.WeaponSide.Left:
@@ -70,6 +73,33 @@ public class PlayerController : BaseController
         }
     }
     
+    #endregion
+    
+    #region Armor
+    public Armor Armor(Define.ArmorType armorType)
+    {
+        return _armors[armorType];
+    }
+
+    public void EquipArmor(Define.ArmorType armorType, Armor equippingArmor)
+    {
+        var currentArmor = _armors[armorType];
+        if (currentArmor != null)
+            currentArmor.UnEquip();
+        else
+            ChangeArmorVisibility(armorType, 0, false);
+
+        currentArmor = equippingArmor;
+        if (currentArmor != null)
+            currentArmor.Equip();
+    }
+    
+    public void UnEquipArmor(Define.ArmorType armorType) => EquipArmor(armorType, null);
+
+    public void ChangeArmorVisibility(Define.ArmorType armorType, int index, bool isActive)
+    {
+        // TODO
+    }
     #endregion
 
     #region Event

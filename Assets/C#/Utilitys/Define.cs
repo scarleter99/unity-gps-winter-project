@@ -29,6 +29,15 @@
         Recover,
         None,
     }
+
+    public enum ArmorType
+    {
+        Accessory,
+        Body,
+        Cloak,
+        HeadAccessory,
+        Helmet
+    }
     
     public enum AreaTileType
     {   
