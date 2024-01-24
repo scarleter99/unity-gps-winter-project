@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Unity.UI;
 
 public class UI_TestInven_TestItem : UI_Base
 {
