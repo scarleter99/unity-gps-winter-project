@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -8,12 +9,14 @@ public class PlayerController : BaseController
 {
     private GameObject _leftHand;
     private GameObject _rightHand;
+    private GameObject _head;
     
     [ReadOnly(false), SerializeField]
     protected PlayerStat _stat;
     protected Define.WeaponType _weaponType;
     protected Bag _bag;
     protected Weapon _weapon;
+    protected Dictionary<Define.ArmorType, Armor> _armors;
     
     public ref PlayerStat Stat { get => ref _stat; }
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
@@ -27,7 +30,7 @@ public class PlayerController : BaseController
             _weapon = value;
         }
     }
-
+    
     public override void Init()
     {
         WorldObjectType = Define.WorldObject.Player;
@@ -35,6 +38,10 @@ public class PlayerController : BaseController
         _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
         _leftHand = Util.FindChild(gameObject, "weapon_l", true);
         _rightHand = Util.FindChild(gameObject, "weapon_r", true);
+        _head = Util.FindChild(gameObject, "head", true);
+        _armors = new Dictionary<Define.ArmorType, Armor>();
+        foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
+            _armors.TryAdd(type, null);
         
         Managers.InputMng.MouseAction -= OnMouseEvent;
         Managers.InputMng.MouseAction += OnMouseEvent;
@@ -58,7 +65,6 @@ public class PlayerController : BaseController
     
     public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
     {
-        string prefabPath = "Animator Controllers";
         switch (weaponSide)
         {
             case Define.WeaponSide.Left:
@@ -70,6 +76,56 @@ public class PlayerController : BaseController
         }
     }
     
+    #endregion
+    
+    #region Armor
+    public Armor Armor(Define.ArmorType armorType)
+    {
+        return _armors[armorType];
+    }
+
+    public void ChangeArmor(Armor equippingArmor)
+    {
+        // Unequip previous armor
+        var currentArmor = _armors[equippingArmor.ArmorType];
+        if (currentArmor != null)
+            currentArmor.UnEquip();
+        else
+            ChangeArmorVisibility(equippingArmor.ArmorType, 1, false);
+
+        // Equip new armor
+        _armors[equippingArmor.ArmorType] = equippingArmor;
+        if (_armors[equippingArmor.ArmorType] != null)
+            _armors[equippingArmor.ArmorType].Equip();
+    }
+
+    public void UnEquipArmor(Define.ArmorType armorType)
+    {
+        var currentArmor = _armors[armorType];
+        if (currentArmor != null)
+            currentArmor.UnEquip();
+
+        _armors[armorType] = null;
+    }
+
+    public void ChangeArmorVisibility(Define.ArmorType armorType, int index, bool isActive)
+    {
+        switch (armorType)
+        {
+             case Define.ArmorType.Body: 
+                 transform.GetChild(index - 1).gameObject.SetActive(isActive);
+                 break; 
+             case Define.ArmorType.Cloak:
+                 transform.GetChild(index + 19).gameObject.SetActive(isActive);
+                 break;
+             case Define.ArmorType.HeadAccessory:
+                 _head.transform.GetChild(index - 1).gameObject.SetActive(isActive);
+                 break;
+             case Define.ArmorType.Helmet:
+                 _head.transform.GetChild(index + 96).gameObject.SetActive(isActive);
+                 break;
+        }
+    }
     #endregion
 
     #region Event
@@ -98,10 +154,15 @@ public class PlayerController : BaseController
             Bag.UseItem(this, 0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
             Bag.UseItem(this, 1);
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+            ChangeArmor(new SampleBody1(this));
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+            ChangeArmor(new SampleBody2(this));
         else if (Input.GetKeyDown(KeyCode.Alpha5))
             Weapon = new SampleSingleSword(this);
         else if (Input.GetKeyDown(KeyCode.Alpha6))
             Weapon = new SampleSwordAndShield(this);
+
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)

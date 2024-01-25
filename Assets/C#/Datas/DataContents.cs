@@ -178,6 +178,40 @@ namespace Data
     }
     #endregion
     
+    #region ArmorData
+    
+    [Serializable]
+    public class Armor
+    {
+        public string Name;
+        public int Hp;
+        public int Attack;
+        public int Defense;
+        public int Speed;
+        public int Dexterity;
+        public int Strength;
+        public int Vitality;
+        public int Intelligence;
+        public int Index;
+    }
+
+    [Serializable]
+    public class ArmorData : IData<string, Armor>
+    {
+        public List<Armor> armors = new List<Armor>();
+
+        public Dictionary<string, Armor> MakeDict()
+        {   
+            var dic = new Dictionary<string, Armor>();
+            foreach (var armor in armors)
+                dic.Add(armor.Name, armor);
+
+            return dic;
+        }
+    }
+    
+    #endregion
+    
     public struct TestStruct : INetworkSerializable
     {
         public Vector3 Position;

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class SampleSingleSword : Weapon
 {
-    public Define.WeaponType WeaponType { get => _weaponType; }
-    
     public SampleSingleSword(PlayerController equipper): base(equipper)
     {
         LoadDataFromJson(this.GetType().Name);
