@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -49,7 +48,7 @@ public class PlayerController : BaseController
         Managers.InputMng.KeyAction += OnKeyboard;
     }
     
-    public void PlayerStatChange(PlayerStat statStruct)
+    public override void StatChange(IStat statStruct)
     {
         // TODO
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using static Define;
 using UnityEngine;
 
@@ -5,6 +6,9 @@ public class BattleSystem : MonoBehaviour
 {   
     [ReadOnly(false), SerializeField]
     private BattleState _battleState;
+    private ulong[] _turns;
+    private int _currentTurn;
+    
     private Define.ActionType _actionType;
     private BaseController _actingEntity;
     
@@ -13,6 +17,7 @@ public class BattleSystem : MonoBehaviour
         get => _battleState;
         set
         {
+            Managers.RpcMng.BattleStateChangeServerRpc(value);
             var tmp = _battleState;
             _battleState = value;
             OnBattleStateChange(tmp, _battleState);
@@ -144,5 +149,20 @@ public class BattleSystem : MonoBehaviour
             case Define.ActionType.SkillUse:
                 break;
         }
+    }
+    
+    
+    
+    private void MakeTurn()
+    {
+        // TODO: 배틀 그리드 진입을 시도한 유저가 실행
+    }
+
+    private void NextTurn()
+    {
+        _currentTurn++;
+
+        if (_currentTurn >= _turns.Length)
+            _currentTurn = 0;
     }
 }

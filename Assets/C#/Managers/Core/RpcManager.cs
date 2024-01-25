@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Data;
 using Unity.Netcode;
+using UnityEngine;
 
 public class RpcManager
 {
@@ -20,27 +20,15 @@ public class RpcManager
     }
     
     [ServerRpc]
-    public void PlayerStatChangeServerRpc(ulong id, PlayerStat playerStatStruct)
+    public void SpawnServerRpc(Define.WorldObject type, string path, string name = null)
     {
-        PlayerStatChangeClientRpc(id, playerStatStruct);
+        SpawnClientRpc(type, path, name);
     }
     
     [ClientRpc]
-    private void PlayerStatChangeClientRpc(ulong id, PlayerStat playerStatStruct)
+    private void SpawnClientRpc(Define.WorldObject type, string path, string name = null)
     {
-        Managers.GameMng.PlayerStatChange(id, playerStatStruct);
-    }
-    
-    [ServerRpc]
-    public void SpawnServerRpc(Define.WorldObject type, string path)
-    {
-        SpawnClientRpc(type, path);
-    }
-    
-    [ClientRpc]
-    private void SpawnClientRpc(Define.WorldObject type, string path)
-    {
-        Managers.GameMng.Spawn(type, path);
+        Managers.GameMng.Spawn(type, path, name);
     }
     
     [ServerRpc]
@@ -65,6 +53,23 @@ public class RpcManager
     private void LoadSceneClientRpc(Define.Scene type)
     {
         Managers.SceneMng.LoadScene(type);
+    }
+    
+    #endregion
+
+    #region Battle
+
+    [ServerRpc]
+    public void BattleStateChangeServerRpc(Define.BattleState battleState)
+    {
+        BattleChangeClientRpc(battleState);
+    }
+    
+    [ClientRpc]
+    private void BattleChangeClientRpc(Define.BattleState battleState)
+    {
+        BattleSystem battleSystem = GameObject.Find("@BattleSystem").GetOrAddComponent<BattleSystem>();
+        battleSystem.BattleState = battleState;
     }
     
     #endregion

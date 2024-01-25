@@ -10,6 +10,16 @@ public class GameManager
     private List<Dictionary<ulong, GameObject>> _gameObjectDics = new List<Dictionary<ulong, GameObject>>(); // Unknown타입의 Dic은 생성하지 않음
     private List<ulong> _lastIds = new List<ulong>(); // id는 1부터 시작
 
+    public Dictionary<ulong, GameObject> GetGameObjectDic(Define.WorldObject type)
+    {
+        return _gameObjectDics[(int)type];
+    }
+
+    public ulong GetLastId(Define.WorldObject type)
+    {
+        return _lastIds[(int)type];
+    }
+    
     public void Init()
     {
         for (int i = 0; i < Enum.GetNames(typeof(Define.WorldObject)).Length - 1; i++)
@@ -19,17 +29,12 @@ public class GameManager
         }
     }
     
-    public void StatChange(Define.WorldObject type, ulong id, MonsterStat statStruct)
+    public void StatChange(Define.WorldObject type, ulong id, IStat statStruct)
     {
-        _gameObjectDics[(int)type][id].GetOrAddComponent<BaseController>().StatChange(statStruct);
+        GetGameObjectDic(type)[id].GetOrAddComponent<BaseController>().StatChange(statStruct);
     }
     
-    public void PlayerStatChange(ulong id, PlayerStat playerStatStruct)
-    {
-        _gameObjectDics[(int)Define.WorldObject.Player][id].GetOrAddComponent<PlayerController>().PlayerStatChange(playerStatStruct);
-    }
-    
-    public GameObject Spawn(Define.WorldObject type, string path)
+    public GameObject Spawn(Define.WorldObject type, string path, string name = null)
     {
         GameObject parent = null;
         switch (type)
@@ -51,15 +56,21 @@ public class GameManager
                 }
                 break;
         }
-        
-        GameObject go = Managers.ResourceMng.Instantiate(path, parent.transform);
-        
-        int typeNum = (int)type;
-        ulong id = ++_lastIds[typeNum];
-        
+
+        GameObject go;
+        if (parent != null)
+        {
+            go = Managers.ResourceMng.Instantiate(path, parent.transform, name);
+        }
+        else
+        {
+            go = Managers.ResourceMng.Instantiate(path, null, name);
+        }
+
         // TODO
         // go에 id 할당
-        _gameObjectDics[typeNum][id] = go;
+        ulong id = GetLastId(type);
+        GetGameObjectDic(type)[++id] = go;
 
         return go;
     }
@@ -85,4 +96,6 @@ public class GameManager
         
         return bc.WorldObjectType;
     }
+    
+    
 }

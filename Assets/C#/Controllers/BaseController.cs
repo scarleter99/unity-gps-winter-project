@@ -125,7 +125,7 @@ public abstract class BaseController : MonoBehaviour
     
     public abstract void Init();
     
-    public void StatChange(MonsterStat statStruct)
+    public virtual void StatChange(IStat statStruct)
     {
         // TODO
     }

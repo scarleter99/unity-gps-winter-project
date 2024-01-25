@@ -22,7 +22,7 @@ public class MatchmakerClient
     
     public void Init()
     {
-        Debug.Log("1");
+        Debug.Log("1: MatchmakerClient Init");
         ServerStartUp.ClientInstance += SignIn;
     }
 
@@ -36,8 +36,8 @@ public class MatchmakerClient
     /// </summary>
     private async void SignIn()
     {
-        Debug.Log("3");
-        await ClientSignIn("SnakePlayer");
+        Debug.Log("3: SignIn");
+        await ClientSignIn("HeroPlayer");
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         
     }
@@ -103,7 +103,7 @@ public class MatchmakerClient
     /// </summary>
     private async void CreateATicket()
     {
-        var options = new CreateTicketOptions("SnakeMode");
+        var options = new CreateTicketOptions("HeroMode");
 
         var players = new List<Player>
         {

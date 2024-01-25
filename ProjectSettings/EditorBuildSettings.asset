@@ -7,14 +7,5 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/TestScene/TestNetworkScene.unity
-    guid: 3df237a5b6f4c3d4b8f5feb7407367cf
-  - enabled: 1
-    path: Assets/Scenes/TestScene/TestGameScene.unity
-    guid: 3abc920c45bdce24ab1229ab5b5fda34
-  - enabled: 1
-    path: Assets/Scenes/TestScene/TestSampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
-    path: Assets/Scenes/TestScene/TestNetworkScene.unity
     guid: 865a055f7847d0e45bc0beb49210ece5
   m_configObjects: {}
