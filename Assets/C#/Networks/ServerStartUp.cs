@@ -71,7 +71,7 @@ public class ServerStartUp
         }
         else
         {
-            Debug.Log("2");
+            Debug.Log("2: ServerStartUp Init");
             ClientInstance?.Invoke();
         }
     }
