@@ -12,10 +12,17 @@ public class UI_PlayerStat : UI_Base
     enum Texts
     {
         Text_Name,
+
         Text_HP,
+        Text_Attack,
+        Text_Defense,
+        Text_Speed,
+
         Text_Strength,
         Text_Vitality,
         Text_Intelligence,
+        Text_Dexterity,
+
         Text_Gold,
     }
 
@@ -53,12 +60,19 @@ public class UI_PlayerStat : UI_Base
 
     private void ChangePlayerStatUI(PlayerStat playerStat)
     {
+        GetText(Texts.Text_Name).text = playerStat.Name;
+
         Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
         GetText(Texts.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
-        GetText(Texts.Text_Name).text = playerStat.Name;
+        GetText(Texts.Text_Attack).text = playerStat.Attack.ToString();
+        GetText(Texts.Text_Defense).text = playerStat.Defense.ToString();
+        GetText(Texts.Text_Speed).text = playerStat.Speed.ToString();
+
         GetText(Texts.Text_Strength).text = playerStat.Strength.ToString();
         GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
         GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
+        GetText(Texts.Text_Dexterity).text = playerStat.Dexterity.ToString();
+
         //GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
         //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
     }
