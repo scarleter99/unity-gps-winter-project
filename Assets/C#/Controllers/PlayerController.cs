@@ -16,7 +16,7 @@ public class PlayerController : BaseController
     protected Bag _bag;
     protected Weapon _weapon;
     protected Dictionary<Define.ArmorType, Armor> _armors;
-    
+
     public ref PlayerStat Stat { get => ref _stat; }
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
     public Bag Bag { get => _bag; }
@@ -194,8 +194,23 @@ public class PlayerController : BaseController
     protected override void UpdateAttack()
     {
         var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
+        {
+            switch (WeaponType)
+            {
+                case Define.WeaponType.DoubleSword:
+                case Define.WeaponType.SingleSword:
+                case Define.WeaponType.Spear:
+                case Define.WeaponType.TwoHandedSword:
+                    AnimState = Define.AnimState.Jump;
+                    break;
+                case Define.WeaponType.Bow:
+                case Define.WeaponType.Wand:
+                    AnimState = Define.AnimState.Idle;
+                    break;
+            }
+        }
     }
 
     protected override void UpdateHit()

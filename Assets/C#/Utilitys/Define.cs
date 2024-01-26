@@ -97,6 +97,7 @@
         Dizzy,
         Hit,
         Idle,
+        Jump,
         Skill,
         Victory
     }

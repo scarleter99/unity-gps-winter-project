@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Data;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -10,6 +11,7 @@ public abstract class BaseController : MonoBehaviour
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
     protected ulong _id;
     protected int _stateHash;
+    protected bool _secondJump;
 
     public ulong Id { get => _id; set => _id = value; }
     
@@ -62,6 +64,9 @@ public abstract class BaseController : MonoBehaviour
                 case Define.AnimState.Idle:
                     _animator.CrossFade(stateName = "Idle", 0.2f);
                     break;
+                case Define.AnimState.Jump:
+                    _animator.Play(stateName = "Jump");
+                    break;
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
@@ -82,6 +87,7 @@ public abstract class BaseController : MonoBehaviour
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        _secondJump = false;
         Init();
     }
     
@@ -114,6 +120,9 @@ public abstract class BaseController : MonoBehaviour
                 break;
             case Define.AnimState.Idle:
                 UpdateIdle();
+                break;
+            case Define.AnimState.Jump:
+                UpdateJump();
                 break;
             //case Define.AnimState.Skill:
             //    break;
@@ -155,13 +164,44 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateDizzy() { }
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
+
+    protected virtual void UpdateJump()
+    {
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
+        {
+            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleSystem.ActionType;
+            switch (nextAct)
+            {
+                case Define.ActionType.Attack:
+                    if (!_secondJump)
+                    {
+                        _secondJump = true;
+                        AnimState = Define.AnimState.Attack;
+                    }
+                    else 
+                    {
+                        AnimState = Define.AnimState.Idle;
+                        _secondJump = false;
+                    }
+                    break;
+                case Define.ActionType.SkillUse:
+                    AnimState = Define.AnimState.Skill;
+                    break;
+            }
+        }
+    }
+    
     protected virtual void UpdateVictory() { }
 
     #endregion
     
-    public void LockAndAttack(GameObject target)
+    public void LockAndAttack(GameObject target, bool jumpNeeded = false)
     {
         _lockTarget = target;
-        AnimState = Define.AnimState.Attack;
+        if (jumpNeeded)
+            AnimState = Define.AnimState.Jump;
+        else 
+            AnimState = Define.AnimState.Attack;
     }
 }

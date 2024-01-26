@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using static Define;
 using UnityEngine;
 
@@ -17,7 +16,7 @@ public class BattleSystem : MonoBehaviour
         get => _battleState;
         set
         {
-            Managers.RpcMng.BattleStateChangeServerRpc(value);
+            //Managers.RpcMng.BattleStateChangeServerRpc(value);
             var tmp = _battleState;
             _battleState = value;
             OnBattleStateChange(tmp, _battleState);
@@ -137,7 +136,7 @@ public class BattleSystem : MonoBehaviour
         switch (ActionType)
         {
             case Define.ActionType.Attack:
-                ActingEntity.LockAndAttack(selectedCell.OnCellObject);
+                ActingEntity.LockAndAttack(selectedCell.OnCellObject, true);
                 // 만약 각 클래스에 구현된 함수라면
                 // (ActingEntity as PlayerController)?.Attack();
                 // (ActingEntity as MonsterController)?.Attack();
