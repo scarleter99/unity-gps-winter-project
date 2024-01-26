@@ -9,7 +9,7 @@ public class UI_PlayerStat : UI_Base
 {
     private event Action OnClaer;
 
-    enum Texts
+    enum Text
     {
         Text_Name,
         Text_HP,
@@ -19,27 +19,27 @@ public class UI_PlayerStat : UI_Base
         Text_Gold,
     }
 
-    enum Buttons
+    enum Button
     {
         Button_Inventory,
     }
 
-    enum Sliders
+    enum Slider
     {
         Slider_HP,
     }
 
-    enum Images
+    enum Image
     {
         UserPicture,
     }
 
     public override void Init()
     {
-        Bind<TextMeshProUGUI>(typeof(Texts));
-        Bind<Button>(typeof(Buttons));
-        Bind<Slider>(typeof(Sliders));
-        Bind<Image>(typeof(Images));
+        Bind<TextMeshProUGUI>(typeof(Text));
+        Bind<UnityEngine.UI.Button>(typeof(Button));
+        Bind<UnityEngine.UI.Slider>(typeof(Slider));
+        Bind<UnityEngine.UI.Image>(typeof(Image));
     }
 
     public void ConnectPlayerStat(PlayerStat stat)
@@ -53,12 +53,12 @@ public class UI_PlayerStat : UI_Base
 
     private void ChangePlayerStatUI(PlayerStat playerStat)
     {
-        Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
-        GetText(Texts.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
-        GetText(Texts.Text_Name).text = playerStat.Name;
-        GetText(Texts.Text_Strength).text = playerStat.Strength.ToString();
-        GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
-        GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
+        Get<UnityEngine.UI.Slider>(Slider.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
+        GetText(Text.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
+        GetText(Text.Text_Name).text = playerStat.Name;
+        GetText(Text.Text_Strength).text = playerStat.Strength.ToString();
+        GetText(Text.Text_Vitality).text = playerStat.Vitality.ToString();
+        GetText(Text.Text_Intelligence).text = playerStat.Intelligence.ToString();
         //GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
         //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
     }

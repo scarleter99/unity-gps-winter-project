@@ -1,10 +1,12 @@
+using OpenCover.Framework.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class UI_CoinToss : UI_Popup
+public class UI_CoinToss : UI_Base
 {
     enum CoinGroup
     {
@@ -14,10 +16,11 @@ public class UI_CoinToss : UI_Popup
         IntelligenceGroup,
     }
 
+    private CoinGroup _currentGroup;
+    private int _count;
+
     public override void Init()
     {
-        base.Init();
-
         Bind<GameObject>(typeof(CoinGroup));
     }
 
@@ -41,11 +44,18 @@ public class UI_CoinToss : UI_Popup
         int i = 0;
         foreach (Transform item in groupObj.transform)
             item.gameObject.SetActive(i++ < count);
+
+        _currentGroup = type;
+        _count = count;
     }
 
-    private void OnEnable()
+
+    public void DisplayCoinToss(int successCount)
     {
-        Clear();
+        GameObject groupObj = GetGameObject(_currentGroup);
+
+        for (int i = 0; i < _count; i++)
+            groupObj.transform.GetChild(i).GetOrAddComponent<UI_Coin>().DisplayIcon(i < successCount);
     }
 
     private void Clear()

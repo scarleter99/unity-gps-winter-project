@@ -1,4 +1,4 @@
-﻿public class Define
+public class Define
 {
     #region GameObjectType
     
@@ -143,6 +143,8 @@
     {
         Click,
         Drag,
+        Enter,
+        Exit,
     }
 
     public enum MouseEvent
