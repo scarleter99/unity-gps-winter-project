@@ -30,7 +30,7 @@ public class SquareGrid
 
     private SquareGridCell[,] _gridArray;
 
-    private const string _gridObjectPath = "Map/grid_square_indicator";
+    private const string _gridObjectPath = "Area/grid_square_indicator";
     private Transform _cellParent;
 
     private SquareGridCell _currentMouseoverCell;
