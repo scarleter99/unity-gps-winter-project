@@ -1,4 +1,4 @@
-﻿public class Define
+public class Define
 {
     #region GameObjectType
     
@@ -105,7 +105,15 @@
         End,
         Dead
     }
-    
+
+    public enum AreaState
+    {
+        Idle,
+        Moving,
+        Battle,
+        Encounter,
+        Boss,
+    }
 
     #endregion
 

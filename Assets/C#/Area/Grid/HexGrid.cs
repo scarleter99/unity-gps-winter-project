@@ -8,7 +8,17 @@ using static Define;
 public class HexGrid
 {
     private int _width;
+
+    public int Width
+    {
+        get => _width;
+    }
+
     private int _height;
+    public int Height
+    {
+        get => _height;
+    }
     private float _cellwidth;
     private float _cellheight;
     private Vector3 _originPosition;

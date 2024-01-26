@@ -425,7 +425,6 @@ GameObject:
   - component: {fileID: 4047972025199878}
   - component: {fileID: 95457531584545886}
   - component: {fileID: 895410296640428761}
-  - component: {fileID: 2458531420635567329}
   m_Layer: 8
   m_Name: Slime
   m_TagString: Monster
@@ -486,21 +485,9 @@ MonoBehaviour:
   _animState: 6
   _turnState: 0
   _lockTarget: {fileID: 0}
---- !u!114 &2458531420635567329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1931298151966786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fed8810cd574eb094aee397639c066e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _level: 0
-  _hp: 0
-  _maxHp: 0
-  _attack: 0
-  _defense: 0
-  _moveSpeed: 0
+  _stat:
+    _hp: 0
+    _maxHp: 0
+    _attack: 0
+    _defense: 0
+    _speed: 0
