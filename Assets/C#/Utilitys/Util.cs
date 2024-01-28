@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -55,5 +56,17 @@ public class Util : MonoBehaviour
             return null;
 
         return transform.gameObject;
+    }
+
+    public static Mesh SpriteToMesh(Sprite sprite)
+    {
+        Mesh mesh = new()
+        {
+            vertices = Array.ConvertAll(sprite.vertices, i => (Vector3)i),
+            uv = sprite.uv,
+            triangles = Array.ConvertAll(sprite.triangles, i => (int)i)
+        };
+
+        return mesh;
     }
 }

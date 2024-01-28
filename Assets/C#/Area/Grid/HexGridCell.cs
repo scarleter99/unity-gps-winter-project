@@ -1,8 +1,13 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Define;
+
+public enum TileColorChangeType
+{
+    Highlight,
+    Reset,
+    ToNormal
+}
 
 public abstract class HexGridCell
 {
@@ -40,12 +45,18 @@ public abstract class HexGridCell
         }
     }
 
+    protected Color _indicatorColor;
+    protected Color _fillColor;
     protected Color _indicatorOriginalColor;
     protected Color _fillOriginalColor;
+    protected Color _indicatorHighlightColor;
+    protected Color _fillHighlightColor;
+
 
     // DoTween을 통해 스프라이트 색을 바꾸는데, 이 작업을 의미함.
     // 이를 통해 작업을 도중에 취소할 수 있음
-    protected Tweener _colorTween;
+    protected Tweener _indicatorColorTween;
+    protected Tweener _fillColorTween;
 
     protected HexGridCell(int x, int z, GameObject cellObject, float size = 1)
     {
@@ -59,7 +70,47 @@ public abstract class HexGridCell
         _indicatorOriginalColor = _indicator.color;
         _fillOriginalColor = _fill.color;
         _cellObject.transform.localScale = new Vector3(_size, _size, 1);
+        SetupMesh();
     }
 
     public abstract void Init();
+
+    public void ChangeColor(TileColorChangeType changeType, float duration = 0.3f)
+    {
+        KillColorTween();
+        switch (changeType)
+        {
+            case TileColorChangeType.Highlight:
+                _indicatorColorTween = _indicator.DOColor(_indicatorHighlightColor, duration).OnComplete(() => { _indicatorColorTween = null; });
+                _fillColorTween = _fill.DOColor(_fillHighlightColor, duration).OnComplete(() => { _fillColorTween = null; });
+                break;
+            case TileColorChangeType.Reset:
+                _indicatorColorTween = _indicator.DOColor(_indicatorColor, duration).OnComplete(() => { _indicatorColorTween = null; });
+                _fillColorTween = _fill.DOColor(_fillColor, duration).OnComplete(() => { _fillColorTween = null; });
+                break;
+            case TileColorChangeType.ToNormal:
+                _indicatorColorTween = _indicator.DOColor(_indicatorOriginalColor, duration).OnComplete(() => { _indicatorColorTween = null; });
+                _fillColorTween = _fill.DOColor(_fillOriginalColor, duration).OnComplete(() => { _fillColorTween = null; });
+                break;
+        }
+
+    }
+
+    // 기존 진행중인 colorTween을 중지, 삭제
+    private void KillColorTween()
+    {
+        _indicatorColorTween?.Kill();
+        _indicatorColorTween = null;
+
+        _fillColorTween?.Kill();
+        _fillColorTween = null;
+    }
+
+    private void SetupMesh()
+    {
+        Mesh mesh = Util.SpriteToMesh(_fill.sprite);
+        _cellObject.transform.Find("collider").GetComponent<MeshCollider>().sharedMesh = mesh;
+    }
+
+    public abstract void OnTileEnter();
 }

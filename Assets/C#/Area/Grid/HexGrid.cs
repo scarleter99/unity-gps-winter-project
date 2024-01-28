@@ -27,6 +27,9 @@ public class HexGrid
     private HexGridCell[,] _gridArray;
     //private bool[,] _isValid;
 
+    private HexGridCell _currentMouseoverCell;
+    private GameObject _mouseoverIndicator;
+
     public HexGrid(int width, int height, Vector3 originposition, float cellwidth = 4, float cellheight = 3.5f)
     {
         if (width % 2 == 0)
@@ -45,7 +48,9 @@ public class HexGrid
         _cellheight = cellheight;
         _originPosition = originposition;
         _gridArray = new HexGridCell[height, width];
-        //InitializeIsValid();
+        _mouseoverIndicator = Managers.ResourceMng.Instantiate("Area/mouseover_indicator");
+        _mouseoverIndicator.transform.position = GetWorldPosition(width / 2, 0, 1.04f);
+     
     }
 
     public void InitializeTileTypeArray(int[,] source)
@@ -87,8 +92,18 @@ public class HexGrid
     // 월드 좌표를 그리드 좌표로 변환
     public void GetGridPosition(Vector3 worldPosition, out int x, out int z)
     {
-        x = Mathf.FloorToInt((worldPosition - _originPosition).x / _cellwidth);
-        z = Mathf.FloorToInt((worldPosition - _originPosition).z / _cellheight);
+
+        x = Mathf.RoundToInt((worldPosition.x - (int)_originPosition.x) / (_cellwidth * 0.75f));
+        float tempz = (worldPosition.z - (int)_originPosition.z) / _cellheight;
+
+        if (x % 2 == 1)
+        {
+            z = Mathf.RoundToInt(tempz - 0.5f);
+        }
+        else
+        {
+            z = Mathf.RoundToInt(tempz);
+        }
     }
 
     public void SetGridCell(int x, int z, HexGridCell gridObject)
@@ -128,6 +143,29 @@ public class HexGrid
         return x >= 0 && x < _width && z >= 0 && z < _height;
     }
 
+    private bool IsPositionMoveable(int x, int z)
+    {
+        return _tileTypeArray[z, x] != AreaTileType.Obstacle && _tileTypeArray[z, x] != AreaTileType.Invalid;
+    }
+
+    private bool IsNeighbor(int originx, int originz, int targetx, int targetz)
+    {
+        List<Vector2Int> neighbors = GetAllNeighbors(originx, originz);
+        foreach (var neighbor in neighbors)
+        {
+            if (neighbor.x == targetx && neighbor.y == targetz) return true;
+        }
+        return false;
+    }
+
+
+    public bool IsNeighbor(Vector3 origin, Vector3 target)
+    {
+        GetGridPosition(origin, out int x1, out int z1);
+        GetGridPosition(target, out int x2, out int z2);
+        return IsNeighbor(x1, z1, x2, z2);
+    }
+
     private List<Vector2Int> GetAllNeighbors(int x, int z)
     {
         int[,] dir;
@@ -146,6 +184,49 @@ public class HexGrid
         }
 
         return neighbors;
+    }
+
+    public void HandleMouseHover(Vector3 worldPosition)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        //Debug.Log($"{z}, {x}");
+        if (x >= 0 && x < _width && z >= 0 && z < _height)
+        {
+            //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Reset);
+            _currentMouseoverCell = _gridArray[z, x];
+            _mouseoverIndicator.transform.position = GetWorldPosition(x, z, 1.07f);
+            //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Highlight);
+        }
+        else
+        {
+            ResetMouseHover();
+        }
+    }
+
+    public void ResetMouseHover()
+    {
+        //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Reset);
+        _currentMouseoverCell = null;
+    }
+
+    public void ChangeNeighborTilesColor(Vector3 worldPosition, TileColorChangeType colorChangeType)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        List<Vector2Int> neighbors = GetAllNeighbors(x, z);
+
+        foreach (Vector2Int neighbor in neighbors)
+        {
+            if (IsPositionMoveable(neighbor.x, neighbor.y))
+            {
+                _gridArray[neighbor.y, neighbor.x].ChangeColor(colorChangeType);
+            }
+        }
+    }
+
+    public void OnTileEnter(Vector3 worldPosition)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        GetGridCell(x, z).OnTileEnter();
     }
 }
 

@@ -141,7 +141,7 @@ public class AreaGenerator
         _grid.SetGridCell(x, z, cell);
         _grid.SetTileType(x, z, tileType);
         // for test  ////////
-        InstantiateGridPositionText(x, z);
+        //InstantiateGridPositionText(x, z);
         /////////////////////
     }
 

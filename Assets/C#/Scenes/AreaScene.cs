@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
@@ -17,6 +15,12 @@ public class AreaScene : BaseScene
         }
     }
     private AreaSystem _areaSystem;
+
+    public AreaState AreaState
+    {
+        get => _areaSystem.AreaState;
+        set => _areaSystem.AreaState = value;
+    }
     
     protected override void Init()
     {
