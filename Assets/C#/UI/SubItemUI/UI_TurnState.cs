@@ -33,17 +33,19 @@ public class UI_TurnState : UI_Base
         // 맨 앞에 있는 아이콘 뒤로 이동
         Image firstImage = _iconImages[0];
         firstImage.rectTransform.anchoredPosition = _pivots[_pivots.Length - 1];
+        firstImage.gameObject.SetActive(false);
 
         // 앞으로 한칸식 앞당기기
         for (int i = 1; i < _iconImages.Length; i++)
         {
-            _iconImages[i].rectTransform.DOAnchorPos(_pivots[i - 1], 0.25f);
+            _iconImages[i].rectTransform.DOAnchorPos(_pivots[i - 1], 0.5f);
             _iconImages[i - 1] = _iconImages[i];
         }
         _iconImages[_iconImages.Length - 1] = firstImage;
 
         // 첫번째 이미지 크기 늘려주기
-        _iconImages[0].rectTransform.DOSizeDelta(firstImage.rectTransform.sizeDelta, 0.25f);
+        _iconImages[0].rectTransform.DOSizeDelta(firstImage.rectTransform.sizeDelta, 0.5f)
+            .OnComplete(() => firstImage.gameObject.SetActive(true));
         // 마지막 이미지 크기 되돌리기
         firstImage.rectTransform.sizeDelta = _iconImages[_iconImages.Length - 2].rectTransform.sizeDelta;
     }
