@@ -27,11 +27,11 @@ public class UI_CoinToss : UI_Base
     /// <summary>
     /// Stat에 해당하는 이미지 출력
     /// </summary>
-    public void SetStatType(Define.Stat stat, int count)
+    public void SetStatType(UI_BattleOrder.Skill skill)
     {
         Clear();
 
-        CoinGroup type = stat switch
+        CoinGroup type = skill.AffectedStat switch
         {
             Define.Stat.Strength => CoinGroup.StrengthGroup,
             Define.Stat.Vitality => CoinGroup.VitalityGroup,
@@ -43,10 +43,10 @@ public class UI_CoinToss : UI_Base
         groupObj.SetActive(true);
         int i = 0;
         foreach (Transform item in groupObj.transform)
-            item.gameObject.SetActive(i++ < count);
+            item.gameObject.SetActive(i++ < skill.SlotCount);
 
         _currentGroup = type;
-        _count = count;
+        _count = skill.SlotCount;
     }
 
 

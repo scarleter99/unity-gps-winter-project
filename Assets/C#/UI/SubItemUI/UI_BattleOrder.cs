@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_BattleOrder : UI_Base
 {
+    public event Action<Skill> OnSelectedSkillChanged;
+
     private Skill _selectedSkill;
 
     enum SkillIconGroup
@@ -25,6 +29,7 @@ public class UI_BattleOrder : UI_Base
     public override void Init()
     {
         Bind<GameObject>(typeof(SkillIconGroup));
+        Bind<TextMeshProUGUI>(typeof(Text));
     }
 
     // 임시용 스킬 클래스 ////////////////////
@@ -46,15 +51,17 @@ public class UI_BattleOrder : UI_Base
         public SkillTarget Target;
         public Sprite Icon;
 
-        public void UseSkill(PointerEventData eventData)
+        public void UseSkill()
         {
 
         }
     }
     ////////////////////////////////////////
 
-    public void SetSkills(PlayerStat playerStat ,IEnumerable<Skill> skills)
+    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 자기 턴이면 해당 함수를 호출하도록 연결
+    private void SetSkills(PlayerStat playerStat ,IEnumerable<Skill> skills, bool isMine)
     {
+        this.gameObject.SetActive(isMine);
         ClearSkillIcon();
 
         int i = 0;
@@ -79,11 +86,18 @@ public class UI_BattleOrder : UI_Base
                 } + '%';
 
                 _selectedSkill = skill;
+                OnSelectedSkillChanged?.Invoke(_selectedSkill);
+            }
+
+            void UseSkill(PointerEventData eventData)
+            {
+                skill.UseSkill();
+                this.gameObject.SetActive(false);
             }
 
             iconObj.SetActive(true);
-            iconObj.BindEvent(skill.UseSkill, Define.UIEvent.Click);
             iconObj.BindEvent(DsiplaySkill, Define.UIEvent.Enter);
+            iconObj.BindEvent(UseSkill, Define.UIEvent.Click);
         }
     }
 
