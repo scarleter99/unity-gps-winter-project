@@ -15,8 +15,10 @@ public class BattleScene : BaseScene
 
         GameObject go = Managers.ResourceMng.Instantiate("Battle/@BattleSystem");
         _battleSystem = go.GetOrAddComponent<BattleSystem>();
+
+        Managers.UIMng.ShowSceneUI<UI_BattleScene>();
     }
-    
+
     public override void Clear()
     {
         Debug.Log("BattleScene Clear!");

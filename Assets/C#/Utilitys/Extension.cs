@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +16,11 @@ public static class Extension
         Define.UIEvent type = Define.UIEvent.Click)
     {
         UI_Base.BindEvent(go, action, type);
+    }
+
+    public static void ClearEvent(this GameObject go)
+    {
+        UI_Base.ClearEvent(go);
     }
 
     public static bool IsValid(this GameObject go)
