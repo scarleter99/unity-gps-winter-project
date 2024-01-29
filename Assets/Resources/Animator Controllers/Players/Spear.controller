@@ -323,7 +323,7 @@ AnimatorStateMachine:
     m_Position: {x: 900, y: -40, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4404528524381574509}
-    m_Position: {x: 1160, y: -40, z: 0}
+    m_Position: {x: -270, y: 80, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1569860619247964839}
     m_Position: {x: 1160, y: 20, z: 0}
@@ -1012,7 +1012,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpFull_RM_Spear
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

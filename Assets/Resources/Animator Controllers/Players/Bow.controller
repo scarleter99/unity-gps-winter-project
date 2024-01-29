@@ -423,7 +423,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpFull_RM_BowAndArrow
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -735,7 +735,7 @@ AnimatorStateMachine:
     m_Position: {x: 930, y: -130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2295494489652999000}
-    m_Position: {x: 1210, y: -130, z: 0}
+    m_Position: {x: -320, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7086759966758016637}
     m_Position: {x: 1210, y: -60, z: 0}
