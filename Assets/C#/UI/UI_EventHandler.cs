@@ -1,14 +1,16 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 // UI가 입력(클릭, 드래그)을 받을 수 있게 해주는 Class
-public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler
+public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Action<PointerEventData> OnClickHandler = null;
     public Action<PointerEventData> OnDragHandler = null;
+    public Action<PointerEventData> OnEnterHandler = null;
+    public Action<PointerEventData> OnExitHandler = null;
 
     // OnClickHandler에 등록된 함수 모두 실행
     public void OnPointerClick(PointerEventData eventData)
@@ -22,5 +24,17 @@ public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler
     {
         if (OnDragHandler != null)
             OnDragHandler.Invoke(eventData);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (OnEnterHandler != null)
+            OnEnterHandler.Invoke(eventData);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (OnExitHandler != null)
+            OnExitHandler.Invoke(eventData);
     }
 }
