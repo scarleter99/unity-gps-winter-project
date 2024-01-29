@@ -1,7 +1,8 @@
 public class Define
 {
-    #region GameObjectType
+    #region Type
     
+    //public enum CreatureType
     public enum WorldObject
     {
         Player,
@@ -21,6 +22,15 @@ public class Define
         Wand
     }
     
+    public enum ArmorType
+    {
+        Accessory,
+        Body,
+        Cloak,
+        HeadAccessory,
+        Helmet
+    }
+    
     public enum ItemType
     {
         Attack,
@@ -29,14 +39,13 @@ public class Define
         Recover,
         None,
     }
-
-    public enum ArmorType
+    
+    public enum ActionType
     {
-        Accessory,
-        Body,
-        Cloak,
-        HeadAccessory,
-        Helmet
+        Attack,
+        Defend,
+        ItemUse,
+        SkillUse
     }
     
     public enum AreaTileType
@@ -50,17 +59,49 @@ public class Define
         Encounter,
         Boss,
     }
-
+    
+    // public enum QuestRewardType
+    public enum QuestReward
+    {
+        Money,
+    }
+    
+    // public enum SceneType
+    public enum Scene
+    {
+        UnknownScene,
+        AreaScene,
+        BattleScene,
+        TestGameScene,
+        TestTitleScene,
+        TitleScene,
+        TownScene,
+    }
+    
+    // public enum SoundType
+    public enum Sound
+    {
+        Bgm,
+        Effect,
+        MaxCount,
+    }
     #endregion
     
-    #region NonGameObjectType
+    #region Attribute
     
-    public enum ActionType
+    public enum Stat
     {
+        Name,
+        Hp,
+        MaxHp,
         Attack,
-        Defend,
-        ItemUse,
-        SkillUse
+        Defense,
+        Speed,
+        Gold,
+        Dexterity,
+        Strength,
+        Vitality,
+        Intelligence
     }
     
     public enum GridSide
@@ -79,15 +120,6 @@ public class Define
     
     #region State
     
-    public enum BattleState
-    {
-        Idle,
-        SelectingTargetPlayer,
-        SelectingTargetMonster,
-        SelectingPlayerSideEmptyCell,
-        ActionProceeding,
-    }
-    
     public enum AnimState
     {
         Attack,
@@ -101,10 +133,13 @@ public class Define
         Victory
     }
     
-    // 상태이상
-    public enum Status
+    public enum BattleState
     {
-        
+        Idle,
+        SelectingTargetPlayer,
+        SelectingTargetMonster,
+        SelectingPlayerSideEmptyCell,
+        ActionProceeding,
     }
     
     public enum TurnState
@@ -115,11 +150,20 @@ public class Define
         Dead
     }
     
+    public enum BattleManagerTurnState
+    {
+
+    }
+    
+    public enum CreatureTurnState
+    {
+
+    }
+    
 
     #endregion
-
-    #region Event
-
+    
+    // Name은 Json으로 관리
     #region Name
 
     public enum AreaName
@@ -138,7 +182,8 @@ public class Define
     }
 
     #endregion
-
+    
+    #region Event
     public enum UIEvent
     {
         Click,
@@ -174,41 +219,5 @@ public class Define
     
     #endregion
     
-    public enum Stat
-    {
-        Name,
-        Hp,
-        MaxHp,
-        Attack,
-        Defense,
-        Speed,
-        Gold,
-        Dexterity,
-        Strength,
-        Vitality,
-        Intelligence
-    }
-    
-    public enum QuestReward
-    {
-        Money,
-    }
-    
-    public enum Scene
-    {
-        UnknownScene,
-        AreaScene,
-        BattleScene,
-        TestGameScene,
-        TestTitleScene,
-        TitleScene,
-        TownScene,
-    }
-    
-    public enum Sound
-    {
-        Bgm,
-        Effect,
-        MaxCount,
-    }
+
 }
