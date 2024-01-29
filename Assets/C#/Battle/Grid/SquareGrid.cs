@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
@@ -30,7 +27,7 @@ public class SquareGrid
 
     private SquareGridCell[,] _gridArray;
 
-    private const string _gridObjectPath = "Map/grid_square_indicator";
+    private const string _gridObjectPath = "Area/grid_square_indicator";
     private Transform _cellParent;
 
     private SquareGridCell _currentMouseoverCell;
@@ -44,7 +41,7 @@ public class SquareGrid
         _cellsize = cellsize;
         _cellgap = cellgap;
         _gridArray = new SquareGridCell[height, width];
-        InitializeParent();
+        AssignParent();
         InitializeGridObject();
     }
 
@@ -94,7 +91,7 @@ public class SquareGrid
     }
 
     // 게임오브젝트 부모 설정
-    private void InitializeParent()
+    private void AssignParent()
     {
         Transform grandparent = GameObject.Find("Grid")?.transform;
 

@@ -149,7 +149,15 @@ public class Define
         End,
         Dead
     }
-    
+
+    public enum AreaState
+    {
+        Idle,
+        Moving,
+        Battle,
+        Encounter,
+        Boss,
+    }
     public enum BattleManagerTurnState
     {
 

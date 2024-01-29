@@ -17,7 +17,7 @@ public class BattleSystem : MonoBehaviour
         get => _battleState;
         set
         {
-            Managers.RpcMng.BattleStateChangeServerRpc(value);
+            //Managers.RpcMng.BattleStateChangeServerRpc(value);
             var tmp = _battleState;
             _battleState = value;
             OnBattleStateChange(tmp, _battleState);

@@ -58,7 +58,6 @@ public class SquareGridCell
 
     public void OnMouseEnter()
     {
-        KillColorTween();
         if (_side == Define.GridSide.Player)
         {
             ChangeColor(Color.green);

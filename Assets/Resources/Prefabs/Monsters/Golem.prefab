@@ -1364,7 +1364,6 @@ GameObject:
   - component: {fileID: 4191744185429214}
   - component: {fileID: 95246818704427922}
   - component: {fileID: 8307621556009859632}
-  - component: {fileID: 4748448664351134280}
   m_Layer: 8
   m_Name: Golem
   m_TagString: Monster
@@ -1425,24 +1424,12 @@ MonoBehaviour:
   _animState: 6
   _turnState: 0
   _lockTarget: {fileID: 0}
---- !u!114 &4748448664351134280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706760125350986}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fed8810cd574eb094aee397639c066e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _level: 0
-  _hp: 0
-  _maxHp: 0
-  _attack: 0
-  _defense: 0
-  _moveSpeed: 0
+  _stat:
+    _hp: 0
+    _maxHp: 0
+    _attack: 0
+    _defense: 0
+    _speed: 0
 --- !u!1 &1713691074708414
 GameObject:
   m_ObjectHideFlags: 0

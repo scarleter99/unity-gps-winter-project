@@ -14,9 +14,9 @@ public class BattleGridSystem
 
     private Camera _mainCamera;
     // 최근 마우스 위치에 해당하는 그리드 사이드
-    private GridSide _recentSide;
+    private GridSide _recentMouseoverSide;
     // 최근 마우스 위치에 해당하는 월드 좌표
-    private Vector3 _recentWorldposition;
+    private Vector3 _recentMouseWorldposition;
 
     public Action OnMouseHover;
     public Action OnMouseLeftClick;
@@ -57,17 +57,17 @@ public class BattleGridSystem
             switch (grid.tag)
             {
                 case "PlayerGrid":
-                    _recentSide = GridSide.Player;
+                    _recentMouseoverSide = GridSide.Player;
                     break;
                 case "EnemyGrid":
-                    _recentSide = GridSide.Enemy;
+                    _recentMouseoverSide = GridSide.Enemy;
                     break;
                 default:
                     Debug.LogError("Grid Tag not set!");
                     break;
             }
 
-            _recentWorldposition = rayHit.point;
+            _recentMouseWorldposition = rayHit.point;
             Debug.DrawLine(_mainCamera.transform.position, rayHit.point);
             return true;
         }
@@ -88,10 +88,10 @@ public class BattleGridSystem
     // 마우스 위치의 그리드 셀 선택
     private void OnMouseEvent_SelectCell()
     {
-        SelectedCell = _grids[_recentSide].GetGridCell(_recentWorldposition);
+        SelectedCell = _grids[_recentMouseoverSide].GetGridCell(_recentMouseWorldposition);
 
         // test code //
-        _grids[_recentSide].GetGridPosition(_recentWorldposition, out int x, out int z);
+        _grids[_recentMouseoverSide].GetGridPosition(_recentMouseWorldposition, out int x, out int z);
         Debug.Log($"{z}, {x}");
         ///////////////
 
@@ -102,11 +102,11 @@ public class BattleGridSystem
     {
         if (TryGetGridInformation())
         {
-            _grids[_recentSide].HandleMouseHover(_recentWorldposition);
+            _grids[_recentMouseoverSide].HandleMouseHover(_recentMouseWorldposition);
         }
         else
         {
-            _grids[_recentSide].ResetMouseHover();
+            _grids[_recentMouseoverSide].ResetMouseHover();
         }
     }
 
