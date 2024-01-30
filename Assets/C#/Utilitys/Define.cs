@@ -129,6 +129,9 @@ public class Define
         Dizzy,
         Hit,
         Idle,
+        JumpFront,
+        JumpBack,
+        Move,
         Skill,
         Victory
     }

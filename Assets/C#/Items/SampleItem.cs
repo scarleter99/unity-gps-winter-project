@@ -10,6 +10,7 @@ public class SampleItem : BaseItem
     
     public override void Use(BaseController control)
     {
+        // debug
         Debug.Log($"Item {Name} description : {Description}");
     }
 }

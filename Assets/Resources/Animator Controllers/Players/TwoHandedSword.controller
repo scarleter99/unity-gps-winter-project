@@ -85,7 +85,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpFull_RM_THS
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -215,7 +215,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveFWD_Battle_InPlace_THS
+  m_Name: Move
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -593,7 +593,7 @@ AnimatorStateMachine:
     m_Position: {x: 600, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4630375517697107221}
-    m_Position: {x: 600, y: 160, z: 0}
+    m_Position: {x: -300, y: 230, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5727770902223164974}
     m_Position: {x: 600, y: 230, z: 0}
@@ -635,7 +635,7 @@ AnimatorStateMachine:
     m_Position: {x: 850, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7847972065838129340}
-    m_Position: {x: 1100, y: 100, z: 0}
+    m_Position: {x: -300, y: 160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7879193806294687582}
     m_Position: {x: 1100, y: 170, z: 0}
