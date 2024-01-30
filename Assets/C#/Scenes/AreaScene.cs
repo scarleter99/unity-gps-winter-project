@@ -25,7 +25,7 @@ public class AreaScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        SceneType = Scene.AreaScene;
+        SceneType = SceneType.AreaScene;
         GameObject go = Managers.ResourceMng.Instantiate("Area/@AreaSystem");
         _areaSystem = go.GetOrAddComponent<AreaSystem>();
         AreaName = AreaName.Forest;

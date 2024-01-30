@@ -1,47 +1,40 @@
 using UnityEngine;
 
-public class MonsterController : BaseController
+public class MonsterController : CreatureController
 {
-    [ReadOnly(false), SerializeField]
-    protected MonsterStat _stat;
-    public ref MonsterStat Stat { get => ref _stat; }
-    
-    public override void Init()
+    protected override void Init()
     {
         base.Init();
-        WorldObjectType = Define.WorldObject.Monster;
-        _stat = new MonsterStat(gameObject.name);
         
-    //////////////////////////////////////////
-    // TODO - TEST CODE
+        CreatureType = Define.CreatureType.Monster;
+
+        // TODO - TEST CODE
         Managers.InputMng.KeyAction -= OnKeyboard;
         Managers.InputMng.KeyAction += OnKeyboard;
     }
-
-    protected void OnKeyboard()
+    
+    public MonsterStat GetMonsterStat()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-            AnimState = Define.AnimState.Attack;
+        MonsterStat monsterStat = (MonsterStat)Stat;
+        return monsterStat;
     }
-    //////////////////////////////////////////
-    //}
     
     #region Event
     
-    public override void OnDamage(BaseController attacker, int amount = 1)
+    public override void OnDamage(CreatureController attacker, int amount = 1)
     {
         var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.DefendHit : Define.AnimState.Hit;
-        var playerAttacker = attacker as PlayerController;
+        var playerAttacker = attacker as HeroController;
         Stat.OnDamage(playerAttacker.Stat.Attack, amount);
-        nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
+        nextState = (Stat.Hp > 0) ? nextState : Define.AnimState.Die;
         AnimState = nextState;
     }
     
     // 적절한 Animation Timing에서 호출
     protected override void OnAttackEvent()
     {
-        if (_lockTarget != null)
-            _lockTarget.GetComponent<BaseController>().OnDamage(this);
+        if (LockTarget != null)
+            LockTarget.GetComponent<CreatureController>().OnDamage(this);
     }
     
     // 적절한 Animation Timing에서 호출
@@ -56,17 +49,26 @@ public class MonsterController : BaseController
 
     protected override void UpdateAttack()
     {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     
     #endregion
+    
+    /*----------------------
+        TODO - TEST CODE
+    ----------------------*/
+    protected void OnKeyboard()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            AnimState = Define.AnimState.Attack;
+    }
 }

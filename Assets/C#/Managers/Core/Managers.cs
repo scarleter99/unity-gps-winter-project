@@ -9,9 +9,9 @@ public class Managers : MonoBehaviour
     public static Managers Instance { get { Init(); return s_instance; } }
 
 #region Contents
-    private GameManager _gameMng = new GameManager();
+    private ObjectManager _objectMng = new ObjectManager();
     
-    public static GameManager GameMng => Instance._gameMng;
+    public static ObjectManager ObjectMng => Instance._objectMng;
 #endregion
 
 #region Core
@@ -67,7 +67,6 @@ public class Managers : MonoBehaviour
             s_instance._serverMng.Init();
             s_instance._soundMng.Init();
             s_instance._poolMng.Init();
-            s_instance._gameMng.Init();
         }
     }
     

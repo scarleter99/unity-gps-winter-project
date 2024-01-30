@@ -12,7 +12,7 @@ public class StatOnInspector : Editor
     }
 }
 
-[CustomEditor(typeof(PlayerStat))]
+[CustomEditor(typeof(HeroStat))]
 public class PlayerStatOnInspector : Editor
 {
     public override void OnInspectorGUI()

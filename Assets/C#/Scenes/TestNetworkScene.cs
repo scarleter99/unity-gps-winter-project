@@ -8,7 +8,7 @@ public class TestNetworkScene : BaseScene
     {
         base.Init();
 
-        SceneType = Define.Scene.TownScene;
+        SceneType = Define.SceneType.TownScene;
 
         // UIManager test
         Managers.UIMng.ShowPopupUI<UI_TestClientButton>("UI_TestClientButton");

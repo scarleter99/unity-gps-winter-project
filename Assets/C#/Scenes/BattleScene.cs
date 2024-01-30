@@ -11,7 +11,7 @@ public class BattleScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        SceneType = Define.Scene.BattleScene;
+        SceneType = Define.SceneType.BattleScene;
 
         GameObject go = Managers.ResourceMng.Instantiate("Battle/@BattleSystem");
         _battleSystem = go.GetOrAddComponent<BattleSystem>();

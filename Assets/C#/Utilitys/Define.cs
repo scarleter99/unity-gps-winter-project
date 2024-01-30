@@ -1,13 +1,12 @@
-public class Define
+﻿public class Define
 {
     #region Type
     
-    //public enum CreatureType
-    public enum WorldObject
+    public enum CreatureType
     {
-        Player,
+        None,
+        Hero,
         Monster,
-        Unknown,
     }
     
     public enum WeaponType
@@ -60,14 +59,13 @@ public class Define
         Boss,
     }
     
-    // public enum QuestRewardType
-    public enum QuestReward
+    public enum QuestRewardType
     {
         Money,
     }
     
     // public enum SceneType
-    public enum Scene
+    public enum SceneType
     {
         UnknownScene,
         AreaScene,
@@ -79,7 +77,7 @@ public class Define
     }
     
     // public enum SoundType
-    public enum Sound
+    public enum SoundType
     {
         Bgm,
         Effect,
@@ -229,6 +227,4 @@ public class Define
     }
     
     #endregion
-    
-
 }
