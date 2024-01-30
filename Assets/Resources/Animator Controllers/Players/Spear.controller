@@ -281,7 +281,7 @@ AnimatorStateMachine:
     m_Position: {x: 650, y: 20, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6770462693640146794}
-    m_Position: {x: 650, y: 90, z: 0}
+    m_Position: {x: -260, y: 140, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 517040099926390656}
     m_Position: {x: 650, y: 150, z: 0}
@@ -1116,7 +1116,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveFWD_Battle_InPlace_Spear
+  m_Name: Move
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

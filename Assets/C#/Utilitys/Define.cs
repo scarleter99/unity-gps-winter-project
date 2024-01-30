@@ -97,7 +97,9 @@
         Dizzy,
         Hit,
         Idle,
-        Jump,
+        JumpFront,
+        JumpBack,
+        Move,
         Skill,
         Victory
     }

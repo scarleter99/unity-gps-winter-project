@@ -1,11 +1,7 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SampleSwordAndShield: Weapon
 {
-    public Define.WeaponType WeaponType { get => _weaponType; }
-    
     public SampleSwordAndShield(PlayerController equipper): base(equipper)
     {
         LoadDataFromJson(this.GetType().Name);

@@ -1,8 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 public class PlayerController : BaseController
 {
@@ -17,6 +16,8 @@ public class PlayerController : BaseController
     protected Weapon _weapon;
     protected Dictionary<Define.ArmorType, Armor> _armors;
 
+    [SerializeField]
+    protected Vector3 _attackPosOffset;
     public ref PlayerStat Stat { get => ref _stat; }
     public Define.WeaponType WeaponType { get => _weaponType; set => _weaponType = value; }
     public Bag Bag { get => _bag; }
@@ -32,6 +33,7 @@ public class PlayerController : BaseController
     
     public override void Init()
     {
+        base.Init();
         WorldObjectType = Define.WorldObject.Player;
         _bag = new Bag(transform);
         _stat = new PlayerStat(name); // TODO : 플레이어 닉네임 설정하면 여기에 할당
@@ -145,10 +147,25 @@ public class PlayerController : BaseController
             }
         }
     }
+    
+    // 적절한 Animation Timing에서 호출
+    protected override void OnJumpStart()
+    {
+        switch (AnimState) 
+        {
+            case Define.AnimState.JumpBack:
+                transform.DOMove(_comebackPos, 0.433f);
+                break;
+            case Define.AnimState.JumpFront:
+                transform.DOMove(_lockTarget.transform.position + _attackPosOffset, 0.433f);
+                break;
+        }
+    }
 
     protected void OnKeyboard()
     {
-        // temp - for test
+        //////////////////////////////////////////
+        // TODO - Test Code
         if (Input.GetKeyDown(KeyCode.Alpha1))
             Bag.UseItem(this, 0);
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -161,7 +178,7 @@ public class PlayerController : BaseController
             Weapon = new SampleSingleSword(this);
         else if (Input.GetKeyDown(KeyCode.Alpha6))
             Weapon = new SampleSwordAndShield(this);
-
+        //////////////////////////////////////////
     }
 
     private void OnMouseEvent(Define.MouseEvent evt)
@@ -194,21 +211,31 @@ public class PlayerController : BaseController
     protected override void UpdateAttack()
     {
         var currentState = _animator.GetCurrentAnimatorStateInfo(0);
-
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
+        if (currentState.shortNameHash == _stateHash)
         {
-            switch (WeaponType)
+            var elapsedTime = currentState.normalizedTime;
+            if (elapsedTime >= 0.98f) 
             {
-                case Define.WeaponType.DoubleSword:
-                case Define.WeaponType.SingleSword:
-                case Define.WeaponType.Spear:
-                case Define.WeaponType.TwoHandedSword:
-                    AnimState = Define.AnimState.Jump;
-                    break;
-                case Define.WeaponType.Bow:
-                case Define.WeaponType.Wand:
-                    AnimState = Define.AnimState.Idle;
-                    break;
+                switch (WeaponType)
+                {
+                    case Define.WeaponType.DoubleSword:
+                    case Define.WeaponType.SingleSword:
+                    case Define.WeaponType.Spear:
+                    case Define.WeaponType.SwordAndShield:
+                    case Define.WeaponType.TwoHandedSword:
+                        AnimState = Define.AnimState.JumpBack;
+                        break;
+                }
+            }
+            else if (elapsedTime >= 0.8f)
+            {
+                switch (WeaponType)
+                {
+                    case Define.WeaponType.Bow:
+                    case Define.WeaponType.Wand:
+                        AnimState = Define.AnimState.Idle;
+                        break;
+                }
             }
         }
     }

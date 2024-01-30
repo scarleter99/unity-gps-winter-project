@@ -1,8 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Data;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -11,7 +6,7 @@ public abstract class BaseController : MonoBehaviour
     public Define.WorldObject WorldObjectType { get; protected set; } = Define.WorldObject.Unknown;
     protected ulong _id;
     protected int _stateHash;
-    protected bool _secondJump;
+    protected Vector3 _comebackPos; // jump에서 사용
 
     public ulong Id { get => _id; set => _id = value; }
     
@@ -21,7 +16,7 @@ public abstract class BaseController : MonoBehaviour
     protected Define.TurnState _turnState = Define.TurnState.Wait;
     [SerializeField]
     protected GameObject _lockTarget;
-
+    
     protected Animator _animator;
 
     public Define.AnimState AnimState
@@ -64,8 +59,15 @@ public abstract class BaseController : MonoBehaviour
                 case Define.AnimState.Idle:
                     _animator.CrossFade(stateName = "Idle", 0.2f);
                     break;
-                case Define.AnimState.Jump:
+                case Define.AnimState.JumpBack:
                     _animator.Play(stateName = "Jump");
+                    break;
+                case Define.AnimState.JumpFront:
+                    _animator.Play(stateName = "Jump");
+                    _comebackPos = transform.position;
+                    break;
+                case Define.AnimState.Move:
+                    _animator.Play(stateName = "Move");
                     break;
                 //case Define.AnimState.Skill:
                 //    break;
@@ -86,8 +88,6 @@ public abstract class BaseController : MonoBehaviour
 
     private void Start()
     {
-        _animator = GetComponent<Animator>();
-        _secondJump = false;
         Init();
     }
     
@@ -121,8 +121,14 @@ public abstract class BaseController : MonoBehaviour
             case Define.AnimState.Idle:
                 UpdateIdle();
                 break;
-            case Define.AnimState.Jump:
-                UpdateJump();
+            case Define.AnimState.JumpBack:
+                UpdateJumpBack();
+                break;
+            case Define.AnimState.JumpFront:
+                UpdateJumpFront();
+                break;
+            case Define.AnimState.Move:
+                UpdateMove();
                 break;
             //case Define.AnimState.Skill:
             //    break;
@@ -131,8 +137,11 @@ public abstract class BaseController : MonoBehaviour
                 break;
         }
     }
-    
-    public abstract void Init();
+
+    public virtual void Init()
+    {
+        _animator = GetComponent<Animator>();
+    }
     
     public virtual void StatChange(IStat statStruct)
     {
@@ -143,9 +152,9 @@ public abstract class BaseController : MonoBehaviour
 
     // Animation의 적절한 타이밍에서 호출
     protected abstract void OnAttackEvent();
-
+    protected abstract void OnJumpStart();
     public abstract void OnDamage(BaseController attacker, int amount = 1);
-
+    
     #endregion
     
     #region Update
@@ -165,7 +174,14 @@ public abstract class BaseController : MonoBehaviour
     protected virtual void UpdateHit() { }
     protected virtual void UpdateIdle() { }
 
-    protected virtual void UpdateJump()
+    protected virtual void UpdateJumpBack()
+    {
+        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
+            AnimState = Define.AnimState.Idle;
+    }
+    
+    protected virtual void UpdateJumpFront()
     {
         var currentState = _animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
@@ -174,16 +190,7 @@ public abstract class BaseController : MonoBehaviour
             switch (nextAct)
             {
                 case Define.ActionType.Attack:
-                    if (!_secondJump)
-                    {
-                        _secondJump = true;
-                        AnimState = Define.AnimState.Attack;
-                    }
-                    else 
-                    {
-                        AnimState = Define.AnimState.Idle;
-                        _secondJump = false;
-                    }
+                    AnimState = Define.AnimState.Attack;
                     break;
                 case Define.ActionType.SkillUse:
                     AnimState = Define.AnimState.Skill;
@@ -192,6 +199,7 @@ public abstract class BaseController : MonoBehaviour
         }
     }
     
+    protected virtual void UpdateMove() { }
     protected virtual void UpdateVictory() { }
 
     #endregion
@@ -200,7 +208,7 @@ public abstract class BaseController : MonoBehaviour
     {
         _lockTarget = target;
         if (jumpNeeded)
-            AnimState = Define.AnimState.Jump;
+            AnimState = Define.AnimState.JumpFront;
         else 
             AnimState = Define.AnimState.Attack;
     }
