@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -7,6 +8,7 @@ public class BattleScene : BaseScene
 {
     private BattleSystem _battleSystem;
     public BattleSystem BattleSystem { get => _battleSystem; }
+
     
     protected override void Init()
     {

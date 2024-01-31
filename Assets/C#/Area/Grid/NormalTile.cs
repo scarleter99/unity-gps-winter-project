@@ -19,6 +19,6 @@ public sealed class NormalTile : HexGridCell
     }
     public override void OnTileEnter()
     {
-        Debug.Log("NormalTile");
+        Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle;
     }
 }

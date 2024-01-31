@@ -1,11 +1,11 @@
+using DG.Tweening;
 using UnityEngine;
+using static Define;
 
 public sealed class BattleTile : HexGridCell
 {
     private const string _iconPath = "Area/icon_battle";
 
-    // 타일에 다시 왔을 때 전투 진입 등 이벤트 재발생 방지
-    private bool _eventTriggered = false;
 
     public BattleTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
     {
@@ -26,7 +26,12 @@ public sealed class BattleTile : HexGridCell
 
     public override void OnTileEnter()
     {
-        Debug.Log("Battletile");
-        _eventTriggered = true;
+        if (_eventTriggered)
+        {
+            Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle;
+            return;
+        }
+        Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Battle;
+        Managers.SceneMng.GetCurrentScene<AreaScene>().LoadBattleScene();
     }
 }

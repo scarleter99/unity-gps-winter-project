@@ -100,7 +100,7 @@ public class AreaGenerator
     private void InstantiateBaseMap(string path)
     {
         GameObject map = Managers.ResourceMng.Instantiate(path);
-        map.transform.position = Vector3.zero;
+        map.transform.position = _originPosition;
         _map = map;
         _tileParent.transform.SetParent(_map.transform);
     }
