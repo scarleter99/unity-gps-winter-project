@@ -9,7 +9,7 @@ public class UI_PlayerStat : UI_Base
 {
     private event Action OnClaer;
 
-    enum Text
+    enum Texts
     {
         Text_Name,
 
@@ -31,7 +31,7 @@ public class UI_PlayerStat : UI_Base
         Button_Inventory,
     }
 
-    enum Slider
+    enum Sliders
     {
         Slider_HP,
     }
