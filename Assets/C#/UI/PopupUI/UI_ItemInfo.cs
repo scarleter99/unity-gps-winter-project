@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_ItemInfo : UI_Popup
 {
@@ -10,6 +11,11 @@ public class UI_ItemInfo : UI_Popup
     enum GameObjects
     {
         Panel,
+    }
+
+    enum Images
+    {
+        ItemIcon,
     }
 
 	enum Text
@@ -29,7 +35,9 @@ public class UI_ItemInfo : UI_Popup
 
     public void Init(UI_PurchaseBoard.TestItem testItem)
     {
-        GetText(Text.ItemName).text = testItem.ItemName;
-        GetText(Text.ItemDescription).text = testItem.ItemDescription;
+        GetText(Text.ItemName).text = testItem.Name;
+        GetText(Text.ItemDescription).text = testItem.Description;
+        if (testItem.Icon != null)
+            Get<Image>(Images.ItemIcon).sprite = testItem.Icon;
     }
 }

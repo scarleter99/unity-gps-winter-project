@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -29,8 +30,10 @@ public class UI_PurchaseBoard : UI_Base
 
         public void Init(TestItem testItem)
         {
-            GetText(Text.ItemName).text = testItem.ItemName;
-            GetText(Text.ItemPrice).text = testItem.ItemPrice.ToString();
+            GetText(Text.ItemName).text = testItem.Name;
+            GetText(Text.ItemPrice).text = testItem.Price.ToString();
+            if(testItem.Icon != null)
+                Get<Image>(Images.ItemIcon).sprite = testItem.Icon;
         }
     }
 
@@ -39,11 +42,12 @@ public class UI_PurchaseBoard : UI_Base
         Content,
     }
 
-    // 테스트용 아이템 구조체
+    // 테스트용 아이템 클래스
     public class TestItem
     {
-        public string ItemName, ItemDescription;
-        public int ItemPrice;
+        public Sprite Icon;
+        public string Name, Description;
+        public int Price;
 
         public void PurchaseItem()
         {
@@ -61,9 +65,10 @@ public class UI_PurchaseBoard : UI_Base
         // Test Code
         TestItem testItem = new TestItem()
         {
-            ItemName = "Test",
-            ItemDescription = "Test",
-            ItemPrice = 10
+            Name = "Lorem Ipsum",
+            Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+            "Ut vehicula ante ac nunc fringilla elementum. Morbi sodales",
+            Price = 10,
         };
 
         for (int i = 0; i < 10; i++)
@@ -95,5 +100,10 @@ public class UI_PurchaseBoard : UI_Base
             itemContent.gameObject.BindEvent(PurchaseItem, Define.UIEvent.DoubleClick);
             itemContent.gameObject.BindEvent(ShowItemInfo, Define.UIEvent.Enter);
         }
+    }
+
+    private void OnEnable()
+    {
+        this.GetComponent<RectTransform>().DOLocalMoveX(500, 0.5f).From(true).SetEase(Ease.OutCirc).SetDelay(0.05f);
     }
 }
