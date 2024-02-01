@@ -9,7 +9,7 @@ public class UI_PlayerStat : UI_Base
 {
     private event Action OnClaer;
 
-    enum Texts
+    enum Text
     {
         Text_Name,
 
