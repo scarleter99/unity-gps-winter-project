@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterController : BaseController
@@ -11,12 +8,12 @@ public class MonsterController : BaseController
     
     public override void Init()
     {
+        base.Init();
         WorldObjectType = Define.WorldObject.Monster;
         _stat = new MonsterStat(gameObject.name);
         
     //////////////////////////////////////////
-    // TEST CODE
-    //////////////////////////////////////////
+    // TODO - TEST CODE
         Managers.InputMng.KeyAction -= OnKeyboard;
         Managers.InputMng.KeyAction += OnKeyboard;
     }
@@ -45,6 +42,12 @@ public class MonsterController : BaseController
     {
         if (_lockTarget != null)
             _lockTarget.GetComponent<BaseController>().OnDamage(this);
+    }
+    
+    // 적절한 Animation Timing에서 호출
+    protected override void OnJumpStart()
+    {
+        // TODO
     }
     
     #endregion

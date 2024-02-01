@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using static Define;
 using UnityEngine;
 
@@ -44,7 +43,9 @@ public class BattleSystem : MonoBehaviour
 
     private void Init()
     {
-        // temp - for test
+        /*----------------------
+        TODO - Test Code
+        ----------------------*/
         _playergridOriginPos = new Vector3(-3f, 0.1f, -4.75f);
         _enemygridOriginPos = new Vector3(-3f, 0.1f, 2.25f);
         
@@ -58,7 +59,7 @@ public class BattleSystem : MonoBehaviour
         SetupPlayer();
         
         ////////////////////////////////////////////////
-        // temp - for test
+        // TODO - Test Code
         BattleState = BattleState.SelectingTargetMonster;
         ActionType = Define.ActionType.Attack;
         ActingEntity = GameObject.Find("@Players").transform.GetChild(0).GetComponent<BaseController>();
@@ -81,7 +82,6 @@ public class BattleSystem : MonoBehaviour
 
     private void GeneratePrefabs()
     {   
-        // 현재는 테스트를 위해 그리드의 모든 셀에 프리팹을 생성하지만 추후 수정을 통해 특정 위치만 생성하도록 해야함.
         //for (int z = 0; z < _gridSystem.PlayerGrid.Height; z += 2) // temp - for test
         //{
         //    for (int x = 0; x < _gridSystem.PlayerGrid.Width; x++)
@@ -89,7 +89,8 @@ public class BattleSystem : MonoBehaviour
         //        _gridSystem.PlayerGrid.SetupObject(Managers.GameMng.Spawn(WorldObject.Player, _playerPrefabPath), x, z);
         //    }
         //}
-        for (int z = 0; z < _gridSystem.EnemyGrid.Height; z += 2) // temp - for test
+        
+        for (int z = 0; z < _gridSystem.EnemyGrid.Height; z += 2) // TODO - Test Code (z 좌표)
         {
             for (int x = 0; x < _gridSystem.EnemyGrid.Width; x++)
             {
@@ -147,7 +148,7 @@ public class BattleSystem : MonoBehaviour
         switch (ActionType)
         {
             case Define.ActionType.Attack:
-                ActingEntity.LockAndAttack(selectedCell.OnCellObject);
+                ActingEntity.LockAndAttack(selectedCell.OnCellObject, true);
                 // 만약 각 클래스에 구현된 함수라면
                 // (ActingEntity as PlayerController)?.Attack();
                 // (ActingEntity as MonsterController)?.Attack();
@@ -197,7 +198,5 @@ public class BattleSystem : MonoBehaviour
                 count++;
             }
         }
-
-        //_gridSystem.PlayerGrid.SetupObject();
     }
 }
