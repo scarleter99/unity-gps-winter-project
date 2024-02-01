@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 public abstract class Weapon: Equipment
 {
     protected Define.WeaponType _weaponType;

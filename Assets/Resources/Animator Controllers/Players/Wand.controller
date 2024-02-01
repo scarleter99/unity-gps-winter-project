@@ -492,7 +492,7 @@ AnimatorStateMachine:
     m_Position: {x: 770, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -126432454747566759}
-    m_Position: {x: 770, y: 130, z: 0}
+    m_Position: {x: -180, y: 190, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2018546034218119641}
     m_Position: {x: 770, y: 190, z: 0}
@@ -534,7 +534,7 @@ AnimatorStateMachine:
     m_Position: {x: 1030, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4921236689302339621}
-    m_Position: {x: 1300, y: 70, z: 0}
+    m_Position: {x: -180, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1880444508903340164}
     m_Position: {x: 1300, y: 130, z: 0}
@@ -629,7 +629,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveFWD_Battle_InPlace_MagicWand
+  m_Name: Move
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1067,7 +1067,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpFull_RM_MagicWand
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

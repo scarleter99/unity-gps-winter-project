@@ -4258,7 +4258,7 @@ Animator:
   m_GameObject: {fileID: 8001354749718593143}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0308cf4e83cf517488b60af58b290fe0, type: 3}
-  m_Controller: {fileID: 9100000, guid: fcec84e4e5b0b2b48a5167fbbd36e211, type: 2}
+  m_Controller: {fileID: 9100000, guid: b6d0621093464bb4c9a72dee693122fa, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -4308,6 +4308,7 @@ MonoBehaviour:
     _strength: 0
     _vitality: 0
     _intelligence: 0
+  _attackPosOffset: {x: 0, y: 0, z: -1.5}
 --- !u!54 &923524702142873111
 Rigidbody:
   m_ObjectHideFlags: 0

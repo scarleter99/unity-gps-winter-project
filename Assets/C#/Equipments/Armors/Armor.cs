@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using UnityEngine;
-
 public abstract class Armor: Equipment
 {
     protected Define.ArmorType _armorType;

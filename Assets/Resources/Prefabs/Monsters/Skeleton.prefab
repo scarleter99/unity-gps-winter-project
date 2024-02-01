@@ -589,7 +589,6 @@ GameObject:
   - component: {fileID: 6285209290496798482}
   - component: {fileID: 6285209290506305774}
   - component: {fileID: 8974564613426981673}
-  - component: {fileID: 711622138152825960}
   m_Layer: 8
   m_Name: Skeleton
   m_TagString: Monster
@@ -650,24 +649,12 @@ MonoBehaviour:
   _animState: 6
   _turnState: 0
   _lockTarget: {fileID: 0}
---- !u!114 &711622138152825960
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6285209290496832306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fed8810cd574eb094aee397639c066e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _level: 0
-  _hp: 0
-  _maxHp: 0
-  _attack: 0
-  _defense: 0
-  _moveSpeed: 0
+  _stat:
+    _hp: 0
+    _maxHp: 0
+    _attack: 0
+    _defense: 0
+    _speed: 0
 --- !u!1 &6285209290496832308
 GameObject:
   m_ObjectHideFlags: 0

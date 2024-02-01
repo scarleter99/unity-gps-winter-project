@@ -10,38 +10,41 @@ using static Define;
 public class AreaGenerator
 {
     private GameObject _map;
-    protected AreaName _areaName;
-
-    // 맵 나타내는 배열
-    // -1: 맵 바깥쪽, 0: 장애물, 1: 이동 가능 타일
-    protected int[,] _basemap;
-
-    private int _width;
-    private int _height;
+    private AreaName _areaName;
+    private int Width
+    {
+        get => _grid.Width;
+    }
+    private int Height
+    {
+        get => _grid.Height;
+    }
     private Vector3 _originPosition;
 
-    protected HexGrid _grid;
+    private HexGrid _grid;
+
+    public HexGrid Grid
+    {
+        get => _grid;
+    }
+
     private Transform _tileParent;
 
-    protected int _battleTileNum;
-    protected int _encounterTileNum;
+    private int _battleTileNum;
+    private int _encounterTileNum;
 
-    private const string TEST_GRID_POSITION_TEXT_PATH = "Map/TestPositionText";
-    private const string GRID_TILE_PATH = "Map/grid_hex";
+    private const string TEST_GRID_POSITION_TEXT_PATH = "Area/TestPositionText";
+    private const string GRID_TILE_PATH = "Area/grid_hex";
 
     public AreaGenerator(AreaName areaName, Vector3 originPosition)
     {
         _areaName = areaName;
-        _width = Managers.DataMng.AreaDataDict[_areaName].width;
-        _height = Managers.DataMng.AreaDataDict[_areaName].height;
         _originPosition = originPosition;
-        _grid = new HexGrid(_width, _height, originPosition);
-
-        _basemap = ParseBasemap(Managers.DataMng.AreaDataDict[_areaName].basemap);
+        _grid = new HexGrid(Managers.DataMng.AreaDataDict[_areaName].width, Managers.DataMng.AreaDataDict[_areaName].height, originPosition);
+        _grid.InitializeTileTypeArray(ParseBasemap(Managers.DataMng.AreaDataDict[_areaName].basemap));
         //Debug.Log(_basemap);
         _battleTileNum = Managers.DataMng.AreaDataDict[_areaName].battleTileNum;
         _encounterTileNum = Managers.DataMng.AreaDataDict[_areaName].encounterTileNum;
-        _grid.InitializeTileTypeArray(_basemap);
 
         _tileParent = new GameObject("Tiles").transform;
     }
@@ -58,11 +61,11 @@ public class AreaGenerator
     }
 
     // 일반 타일
-    protected void GenerateNormalTile()
+    private void GenerateNormalTile()
     {
-        for (int z = 0; z < _height; z++)
+        for (int z = 0; z < Height; z++)
         {
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < Width; x++)
             {
                 if (_grid.IsTileEmpty(x, z))
                 {
@@ -72,38 +75,38 @@ public class AreaGenerator
         }
     }
 
-    protected void GenerateBattleTile()
+    private void GenerateBattleTile()
     {
         GenerateTileWithWindow(2, _battleTileNum, AreaTileType.Battle);
     }
 
-    protected void GenerateEncounterTile()
+    private void GenerateEncounterTile()
     {
         GenerateTileWithWindow(2, _encounterTileNum, AreaTileType.Encounter);
     }
-    
+
     // 시작 타일: 맨 밑 중간
-    protected void GenerateStartTile()
+    private void GenerateStartTile()
     {
-        CreateTile(_width / 2, 0, AreaTileType.Start);
-    }
-    
-    // 보스 타일: 맨 위 중간
-    protected void GenerateBossTile()
-    {
-        CreateTile(_width / 2, _height-1, AreaTileType.Boss);
+        CreateTile(Width / 2, 0, AreaTileType.Start);
     }
 
-    protected void InstantiateBaseMap(string path)
+    // 보스 타일: 맨 위 중간
+    private void GenerateBossTile()
+    {
+        CreateTile(Width / 2, Height-1, AreaTileType.Boss);
+    }
+
+    private void InstantiateBaseMap(string path)
     {
         GameObject map = Managers.ResourceMng.Instantiate(path);
-        map.transform.position = Vector3.zero;
+        map.transform.position = _originPosition;
         _map = map;
         _tileParent.transform.SetParent(_map.transform);
     }
 
     // for test: 그리드 셀 위에 해당 셀의 좌표 나타내는 텍스트 띄움
-    protected void InstantiateGridPositionText(int x, int z)
+    private void InstantiateGridPositionText(int x, int z)
     {
         GameObject canvas = Managers.ResourceMng.Instantiate(TEST_GRID_POSITION_TEXT_PATH, _tileParent);
         canvas.GetComponentInChildren<TextMeshProUGUI>().SetText($"{z}, {x}");
@@ -111,7 +114,7 @@ public class AreaGenerator
         canvas.transform.rotation = Quaternion.Euler(60, 0, 0);
     }
 
-    protected void CreateTile(int x, int z, AreaTileType tileType)
+    private void CreateTile(int x, int z, AreaTileType tileType)
     {
         GameObject tile = Managers.ResourceMng.Instantiate(GRID_TILE_PATH, _tileParent);
         tile.transform.position = _grid.GetWorldPosition(x, z, 1.02f);
@@ -138,14 +141,14 @@ public class AreaGenerator
         _grid.SetGridCell(x, z, cell);
         _grid.SetTileType(x, z, tileType);
         // for test  ////////
-        InstantiateGridPositionText(x, z);
+        //InstantiateGridPositionText(x, z);
         /////////////////////
     }
 
     private void GenerateTileWithWindow(int windowSize, int tilenum, AreaTileType tileType)
     {
-        int[] windowStartArr = new int[_height - windowSize - 2];
-        for (int i = 2; i < _height - windowSize; i++)
+        int[] windowStartArr = new int[Height - windowSize - 2];
+        for (int i = 2; i < Height - windowSize; i++)
         {
             windowStartArr[i - 2] = i;
         }
@@ -156,8 +159,8 @@ public class AreaGenerator
             // 모든 windowstart가 한번씩 다 선택됐다면 다시 초기화
             if (windowStartArr.Length == 0)
             {
-                windowStartArr = new int[_height - windowSize - 1];
-                for (int i = 2; i < _height - windowSize; i++)
+                windowStartArr = new int[Height - windowSize - 1];
+                for (int i = 2; i < Height - windowSize; i++)
                 {
                     windowStartArr[i - 2] = i;
                 }
@@ -172,7 +175,7 @@ public class AreaGenerator
                 int windowstart = windowStartArr[UnityEngine.Random.Range(0, windowStartArr.Length)];
                 z = UnityEngine.Random.Range(windowstart, windowstart + windowSize - 1);
                 // x 좌표는 그냥 width 범위에서 랜덤
-                x = UnityEngine.Random.Range(0, _width);
+                x = UnityEngine.Random.Range(0, Width);
                 // 빈 타일이어야 하며, 근처 1칸 범위에 같은 종류 타일이 없어야 함
                 if (_grid.IsTileEmpty(x, z) && !_grid.CheckNeighborType(x, z, tileType)) selected = true;
                 if (trycnt == 100)
@@ -200,9 +203,9 @@ public class AreaGenerator
         {
             trycnt++;
             // z 좌표: 시작 지점 + 1칸, 보스 타일 제외한 height 범위에서 랜덤
-            z = UnityEngine.Random.Range(2, _height - 2);
+            z = UnityEngine.Random.Range(2, Height - 2);
             // x 좌표: width 범위에서 랜덤
-            x = UnityEngine.Random.Range(0, _width);
+            x = UnityEngine.Random.Range(0, Width);
             if (_grid.IsTileEmpty(x, z) && !_grid.CheckNeighborType(x, z, tileType)) selected = true;
             if (trycnt == 100)
             {
@@ -216,17 +219,17 @@ public class AreaGenerator
 
     private int[,] ParseBasemap(string input)
     {
-        int[,] basemap = new int[_height, _width];
+        int[,] basemap = new int[Height, Width];
 
         // 문자열을 행으로 분리
         string[] rows = input.Split("\n", StringSplitOptions.RemoveEmptyEntries);
 
         // 각 요소를 배열에 배치
-        for (int i = 0; i < _height; i++)
+        for (int i = 0; i < Height; i++)
         {
             string[] values = rows[i].Split(",", StringSplitOptions.RemoveEmptyEntries);
 
-            for (int j = 0; j < _width; j++)
+            for (int j = 0; j < Width; j++)
             {
                 basemap[i, j] = int.Parse(values[j].Trim());
             }

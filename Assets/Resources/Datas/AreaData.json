@@ -1,4 +1,4 @@
-﻿{   
+{   
   "areadatas": [
       {
       "name": "Forest",
@@ -7,7 +7,7 @@
       "height": 16,
       "battleTileNum": 12,
       "encounterTileNum": 10,
-      "mapPrefabPath": "Map/Area_1/Area_1_Map"
+      "mapPrefabPath": "Area/Area_1/Area_1_Map"
       }
   ]
 }

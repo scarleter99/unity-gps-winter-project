@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class UI_Page_Town_Quest : UI_Page
 {
-    private GameObject _currentOpenedObject;
-
     enum Buttons
     {
         Button_QuestBoard,
@@ -24,25 +22,17 @@ public class UI_Page_Town_Quest : UI_Page
         Bind<Button>(typeof(Buttons));
         Bind<GameObject>(typeof(GameObjects));
 
-        GetButton(Buttons.Button_QuestBoard).gameObject.BindEvent(OnClickedQuestBoard);
-    }
+        void OnClickedQuestBoard()
+        {
+            GetGameObject(GameObjects.QuestBoard).SetActive(true);
+        }
 
-    private void OnClickedQuestBoard(PointerEventData data)
-    {
-        if (_currentOpenedObject == GetGameObject(GameObjects.QuestBoard))
-            return;
-
-        _currentOpenedObject?.SetActive(false);
-
-        _currentOpenedObject = GetGameObject(GameObjects.QuestBoard);
-        _currentOpenedObject.SetActive(true);
+        GetButton(Buttons.Button_QuestBoard).onClick.AddListener(OnClickedQuestBoard);
     }
 
     private void OnDisable()
     {
+        GetGameObject(GameObjects.QuestBoard).SetActive(false);
         GetGameObject(GameObjects.UI_Quest).SetActive(false);
-
-        _currentOpenedObject?.SetActive(false);
-        _currentOpenedObject = null;
     }
 }

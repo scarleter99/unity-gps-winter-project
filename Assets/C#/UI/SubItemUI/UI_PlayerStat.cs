@@ -9,7 +9,7 @@ public class UI_PlayerStat : UI_Base
 {
     private event Action OnClaer;
 
-    enum Text
+    enum Texts
     {
         Text_Name,
 
@@ -31,7 +31,7 @@ public class UI_PlayerStat : UI_Base
         Button_Inventory,
     }
 
-    enum Slider
+    enum Sliders
     {
         Slider_HP,
     }
@@ -62,7 +62,8 @@ public class UI_PlayerStat : UI_Base
     {
         GetText(Text.Text_Name).text = playerStat.Name;
 
-        Get<UnityEngine.UI.Slider>(Slider.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
+        Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
+
         GetText(Text.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
         GetText(Text.Text_Attack).text = playerStat.Attack.ToString();
         GetText(Text.Text_Defense).text = playerStat.Defense.ToString();

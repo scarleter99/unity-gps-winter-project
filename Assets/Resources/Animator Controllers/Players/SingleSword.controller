@@ -163,7 +163,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: JumpFull_RM_SingleSword
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -437,7 +437,7 @@ AnimatorStateMachine:
     m_Position: {x: 720, y: 0, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3451071937060126150}
-    m_Position: {x: 720, y: 70, z: 0}
+    m_Position: {x: -220, y: 150, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7840659766584776541}
     m_Position: {x: 720, y: 140, z: 0}
@@ -479,7 +479,7 @@ AnimatorStateMachine:
     m_Position: {x: 980, y: -70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6209599485766455586}
-    m_Position: {x: 1240, y: -70, z: 0}
+    m_Position: {x: -220, y: 70, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4553128588293907039}
     m_Position: {x: 1240, y: 0, z: 0}
@@ -908,7 +908,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MoveFWD_Battle_InPlace_SingleSword
+  m_Name: Move
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
