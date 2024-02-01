@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class AreaCameraController : MonoBehaviour
 {   
+    public bool Freeze { get;  set; } // true: 카메라 정지
     // 실제 카메라가 부착된 오브젝트의 트랜스폼
     private Transform _cameraTransform;
 
@@ -79,6 +80,7 @@ public class AreaCameraController : MonoBehaviour
 
     void Update()
     {
+        if (Freeze) return;
         HandleZoom();
         HandleMouseInput();
         _zoomLevel = CalculateZoomlevel();

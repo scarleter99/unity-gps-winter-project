@@ -25,6 +25,7 @@ public abstract class HexGridCell
 
     // 크기. 기본 1x1
     protected float _size;
+    protected bool _eventTriggered = false;
 
     // 셀 모서리 스프라이트
     protected SpriteRenderer _indicator;
@@ -113,4 +114,15 @@ public abstract class HexGridCell
     }
 
     public abstract void OnTileEnter();
+
+    public virtual void OnTileEventFinish()
+    {
+        _eventTriggered = true;
+        Icon?.GetComponent<SpriteRenderer>().DOFade(0, 3f);
+        ChangeColor(TileColorChangeType.ToNormal, 3f);
+        _indicatorColor = _indicatorOriginalColor;
+        _fillColor = _fillOriginalColor;
+        _indicatorHighlightColor = new Color(50f / 255f, 1f, 0);
+        _fillHighlightColor = new Color(50f / 255f, 1f, 0, 65f / 255f);
+    }
 }

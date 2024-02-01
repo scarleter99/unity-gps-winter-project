@@ -7,9 +7,6 @@ public sealed class EncounterTile : HexGridCell
 {
     private const string _iconPath = "Area/icon_encounter";
 
-    // 타일에 다시 왔을 때 이벤트 재발생 방지
-    private bool _eventTriggered = false;
-
     public EncounterTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
     {
         _indicatorColor = new Color(255f / 255f, 255f / 255f, 20f / 255f, 200f / 255f);
@@ -28,7 +25,11 @@ public sealed class EncounterTile : HexGridCell
     }
     public override void OnTileEnter()
     {
-        Debug.Log("EncounterTile");
-        _eventTriggered = true;
+        if (_eventTriggered)
+        {
+            Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle;
+            return;
+        }
+        Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle; // TODO - Encounter 구현 시 상태 수정
     }
 }

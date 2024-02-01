@@ -140,5 +140,12 @@ public class SquareGrid
         prefab.transform.rotation = Quaternion.Euler(0, rotationY, 0);
         GetGridCell(x, z).OnCellObject = prefab;
     }
+
+    public void SetupObject(GameObject go, int x, int z, float rotationY = 0)
+    {
+        go.transform.position = GetWorldPosition(x, z);
+        go.transform.rotation = Quaternion.Euler(0, rotationY, 0);
+        GetGridCell(x, z).OnCellObject = go;
+    }
     
 }
