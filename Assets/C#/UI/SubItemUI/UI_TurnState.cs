@@ -28,6 +28,7 @@ public class UI_TurnState : UI_Base
             _pivots[i] = _iconImages[i].rectTransform.anchoredPosition;
     }
 
+    // 전체 크리처 턴만 띄우고 다 하면 다시 재구성 리스트형태로 매개변수 받아오기
     private void ChangeTurnStateUI()
     {
         // 맨 앞에 있는 아이콘 뒤로 이동
@@ -47,7 +48,7 @@ public class UI_TurnState : UI_Base
         _iconImages[0].rectTransform.DOSizeDelta(firstImage.rectTransform.sizeDelta, 0.5f)
             .OnComplete(() => firstImage.gameObject.SetActive(true));
         // 마지막 이미지 크기 되돌리기
-        firstImage.rectTransform.sizeDelta = _iconImages[_iconImages.Length - 2].rectTransform.sizeDelta;
+        firstImage.rectTransform.sizeDelta = _iconImages[1].rectTransform.sizeDelta;
     }
 
     // 테스트 코드

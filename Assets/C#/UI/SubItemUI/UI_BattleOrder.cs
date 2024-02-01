@@ -58,7 +58,7 @@ public class UI_BattleOrder : UI_Base
     }
     ////////////////////////////////////////
 
-    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 자기 턴이면 해당 함수를 호출하도록 연결
+    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 호출하도록 연결
     private void SetSkills(PlayerStat playerStat ,IEnumerable<Skill> skills, bool isMine)
     {
         this.gameObject.SetActive(isMine);

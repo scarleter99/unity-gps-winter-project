@@ -63,6 +63,7 @@ public class UI_PlayerStat : UI_Base
         GetText(Text.Text_Name).text = playerStat.Name;
 
         Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
+
         GetText(Text.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
         GetText(Text.Text_Attack).text = playerStat.Attack.ToString();
         GetText(Text.Text_Defense).text = playerStat.Defense.ToString();
