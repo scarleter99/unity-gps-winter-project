@@ -1,32 +1,11 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
-// 테스트용 아이템 클래스
-public class TestItem
+public class UI_SellBoard : UI_Base
 {
-    public Sprite Icon;
-    public string Name, Description;
-    public int Price;
-
-    public void PurchaseItem()
-    {
-        Debug.Log("Purchase!");
-    }
-
-    public void SellItem()
-    {
-        Debug.Log("Sell!");
-    }
-}
-
-public class UI_PurchaseBoard : UI_Base
-{ 
     enum GameObjects
     {
         Content,
@@ -58,9 +37,9 @@ public class UI_PurchaseBoard : UI_Base
             UI_ItemContent itemContent = Managers.UIMng.MakeSubItemUI<UI_ItemContent>(GetGameObject(GameObjects.Content).transform);
             itemContent.Init(item);
 
-            void PurchaseItem(PointerEventData eventData)
+            void SellItem(PointerEventData eventData)
             {
-                item.PurchaseItem();
+                item.SellItem();
             }
 
             void ShowItemInfo(PointerEventData eventData)
@@ -74,7 +53,7 @@ public class UI_PurchaseBoard : UI_Base
                 itemContent.gameObject.BindEvent((PointerEventData) => Managers.UIMng.ClosePopupUI(itemInfo), Define.UIEvent.Exit);
             }
 
-            itemContent.gameObject.BindEvent(PurchaseItem, Define.UIEvent.DoubleClick);
+            itemContent.gameObject.BindEvent(SellItem, Define.UIEvent.DoubleClick);
             itemContent.gameObject.BindEvent(ShowItemInfo, Define.UIEvent.Enter);
         }
     }
