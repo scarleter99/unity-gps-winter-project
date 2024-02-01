@@ -5,9 +5,6 @@ public sealed class BossTile : HexGridCell
 {
     private const string _iconPath = "Area/icon_boss";
 
-    // 타일에 다시 왔을 때 전투 진입 등 이벤트 재발생 방지
-    private bool _eventTriggered = false;
-
     public BossTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
     {
         _indicatorColor = new Color(138 / 255f, 0 / 255f, 255 / 255f, 255 / 255f);
@@ -27,7 +24,11 @@ public sealed class BossTile : HexGridCell
     }
     public override void OnTileEnter()
     {
-        Debug.Log("BossTile");
-        _eventTriggered = true;
+        if (_eventTriggered)
+        {
+            Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle;
+            return;
+        }
+        Managers.SceneMng.GetCurrentScene<AreaScene>().AreaState = AreaState.Idle; // TODO - Boss 구현 시 상태 수정
     }
 }
