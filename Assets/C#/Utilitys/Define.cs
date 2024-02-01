@@ -201,6 +201,8 @@ public class Define
         Drag,
         Enter,
         Exit,
+        Stay,
+        DoubleClick,
     }
 
     public enum MouseEvent
