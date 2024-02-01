@@ -31,7 +31,7 @@ public class UI_PlayerStat : UI_Base
         Button_Inventory,
     }
 
-    enum Slider
+    enum Sliders
     {
         Slider_HP,
     }
@@ -60,18 +60,18 @@ public class UI_PlayerStat : UI_Base
 
     private void ChangePlayerStatUI(PlayerStat playerStat)
     {
-        GetText(Texts.Text_Name).text = playerStat.Name;
+        GetText(Text.Text_Name).text = playerStat.Name;
 
         Get<Slider>(Sliders.Slider_HP).value = playerStat.Hp / playerStat.MaxHp;
-        GetText(Texts.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
-        GetText(Texts.Text_Attack).text = playerStat.Attack.ToString();
-        GetText(Texts.Text_Defense).text = playerStat.Defense.ToString();
-        GetText(Texts.Text_Speed).text = playerStat.Speed.ToString();
+        GetText(Text.Text_HP).text = $"{playerStat.Hp}/{playerStat.MaxHp}";
+        GetText(Text.Text_Attack).text = playerStat.Attack.ToString();
+        GetText(Text.Text_Defense).text = playerStat.Defense.ToString();
+        GetText(Text.Text_Speed).text = playerStat.Speed.ToString();
 
-        GetText(Texts.Text_Strength).text = playerStat.Strength.ToString();
-        GetText(Texts.Text_Vitality).text = playerStat.Vitality.ToString();
-        GetText(Texts.Text_Intelligence).text = playerStat.Intelligence.ToString();
-        GetText(Texts.Text_Dexterity).text = playerStat.Dexterity.ToString();
+        GetText(Text.Text_Strength).text = playerStat.Strength.ToString();
+        GetText(Text.Text_Vitality).text = playerStat.Vitality.ToString();
+        GetText(Text.Text_Intelligence).text = playerStat.Intelligence.ToString();
+        GetText(Text.Text_Dexterity).text = playerStat.Dexterity.ToString();
         //GetText(Texts.Text_Gold).text = playerStat.Gold.ToString();
         //Get<Image>(Images.UserPicture).sprite = playerStat.Texture;
     }
