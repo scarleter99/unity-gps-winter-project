@@ -6,21 +6,21 @@ using UnityEngine;
 public class Bag
 {
     public List<Data.BagItem> Items { get; protected set; }
-    public int Gold { get; protected set; } = 0;
-
-    public Bag(Transform player)
-    {
-        Items = new List<Data.BagItem>(6);
-        for (int i = 0; i < 6; i++)
-            Items.Add(new Data.BagItem());
-
-        GameObject itemCollection = new GameObject { name = "ItemBag" };
-        itemCollection.transform.parent = player;
-
-        // TODO - TEST CODE
-        StoreItem("Items/Item1", 0, 4, itemCollection.transform);
-        StoreItem("Items/SampleItem", 1, 5, itemCollection.transform);
-    }
+         public int Gold { get; protected set; } = 0;
+     
+         public Bag(Transform player)
+         {
+             Items = new List<Data.BagItem>(6);
+             for (int i = 0; i < 6; i++)
+                 Items.Add(new Data.BagItem());
+     
+             GameObject itemCollection = new GameObject { name = "ItemBag" };
+             itemCollection.transform.parent = player;
+     
+             // TODO - TEST CODE
+             StoreItem("Items/Item1", 0, 4, itemCollection.transform);
+             StoreItem("Items/SampleItem", 1, 5, itemCollection.transform);
+         }
 
     private void DestroyItemIfPossible(int index)
     {

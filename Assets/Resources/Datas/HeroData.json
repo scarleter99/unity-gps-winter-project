@@ -1,8 +1,8 @@
 ﻿{
   "stats": [
     {
-      "dataId": 100000,
-      "name": "Hero",
+      "dataId": 101000,
+      "name": "Kngiht",
       "hp": 30,
       "attack": 40,
       "defense": 5,

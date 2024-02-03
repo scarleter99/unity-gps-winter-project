@@ -10,8 +10,10 @@ public class Managers : MonoBehaviour
 
 #region Contents
     private ObjectManager _objectMng = new ObjectManager();
+    private BattleManager _battleMng = new BattleManager();
     
     public static ObjectManager ObjectMng => Instance._objectMng;
+    public static BattleManager BattleManager => Instance._battleMng;
 #endregion
 
 #region Core
@@ -67,6 +69,7 @@ public class Managers : MonoBehaviour
             s_instance._serverMng.Init();
             s_instance._soundMng.Init();
             s_instance._poolMng.Init();
+            s_instance._battleMng.Init();
         }
     }
     

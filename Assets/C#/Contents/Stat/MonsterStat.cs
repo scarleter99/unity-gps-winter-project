@@ -26,16 +26,15 @@ public struct MonsterStat: IStat, INetworkSerializable
 
     public Action<MonsterStat> StatChangeAction;
 
-    public MonsterStat(int templateId)
+    public MonsterStat(Data.MonsterData monsterData)
     {
         StatChangeAction = null;
-        Data.MonsterData data = Managers.DataMng.MonsterDataDict[templateId];
-        _name = data.name;
-        _hp = data.hp;
-        _maxHp = data.hp;
-        _attack = data.attack;
-        _defense = data.defense;
-        _speed = data.speed;
+        _name = monsterData.name;
+        _hp = monsterData.hp;
+        _maxHp = monsterData.hp;
+        _attack = monsterData.attack;
+        _defense = monsterData.defense;
+        _speed = monsterData.speed;
     }
     
     #region Event

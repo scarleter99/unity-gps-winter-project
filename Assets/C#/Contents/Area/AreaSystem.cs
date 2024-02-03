@@ -103,9 +103,11 @@ public class AreaSystem : MonoBehaviour
         _currentPlayerPosition = spawnOriginPos;
         for (int i = 0; i < 3; i++)
         {
+            /*
             GameObject player = Managers.ObjectMng.Spawn(CreatureType.Hero, "Players/Hero");
             player.transform.position = spawnOriginPos + new Vector3(PLAYER_SPAWN_POSITION_OFFSET[i].x, 0, PLAYER_SPAWN_POSITION_OFFSET[i].y);
             _players.Add(player);
+            */
         }
 
     }

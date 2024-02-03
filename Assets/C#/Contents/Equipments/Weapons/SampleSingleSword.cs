@@ -2,34 +2,17 @@ using UnityEngine;
 
 public class SampleSingleSword : Weapon
 {
-    public SampleSingleSword(HeroController owner): base(owner)
+    public SampleSingleSword() : base()
     {
-        LoadDataFromJson(this.GetType().Name);
-        
-        _weaponType = Define.WeaponType.SingleSword;
-        owner.WeaponType = _weaponType;
+        WeaponType = Define.WeaponType.SingleSword;
     }
     
-    #region Event
-    public override void EffectAfterAttack()
+    protected override void SetInfo(int templateId)
     {
-        // 무언가 특별한 로직이 있다면 여기에 구현 (ex: 특정 확률로 상태이상)
-        // debug
-        Debug.Log("Effect After Attack Debug");
-    }
-    #endregion
+        base.SetInfo(templateId);
 
-    #region Skill
-    public override void Skill1()
-    {
-        // debug
-        Debug.Log("Skill1 Debug");
+        Skill1 = new Strike();
+        Skill2 = new Strike();
+        Skill3 = new Strike();
     }
-
-    public override void Skill2()
-    {
-        // debug
-        Debug.Log("Skill2 Debug");
-    }
-    #endregion
 }

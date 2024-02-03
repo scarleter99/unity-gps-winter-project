@@ -28,7 +28,7 @@ public class ObjectManager
     public Transform GridRoot { get { return GetRootTransform("@Grid"); } }
     #endregion
     
-    public T Spawn<T>(int templateId) where T : CreatureController
+    public T Spawn<T>(int dataId) where T : CreatureController
 	{
 		string prefabName = typeof(T).Name;
 
@@ -54,7 +54,7 @@ public class ObjectManager
 				break;
 		}
 
-		creature.SetInfo(templateId);
+		creature.SetInfo(dataId);
 
 		return creature as T;
 	}

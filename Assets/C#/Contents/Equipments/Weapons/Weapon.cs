@@ -1,52 +1,46 @@
 public abstract class Weapon: Equipment
 {
-    protected Define.WeaponType _weaponType;
-    protected int _leftWeaponIndex;
-    protected int _rightWeaponIndex;
-    
-    public Define.WeaponType WeaponType { get => _weaponType; }
-    
-    public abstract void EffectAfterAttack();
-    public abstract void Skill1();
-    public abstract void Skill2();
+    public Data.WeaponData WeaponData => EquipmentData as Data.WeaponData;
+    public Define.WeaponType WeaponType { get; protected set; }
+    public int LeftIndex { get; protected set; }
+    public int RightIndex { get; protected set; }
 
-    public Weapon(HeroController owner): base(owner) { }
+    public BaseSkill Skill1;
+    public BaseSkill Skill2;
+    public BaseSkill Skill3;
 
-    protected override void LoadDataFromJson(string className)
+    public Weapon() { EquipmentType = Define.EquipmentType.Weapon; }
+    
+    protected override void SetInfo(int templateId)
     {
-        var data = Managers.DataMng.WeaponDataDict[className];
-        if (data.Hp != 0) EquipmentStat.TryAdd(Define.Stat.Hp, data.Hp);
-        if (data.Attack != 0) 
-            EquipmentStat.TryAdd(Define.Stat.Attack, data.Attack);
-        if (data.Defense != 0) EquipmentStat.TryAdd(Define.Stat.Defense, data.Defense);
-        if (data.Speed != 0) EquipmentStat.TryAdd(Define.Stat.Speed, data.Speed);
-        if (data.Dexterity != 0) EquipmentStat.TryAdd(Define.Stat.Dexterity, data.Dexterity);
-        if (data.Strength != 0) EquipmentStat.TryAdd(Define.Stat.Strength, data.Strength);
-        if (data.Vitality != 0) EquipmentStat.TryAdd(Define.Stat.Vitality, data.Vitality);
-        if (data.Intelligence != 0) EquipmentStat.TryAdd(Define.Stat.Intelligence, data.Intelligence);
-        if (data.Left != 0) _leftWeaponIndex = data.Left;
-        if (data.Right != 0) _rightWeaponIndex = data.Right;
+        base.SetInfo(templateId);
+
+        LeftIndex = WeaponData.LeftIndex;
+        RightIndex = WeaponData.RightIndex;
     }
     
-    public override void Equip()
+    public override void Equip(HeroController heroController)
     {
-        Owner.Stat.AttachEquipment(EquipmentStat);
-        
-        if (_leftWeaponIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, true);
-        if (_rightWeaponIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, true);
-        
-        Owner.ChangeAnimator();
+        if (LeftIndex != 0)
+            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, true);
+        if (RightIndex != 0)
+            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, true);
+
+        Skill1.Owner = Owner;
+        Skill2.Owner = Owner;
+        Skill3.Owner = Owner;
     }
 
     public override void UnEquip()
     {
-        Owner.Stat.DetachEquipment(EquipmentStat);
+        if (LeftIndex != 0)
+            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, false);
+        if (RightIndex != 0)
+            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, false);
         
-        if (_leftWeaponIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, _leftWeaponIndex, false);
-        if (_rightWeaponIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, _rightWeaponIndex, false);
+        Owner = null;
+        Skill1.Owner = null;
+        Skill2.Owner = null;
+        Skill3.Owner = null;
     }
 }

@@ -13,18 +13,18 @@ public class DataManager
     public Dictionary<int, Data.HeroData> HeroDataDict { get; private set; }
     public Dictionary<int, Data.MonsterData> MonsterDataDict { get; private set; }
     public Dictionary<int, Data.ItemData> ItemDataDict { get; private set; }
+    public Dictionary<int, Data.WeaponData> WeaponDataDict { get; private set; }
+    public Dictionary<int, Data.ArmorData> ArmorDataDict { get; private set; }
     public Dictionary<Define.AreaName, Data.AreaData> AreaDataDict { get; private set; }
-    public Dictionary<string, Data.WeaponData> WeaponDataDict { get; private set; }
-    public Dictionary<string, Data.ArmorData> ArmorDataDict { get; private set; }
 
     public void Init()
     {
         HeroDataDict = LoadJson<Data.HeroDataLoader, int, Data.HeroData>("HeroData").MakeDict();
         MonsterDataDict = LoadJson<Data.MonsterDataLoader, int, Data.MonsterData>("MonsterData").MakeDict();
         ItemDataDict = LoadJson<Data.ItemDataLoader, int, Data.ItemData>("ItemData").MakeDict();
+        WeaponDataDict = LoadJson<Data.WeaponDataLoader, int, Data.WeaponData>("WeaponData").MakeDict();
+        ArmorDataDict = LoadJson<Data.ArmorDataLoader, int, Data.ArmorData>("ArmorData").MakeDict();
         AreaDataDict = LoadJson<Data.AreaDataSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
-        WeaponDataDict = LoadJson<Data.WeaponDataLoader, string, Data.WeaponData>("WeaponData").MakeDict();
-        ArmorDataDict = LoadJson<Data.ArmorDataLoader, string, Data.ArmorData>("ArmorData").MakeDict();
     }
 
     // path 위치의 Json 파일을 TextAsset 타입으로 로드

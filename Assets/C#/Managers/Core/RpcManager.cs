@@ -44,8 +44,7 @@ public class RpcManager
     [ClientRpc]
     private void BattleChangeClientRpc(Define.BattleState battleState)
     {
-        BattleSystem battleSystem = GameObject.Find("@BattleSystem").GetOrAddComponent<BattleSystem>();
-        battleSystem.BattleState = battleState;
+
     }
     
     #endregion

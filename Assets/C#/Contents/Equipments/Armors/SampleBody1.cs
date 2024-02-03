@@ -1,9 +1,7 @@
 public class SampleBody1 : Armor
 {
-    public SampleBody1(HeroController equipper): base(equipper)
+    public SampleBody1() : base()
     {
-        LoadDataFromJson(this.GetType().Name);
-
-        _armorType = Define.ArmorType.Body; 
+        ArmorType = Define.ArmorType.Body;
     }
 }

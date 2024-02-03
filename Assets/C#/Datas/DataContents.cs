@@ -149,10 +149,11 @@ namespace Data
     }
     #endregion
     
-    #region WeaponData
+    #region EquipmentData
     [Serializable]
-    public class WeaponData
+    public class EquipmentData
     {
+        public int DataId;
         public string Name;
         public int Hp;
         public int Attack;
@@ -162,20 +163,27 @@ namespace Data
         public int Strength;
         public int Vitality;
         public int Intelligence;
-        public int Left;
-        public int Right;
+    }
+    #endregion
+    
+    #region WeaponData
+    [Serializable]
+    public class WeaponData : EquipmentData
+    {
+        public int LeftIndex;
+        public int RightIndex;
     }
 
     [Serializable]
-    public class WeaponDataLoader : IData<string, WeaponData>
+    public class WeaponDataLoader : IData<int, WeaponData>
     {
         public List<WeaponData> weapons = new List<WeaponData>();
 
-        public Dictionary<string, WeaponData> MakeDict()
+        public Dictionary<int, WeaponData> MakeDict()
         {   
-            var dic = new Dictionary<string, WeaponData>();
+            var dic = new Dictionary<int, WeaponData>();
             foreach (var weapon in weapons)
-                dic.Add(weapon.Name, weapon);
+                dic.Add(weapon.DataId, weapon);
 
             return dic;
         }
@@ -185,30 +193,21 @@ namespace Data
     #region ArmorData
     
     [Serializable]
-    public class ArmorData
+    public class ArmorData : EquipmentData
     {
-        public string Name;
-        public int Hp;
-        public int Attack;
-        public int Defense;
-        public int Speed;
-        public int Dexterity;
-        public int Strength;
-        public int Vitality;
-        public int Intelligence;
-        public int Index;
+        public int ArmorIndex;
     }
 
     [Serializable]
-    public class ArmorDataLoader : IData<string, ArmorData>
+    public class ArmorDataLoader : IData<int, ArmorData>
     {
         public List<ArmorData> armors = new List<ArmorData>();
 
-        public Dictionary<string, ArmorData> MakeDict()
+        public Dictionary<int, ArmorData> MakeDict()
         {   
-            var dic = new Dictionary<string, ArmorData>();
+            var dic = new Dictionary<int, ArmorData>();
             foreach (var armor in armors)
-                dic.Add(armor.Name, armor);
+                dic.Add(armor.DataId, armor);
 
             return dic;
         }

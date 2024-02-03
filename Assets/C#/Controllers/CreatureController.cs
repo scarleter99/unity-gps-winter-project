@@ -1,19 +1,17 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = System.Random;
 
 public abstract class CreatureController : MonoBehaviour
 {
-    public ulong Id { get; set; }
-    public int DataTemplateId { get; protected set; }
-    public Data.CreatureData CreatureData { get; protected set; }
-    public Define.CreatureType CreatureType { get; protected set; } = Define.CreatureType.None;
-    public IStat Stat { get; protected set; }
-    
     public Animator Animator { get; protected set; }
-
-    public Define.TurnState TurnState { get; protected set; } = Define.TurnState.Wait;
+    
+    public ulong Id { get; set; }
+    public int DataId { get; protected set; }
+    public Define.CreatureType CreatureType { get; protected set; } = Define.CreatureType.None;
+    public Data.CreatureData CreatureData { get; protected set; }
+    public IStat Stat { get; protected set; }
+    public Define.HeroTurnState HeroTurnState { get; protected set; } = Define.HeroTurnState.Wait;
     private Define.AnimState _animState = Define.AnimState.Idle;
     public Define.AnimState AnimState
     {
@@ -75,11 +73,15 @@ public abstract class CreatureController : MonoBehaviour
             _stateHash = Animator.StringToHash(stateName);
         }
     }
-    public GameObject LockTarget { get; protected set; }
+    public int Row { get; set; }
+    public int Col { get; set; }
+
+    public BaseAction CurrentAction { get; set; }
+    public CreatureController TargetCreature { get; protected set; }
     
     protected int _stateHash;
     protected Vector3 _comebackPos; // jump에서 사용
-
+    
     private void Start()
     {
         Init();
@@ -95,9 +97,10 @@ public abstract class CreatureController : MonoBehaviour
         Animator = GetComponent<Animator>();
     }
     
+    // 수동 실행
     public virtual void SetInfo(int templateId)
     {
-        DataTemplateId = templateId;
+        DataId = templateId;
 
         if (CreatureType == Define.CreatureType.Hero)
             CreatureData = Managers.DataMng.HeroDataDict[templateId];
@@ -105,12 +108,9 @@ public abstract class CreatureController : MonoBehaviour
             CreatureData = Managers.DataMng.MonsterDataDict[templateId];
 
         gameObject.name = $"{CreatureData.dataId}_{CreatureData.name}";
-
-        // State
-        TurnState = Define.TurnState.Wait;
-        _animState = Define.AnimState.Idle;
         
-        Stat = new HeroStat(templateId);
+        HeroTurnState = Define.HeroTurnState.Wait;
+        AnimState = Define.AnimState.Idle;
     }
 
     protected void ChangeAnim()
@@ -159,15 +159,41 @@ public abstract class CreatureController : MonoBehaviour
     {
         Stat = statStruct;
     }
+    
+    public virtual void DoAction(ulong targetId)
+    {
+        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out HeroController hero))
+            TargetCreature = hero;
+        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out MonsterController monster))
+            TargetCreature = monster;
+        if (TargetCreature == null)
+        {
+            Debug.Log("Failed to DoAction");
+            return;
+        }
 
-    #region Event
+        switch (CurrentAction.ActionType)
+        {
+            case Define.ActionType.MeleeAttack:
+                // TODO - 애니메이션 실행
+                Debug.Log("MeleeAttack");
+                break;
+        }
+    }
 
     // Animation의 적절한 타이밍에서 호출
-    protected abstract void OnAttackEvent();
-    protected abstract void OnJumpStart();
-    public abstract void OnDamage(CreatureController attacker, int amount = 1);
-    
-    #endregion
+    public virtual void HandleAction()
+    {
+        CurrentAction.HandleAction(TargetCreature.Id);
+        TargetCreature = null;
+    }
+
+    // TODO - 코인 앞면 수에 비례한 데미지 계산 
+    public virtual void OnDamage(CreatureController attacker, int amount = 1)
+    {
+        Stat.OnDamage(attacker.Stat.Attack, amount);
+        // TODO - 피격 애니메이션 실행
+    }
     
     #region Update
 
@@ -198,7 +224,8 @@ public abstract class CreatureController : MonoBehaviour
         var currentState = Animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
         {
-            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleSystem.ActionType;
+            /* TODO - 현재 오류 발생
+            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleManager.ActionType;
             switch (nextAct)
             {
                 case Define.ActionType.Attack:
@@ -208,6 +235,7 @@ public abstract class CreatureController : MonoBehaviour
                     AnimState = Define.AnimState.Skill;
                     break;
             }
+            */
         }
     }
     
@@ -215,13 +243,4 @@ public abstract class CreatureController : MonoBehaviour
     protected virtual void UpdateVictory() { }
 
     #endregion
-    
-    public void LockAndAttack(GameObject target, bool jumpNeeded = false)
-    {
-        LockTarget = target;
-        if (jumpNeeded)
-            AnimState = Define.AnimState.JumpFront;
-        else 
-            AnimState = Define.AnimState.Attack;
-    }
 }

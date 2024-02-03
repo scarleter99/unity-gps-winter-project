@@ -9,42 +9,60 @@
         Monster,
     }
     
+    public enum EquipmentType
+    {
+        None,
+        Weapon,
+        Armor,
+    }
+    
     public enum WeaponType
     {
-        NoWeapon,
+        None,
         Bow,
         DoubleSword,
         SingleSword,
         Spear,
         SwordAndShield,
         TwoHandedSword,
-        Wand
+        Wand,
     }
     
     public enum ArmorType
     {
+        None,
         Accessory,
         Body,
         Cloak,
         HeadAccessory,
-        Helmet
+        Helmet,
     }
     
     public enum ItemType
     {
+        None,
         Attack,
         Buff,
         Debuff,
         Recover,
-        None,
     }
     
     public enum ActionType
     {
-        Attack,
-        Defend,
-        ItemUse,
-        SkillUse
+        None,
+        MeleeAttack,
+        RangedAttack,
+        Buff,
+        Heal,
+        Move
+    }
+    
+    public enum ActionTargetType
+    {
+        Single,
+        Cross,
+        Horizontal,
+        Vertical,
     }
     
     public enum AreaTileType
@@ -95,23 +113,22 @@
         Attack,
         Defense,
         Speed,
-        Gold,
-        Dexterity,
         Strength,
+        Intelligence,
         Vitality,
-        Intelligence
+        Dexterity,
     }
     
     public enum GridSide
     {
-        Player,
-        Enemy
+        HeroSide,
+        MonsterSide,
     }
 
     public enum WeaponSide
     {
         Left,
-        Right
+        Right,
     }
     
     #endregion
@@ -136,14 +153,13 @@
     
     public enum BattleState
     {
-        Idle,
-        SelectingTargetPlayer,
-        SelectingTargetMonster,
-        SelectingPlayerSideEmptyCell,
-        ActionProceeding,
+        MonsterTurn,
+        SelectAction,
+        SelectTarget,
+        ActionProceed,
     }
     
-    public enum TurnState
+    public enum HeroTurnState
     {
         Wait,
         Action,
@@ -172,7 +188,26 @@
 
     #endregion
     
-    // Name은 Json으로 관리
+    #region Event
+    public enum UIEvent
+    {
+        Click,
+        Drag,
+        Enter,
+        Exit,
+    }
+
+    public enum MouseEvent
+    {
+        Press,
+        PointerDown,
+        PointerUp,
+        Click,
+    }
+
+    #endregion
+    
+    // Name은 나중에 Json으로 관리
     #region Name
 
     public enum AreaName
@@ -191,23 +226,19 @@
     }
 
     #endregion
-    
-    #region Event
-    public enum UIEvent
-    {
-        Click,
-        Drag,
-        Enter,
-        Exit,
-    }
 
-    public enum MouseEvent
-    {
-        Press,
-        PointerDown,
-        PointerUp,
-        Click,
-    }
+    // DataId는 나중에 Json으로 관리
+    #region DataId
+    
+    public const int HERO_KNIGHT_ID = 101000;
+
+    public const int MONSTER_BAT_ID = 102000;
+    
+    public const int WEAPON_SAMPLESINGLESWORD_ID = 201000;
+    public const int WEAPON_SAMPLESWORDANDSHIELD_ID = 201001;
+    
+    public const int ARMOR_SAMPLEBODY1_ID = 202000;
+    public const int ARMOR_SAMPLEBODY2_ID = 202001;
 
     #endregion
 

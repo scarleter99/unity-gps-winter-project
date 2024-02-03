@@ -1,15 +1,17 @@
 ﻿{
   "armors": [
     {
+      "DataId": 202000,
       "Name": "SampleBody1",
       "Defense": 200,
-      "Index": 5
+      "ArmorIndex": 5
     },
     {
+      "DataId": 202001,
       "Name": "SampleBody2",
       "Defense": 6,
       "Speed": 10,
-      "Index": 6
+      "ArmorIndex": 6
     }
   ]
 }

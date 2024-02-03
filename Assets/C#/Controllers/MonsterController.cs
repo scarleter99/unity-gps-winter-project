@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class MonsterController : CreatureController
 {
+    public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
+    public MonsterStat MonsterStat => (MonsterStat)Stat;
+    
     protected override void Init()
     {
         base.Init();
@@ -9,41 +12,16 @@ public class MonsterController : CreatureController
         CreatureType = Define.CreatureType.Monster;
 
         // TODO - TEST CODE
-        Managers.InputMng.KeyAction -= OnKeyboard;
-        Managers.InputMng.KeyAction += OnKeyboard;
+        Managers.InputMng.KeyAction -= OnKeyboardClick;
+        Managers.InputMng.KeyAction += OnKeyboardClick;
     }
     
-    public MonsterStat GetMonsterStat()
+    public override void SetInfo(int templateId)
     {
-        MonsterStat monsterStat = (MonsterStat)Stat;
-        return monsterStat;
+        base.SetInfo(templateId);
+        
+        Stat = new MonsterStat(MonsterData);
     }
-    
-    #region Event
-    
-    public override void OnDamage(CreatureController attacker, int amount = 1)
-    {
-        var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.DefendHit : Define.AnimState.Hit;
-        var playerAttacker = attacker as HeroController;
-        Stat.OnDamage(playerAttacker.Stat.Attack, amount);
-        nextState = (Stat.Hp > 0) ? nextState : Define.AnimState.Die;
-        AnimState = nextState;
-    }
-    
-    // 적절한 Animation Timing에서 호출
-    protected override void OnAttackEvent()
-    {
-        if (LockTarget != null)
-            LockTarget.GetComponent<CreatureController>().OnDamage(this);
-    }
-    
-    // 적절한 Animation Timing에서 호출
-    protected override void OnJumpStart()
-    {
-        // TODO
-    }
-    
-    #endregion
     
     #region Update
 
@@ -66,7 +44,7 @@ public class MonsterController : CreatureController
     /*----------------------
         TODO - TEST CODE
     ----------------------*/
-    protected void OnKeyboard()
+    protected void OnKeyboardClick()
     {
         if (Input.GetKeyDown(KeyCode.A))
             AnimState = Define.AnimState.Attack;
