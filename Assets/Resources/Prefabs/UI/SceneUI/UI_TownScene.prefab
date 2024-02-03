@@ -160,22 +160,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5979273570428051150}
     m_Modifications:
-    - target: {fileID: 1386734320511169713, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1386734320511169713, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1386734320511169713, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 160
-      objectReference: {fileID: 0}
-    - target: {fileID: 1386734320511169713, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -539.7865
-      objectReference: {fileID: 0}
     - target: {fileID: 5454128154881834291, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -260,45 +244,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5604180753707307689, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5604180753707307689, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5604180753707307689, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 160
-      objectReference: {fileID: 0}
-    - target: {fileID: 5604180753707307689, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -624.7865
-      objectReference: {fileID: 0}
     - target: {fileID: 8651166219520378522, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
       propertyPath: m_Name
       value: UI_Page_Town_Quest
-      objectReference: {fileID: 0}
-    - target: {fileID: 8651166219520378522, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9217980889976636356, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9217980889976636356, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9217980889976636356, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 160
-      objectReference: {fileID: 0}
-    - target: {fileID: 9217980889976636356, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -454.7865
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ffbcc3b815bc6a4f924e133099bef6d, type: 3}
@@ -506,6 +454,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1488907bb65730c409e65fd99399f6dd, type: 3}
+--- !u!1 &2046420213163117653 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4736094952489452751, guid: 1488907bb65730c409e65fd99399f6dd, type: 3}
+  m_PrefabInstance: {fileID: 6764306667890002074}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1897949874489682294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2046420213163117653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91757e2a15dd75842aee4cf30437e689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8194039866046548344 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3200008520262730210, guid: 1488907bb65730c409e65fd99399f6dd, type: 3}

@@ -79,6 +79,14 @@ public abstract class UI_Base : MonoBehaviour
                 evt.OnExitHandler -= action;
                 evt.OnExitHandler += action;
                 break;
+            case Define.UIEvent.Stay:
+                evt.OnStayHandler -= action;
+                evt.OnStayHandler += action;
+                break;
+            case Define.UIEvent.DoubleClick:
+                evt.OnDoubleClickHandler -= action;
+                evt.OnDoubleClickHandler += action;
+                break;
         }
     }
 

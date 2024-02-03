@@ -228,6 +228,12 @@ public class HexGrid
         GetGridPosition(worldPosition, out int x, out int z);
         GetGridCell(x, z).OnTileEnter();
     }
+
+    public void OnTileEventFinish(Vector3 worldPosition)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        GetGridCell(x, z).OnTileEventFinish();
+    }
 }
 
 #region legacy: 유효한 그리드인지 확인해주는 2차원 bool _isValid 초기화. 맵을 미리 생성해 두는 것으로 결정되어 현재 사용하지 않음

@@ -30,15 +30,14 @@ public class AreaSystem : MonoBehaviour
     private Vector3 _recentMouseWorldPosition;
 
     private Camera _mainCamera;
+    private GameObject _cameraController;
+    private GameObject _light;
+
     private Action OnMouseLeftClick;
 
     private Vector2[] PLAYER_SPAWN_POSITION_OFFSET = new[]
         { new Vector2(0, 0.75f), new Vector2(-0.75f, -0.75f), new Vector2(0.75f, -0.75f) };
 
-    void Start()
-    {
-        _mainCamera = Camera.main;
-    }
 
     void Update()
     {
@@ -59,10 +58,13 @@ public class AreaSystem : MonoBehaviour
     {
         GenerateMap();
         SpawnPlayers();
+        InitCamera();
         OnMouseLeftClick -= SelectDestinationTile;
         OnMouseLeftClick += SelectDestinationTile;
+        Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
         AreaState = AreaState.Idle;
+        _light = GameObject.FindGameObjectWithTag("AreaLight");
     }
 
     private void HandleMouseInput(MouseEvent mouseEvent)
@@ -92,7 +94,7 @@ public class AreaSystem : MonoBehaviour
 
     private void GenerateMap()
     {
-        AreaGenerator _areaGenerator = new AreaGenerator(AreaName, Vector3.zero);
+        AreaGenerator _areaGenerator = new AreaGenerator(AreaName, new Vector3(100, 0, 100));
         _areaGenerator.GenerateMap();
         _grid = _areaGenerator.Grid;
     }
@@ -145,8 +147,38 @@ public class AreaSystem : MonoBehaviour
     {
         _currentPlayerPosition = currentPosition;
         _grid.OnTileEnter(currentPosition);
-        // for test /////
-        AreaState = AreaState.Idle;
-        ////////////////
+    }
+
+    private void InitCamera()
+    {
+        _cameraController = Managers.ResourceMng.Instantiate("Area/@AreaCameraController");
+        _cameraController.transform.position = new Vector3(_currentPlayerPosition.x, 50, _currentPlayerPosition.z - 40);
+        _mainCamera = _cameraController.transform.GetComponentInChildren<Camera>();
+    }
+
+    public void FreezeCamera()
+    {
+        _cameraController.GetComponent<AreaCameraController>().Freeze = true;
+    }
+
+    public void OnBattleSceneLoadStart()
+    {
+        _light.SetActive(false);
+        _cameraController.SetActive(false);
+    }
+
+    public void OnBattleSceneUnloadFinish()
+    {   
+        Destroy(FindObjectOfType<UI_BattleScene>().gameObject);
+        _cameraController.GetComponent<AreaCameraController>().Freeze = false;
+        _light.SetActive(true);
+        _cameraController.SetActive(true);
+        
+        foreach (var player in _players)
+        {
+            player.transform.position = _currentPlayerPosition + new Vector3(PLAYER_SPAWN_POSITION_OFFSET[_players.IndexOf(player)].x, 0, PLAYER_SPAWN_POSITION_OFFSET[_players.IndexOf(player)].y);
+        }
+
+        _grid.OnTileEventFinish(_currentPlayerPosition);
     }
 }
