@@ -8,7 +8,7 @@ public abstract class BaseAction
 
     protected Coroutine DoActionCo;
 
-    public CreatureController Owner { get; set; }
+    public Creature Owner { get; set; }
     
     public abstract void HandleAction(ulong targetId);
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterController : CreatureController
+public class Monster : Creature
 {
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)Stat;

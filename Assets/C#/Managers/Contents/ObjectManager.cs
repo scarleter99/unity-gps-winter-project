@@ -6,8 +6,8 @@ public class ObjectManager
     private List<Dictionary<ulong, GameObject>> _gameObjectDics = new List<Dictionary<ulong, GameObject>>(); // Unknown타입의 Dic은 생성하지 않음
     private List<ulong> _lastIds = new List<ulong>(); // id는 1부터 시작
     
-    public Dictionary<ulong, HeroController> Heroes { get; } = new();
-    public Dictionary<ulong, MonsterController> Monsters { get; } = new();
+    public Dictionary<ulong, Hero> Heroes { get; } = new();
+    public Dictionary<ulong, Monster> Monsters { get; } = new();
     
     public ulong HeroLastId = 1000;
     public ulong MonsterLastId = 2000;
@@ -28,7 +28,7 @@ public class ObjectManager
     public Transform GridRoot { get { return GetRootTransform("@Grid"); } }
     #endregion
     
-    public T Spawn<T>(int dataId) where T : CreatureController
+    public T Spawn<T>(int dataId) where T : Creature
 	{
 		string prefabName = typeof(T).Name;
 
@@ -36,19 +36,19 @@ public class ObjectManager
 		go.name = prefabName;
 		go.transform.position = Vector3.zero;
 		
-		CreatureController creature = go.GetComponent<CreatureController>();
+		Creature creature = go.GetComponent<Creature>();
 
 		switch (creature.CreatureType)
 		{
 			case Define.CreatureType.Hero:
 				creature.transform.parent = HeroRoot;
-				HeroController hero = creature as HeroController;
+				Hero hero = creature as Hero;
 				Heroes[++HeroLastId] = hero;
 				creature.Id = HeroLastId;
 				break;
 			case Define.CreatureType.Monster:
 				creature.transform.parent = MonsterRoot;
-				MonsterController monster = creature as MonsterController;
+				Monster monster = creature as Monster;
 				Monsters[++MonsterLastId] = monster;
 				creature.Id = MonsterLastId;
 				break;
@@ -61,7 +61,7 @@ public class ObjectManager
 
     public void Despawn(Define.CreatureType creatureType, ulong id)
     {
-	    CreatureController creature = null;
+	    Creature creature = null;
 		switch (creatureType)
 		{
 			case Define.CreatureType.Hero:

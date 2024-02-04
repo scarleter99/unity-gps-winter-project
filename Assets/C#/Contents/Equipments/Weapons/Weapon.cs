@@ -19,7 +19,7 @@ public abstract class Weapon: Equipment
         RightIndex = WeaponData.RightIndex;
     }
     
-    public override void Equip(HeroController heroController)
+    public override void Equip(Hero hero)
     {
         if (LeftIndex != 0)
             Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, true);

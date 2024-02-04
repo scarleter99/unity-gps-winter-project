@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class HeroController : CreatureController
+public class Hero : Creature
 {
     public Data.HeroData HeroData => CreatureData as Data.HeroData;
     public HeroStat HeroStat => (HeroStat)Stat;
@@ -44,6 +44,7 @@ public class HeroController : CreatureController
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
         
+        // TODO - TEST CODE
         Managers.InputMng.KeyAction -= OnKeyboardClick;
         Managers.InputMng.KeyAction += OnKeyboardClick;
     }
@@ -55,12 +56,25 @@ public class HeroController : CreatureController
         Stat = new HeroStat(HeroData);
     }
 
-    #region WeaponData
+    #region Weapon
 
     public void ChangeAnimator()
     {
         string path = "Animator Controllers/Players/" + WeaponType.ToString();
         Animator.runtimeAnimatorController = Resources.Load(path) as RuntimeAnimatorController; 
+    }
+    
+    public void EquipWeapon(Weapon equippingWeapon)
+    {
+        _weapon?.UnEquip(); 
+        equippingWeapon.Equip(this);
+        _weapon = equippingWeapon;
+    }
+    
+    public void UnEquipArmor()
+    {
+       _weapon?.UnEquip();
+       _weapon = null;
     }
     
     public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
@@ -78,8 +92,8 @@ public class HeroController : CreatureController
     
     #endregion
     
-    #region ArmorData
-    public Armor Armor(Define.ArmorType armorType)
+    #region Armor
+    public Armor GetArmor(Define.ArmorType armorType)
     {
         return Armors[armorType];
     }
@@ -186,8 +200,8 @@ public class HeroController : CreatureController
         else if (Input.GetKeyDown(KeyCode.Alpha4))
             EquipArmor(new SampleBody2());
         else if (Input.GetKeyDown(KeyCode.Alpha5))
-            Weapon = new SampleSingleSword();
+            EquipWeapon(new SampleSingleSword());
         else if (Input.GetKeyDown(KeyCode.Alpha6))
-            Weapon = new SampleSwordAndShield();
+            EquipWeapon(new SampleSingleSword());
     }
 }

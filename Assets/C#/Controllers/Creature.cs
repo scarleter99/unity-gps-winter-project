@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Random = System.Random;
 
-public abstract class CreatureController : MonoBehaviour
+public abstract class Creature : MonoBehaviour
 {
     public Animator Animator { get; protected set; }
     
@@ -11,6 +11,7 @@ public abstract class CreatureController : MonoBehaviour
     public Define.CreatureType CreatureType { get; protected set; } = Define.CreatureType.None;
     public Data.CreatureData CreatureData { get; protected set; }
     public IStat Stat { get; protected set; }
+    
     public Define.HeroTurnState HeroTurnState { get; protected set; } = Define.HeroTurnState.Wait;
     private Define.AnimState _animState = Define.AnimState.Idle;
     public Define.AnimState AnimState
@@ -77,7 +78,7 @@ public abstract class CreatureController : MonoBehaviour
     public int Col { get; set; }
 
     public BaseAction CurrentAction { get; set; }
-    public CreatureController TargetCreature { get; protected set; }
+    public Creature TargetCreature { get; protected set; }
     
     protected int _stateHash;
     protected Vector3 _comebackPos; // jump에서 사용
@@ -162,9 +163,9 @@ public abstract class CreatureController : MonoBehaviour
     
     public virtual void DoAction(ulong targetId)
     {
-        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out HeroController hero))
+        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out Hero hero))
             TargetCreature = hero;
-        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out MonsterController monster))
+        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out Monster monster))
             TargetCreature = monster;
         if (TargetCreature == null)
         {
@@ -189,7 +190,7 @@ public abstract class CreatureController : MonoBehaviour
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
-    public virtual void OnDamage(CreatureController attacker, int amount = 1)
+    public virtual void OnDamage(Creature attacker, int amount = 1)
     {
         Stat.OnDamage(attacker.Stat.Attack, amount);
         // TODO - 피격 애니메이션 실행

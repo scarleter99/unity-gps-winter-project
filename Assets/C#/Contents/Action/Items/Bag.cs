@@ -39,7 +39,7 @@ public class Bag
     }
     
     // 아이템 사용
-    public void UseItem(CreatureController user, int index)
+    public void UseItem(Creature user, int index)
     {
         var selectedIndex = Items[index];
         if (selectedIndex.IsNull())

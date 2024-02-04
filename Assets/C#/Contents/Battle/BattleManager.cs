@@ -10,8 +10,8 @@ public class BattleManager
     public BattleGridCell[,] HeroGrid = new BattleGridCell[3,2];
     public BattleGridCell[,] MonsterGrid = new BattleGridCell[3,2];
 
-    public CreatureController CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
-    public CreatureController TargetCreature;
+    public Creature CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
+    public Creature TargetCreature;
 
     public void Init()
     {
@@ -69,7 +69,7 @@ public class BattleManager
     {
         TurnSystem.NextTurn();
         
-        CreatureController currentTurnCreature = TurnSystem.CurrentTurnCreature();
+        Creature currentTurnCreature = TurnSystem.CurrentTurnCreature();
         switch (currentTurnCreature.CreatureType)
         {
             case Define.CreatureType.Hero:
@@ -81,9 +81,9 @@ public class BattleManager
         }
     }
 
-    public HeroController SpawnHero(ulong heroId, int row, int col)
+    public Hero SpawnHero(ulong heroId, int row, int col)
     {
-        HeroController hero = Managers.ObjectMng.Heroes[heroId];
+        Hero hero = Managers.ObjectMng.Heroes[heroId];
         HeroGrid[row, col].CellCreature = hero;
         hero.transform.position = HeroGrid[row, col].transform.position;
         hero.Row = row;
@@ -92,9 +92,9 @@ public class BattleManager
         return hero;
     }
     
-    public MonsterController SpawnMonster(int monsterDataId, int row, int col)
+    public Monster SpawnMonster(int monsterDataId, int row, int col)
     {
-        MonsterController monster = Managers.ObjectMng.Spawn<MonsterController>(monsterDataId);
+        Monster monster = Managers.ObjectMng.Spawn<Monster>(monsterDataId);
         HeroGrid[row, col].CellCreature = monster;
         monster.transform.position = HeroGrid[row, col].transform.position;
         monster.Row = row;
@@ -124,7 +124,7 @@ public class BattleManager
             BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
             TargetCreature = gridCell.CellCreature;
             
-            HeroController currentHero = CurrentTurnCreature as HeroController;
+            Hero currentHero = CurrentTurnCreature as Hero;
             currentHero.DoAction(TargetCreature.Id);
             
             // TODO - DEBUG CODE

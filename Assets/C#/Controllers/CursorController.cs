@@ -40,7 +40,7 @@ public class CursorController : MonoBehaviour
                 if (_cursorType == CursorType.Attack)
                     return;
 			    
-                Cursor.SetCursor(_attackIcon, new Vector2(_attackIcon.width / 5, 0), CursorMode.Auto);
+                UnityEngine.Cursor.SetCursor(_attackIcon, new Vector2(_attackIcon.width / 5, 0), CursorMode.Auto);
                 _cursorType = CursorType.Attack;
             }
             else
@@ -48,7 +48,7 @@ public class CursorController : MonoBehaviour
                 if (_cursorType == CursorType.Hand)
                     return;
 			    
-                Cursor.SetCursor(_handIcon, new Vector2(_handIcon.width / 3, 0), CursorMode.Auto);
+                UnityEngine.Cursor.SetCursor(_handIcon, new Vector2(_handIcon.width / 3, 0), CursorMode.Auto);
                 _cursorType = CursorType.Hand;
             }
         }

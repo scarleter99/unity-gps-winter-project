@@ -7,7 +7,7 @@ public class Item1 : BaseItem
         ItemType = Define.ItemType.Recover;
     }
 
-    public override void Use(CreatureController owner)
+    public override void Use(Creature owner)
     {
         owner.Stat.RecoverHp(40);
     }

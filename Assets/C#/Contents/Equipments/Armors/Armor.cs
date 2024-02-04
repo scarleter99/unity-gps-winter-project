@@ -13,7 +13,7 @@ public abstract class Armor: Equipment
         ArmorIndex = ArmorData.ArmorIndex;
     }
     
-    public override void Equip(HeroController heroController)
+    public override void Equip(Hero hero)
     {
         if (ArmorIndex != 0)
             Owner.ChangeArmorVisibility(ArmorType, ArmorIndex, true);
