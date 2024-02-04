@@ -29,7 +29,7 @@ public class AreaScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        SceneType = Scene.AreaScene;
+        SceneType = SceneType.AreaScene;
         GameObject areaSystem = Managers.ResourceMng.Instantiate("Area/@AreaSystem");
         _areaSystem = areaSystem.GetOrAddComponent<AreaSystem>();
         AreaName = AreaName.Forest; // TODO - 나중엔 외부에서 지정해줘야 함
