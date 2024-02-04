@@ -19,7 +19,7 @@ TagManager:
   - Block
   - Monster
   - Player
-  - BattleGrid
+  - BattleGridCell
   - AreaLightTarget
   - AreaGrid
   - 

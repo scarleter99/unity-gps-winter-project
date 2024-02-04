@@ -58,8 +58,8 @@ public class UI_BattleOrder : UI_Base
     }
     ////////////////////////////////////////
 
-    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 호출하도록 연결
-    private void SetSkills(PlayerStat playerStat ,IEnumerable<Skill> skills, bool isMine)
+    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 자기 턴이면 해당 함수를 호출하도록 연결
+    private void SetSkills(HeroStat heroStat ,IEnumerable<Skill> skills, bool isMine)
     {
         this.gameObject.SetActive(isMine);
         ClearSkillIcon();
@@ -79,10 +79,10 @@ public class UI_BattleOrder : UI_Base
                 GetText(Text.Text_Target).text = skill.Target.ToString();
                 GetText(Text.Text_SlotPercentage).text = skill.AffectedStat switch
                 {
-                    Define.Stat.Strength => playerStat.Strength.ToString(),
-                    Define.Stat.Vitality => playerStat.Strength.ToString(),
-                    Define.Stat.Dexterity => playerStat.Strength.ToString(),
-                    Define.Stat.Intelligence => playerStat.Strength.ToString(),
+                    Define.Stat.Strength => heroStat.Strength.ToString(),
+                    Define.Stat.Vitality => heroStat.Strength.ToString(),
+                    Define.Stat.Dexterity => heroStat.Strength.ToString(),
+                    Define.Stat.Intelligence => heroStat.Strength.ToString(),
                 } + '%';
 
                 _selectedSkill = skill;

@@ -1,0 +1,12 @@
+﻿{
+  "stats": [
+    {
+      "templateId": 102000,
+      "name": "Bat",
+      "hp": 100,
+      "attack": 12,
+      "defense": 4,
+      "speed": 40
+    }
+  ]
+}

@@ -2,36 +2,45 @@
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Data
 {
-    #region PlayerStat
-
+    #region CreatureData
     [Serializable]
-    public class PlayerStat
+    public class CreatureData
     {
+        public int dataId;
         public string name;
         public int hp;
         public int attack;
         public int defense;
+        public int speed;
+    }
+    #endregion
+    
+    #region HeroData
+
+    [Serializable]
+    public class HeroData : CreatureData
+    {
         public int dexterity;
         public int strength;
         public int vitality;
         public int intelligence;
-        public int speed;
     }
 
     [Serializable]
-    public class PlayerStatData : IData<string, PlayerStat>
+    public class HeroDataLoader : IData<int, HeroData>
     {
-        public List<PlayerStat> stats = new List<PlayerStat>();
+        public List<HeroData> stats = new List<HeroData>();
 
         // List형태의 Data를 Dictionary형태로 변환 후 반환
-        public Dictionary<string, PlayerStat> MakeDict()
+        public Dictionary<int, HeroData> MakeDict()
         {
-            Dictionary<string, PlayerStat> dic = new Dictionary<string, PlayerStat>();
-            foreach (PlayerStat stat in stats)
-                dic.Add(stat.name, stat);
+            Dictionary<int, HeroData> dic = new Dictionary<int, HeroData>();
+            foreach (HeroData stat in stats)
+                dic.Add(stat.dataId, stat);
 
             return dic;
         }
@@ -39,29 +48,24 @@ namespace Data
 
     #endregion
 
-    #region MonsterStat
+    #region MonsterData
 
     [Serializable]
-    public class MonsterStat
+    public class MonsterData : CreatureData
     {
-        public string name;
-        public int hp;
-        public int attack;
-        public int defense;
-        public int speed;
     }
 
     [Serializable]
-    public class MonsterStatData : IData<string, MonsterStat>
+    public class MonsterDataLoader : IData<int, MonsterData>
     {
-        public List<MonsterStat> stats = new List<MonsterStat>();
+        public List<MonsterData> stats = new List<MonsterData>();
 
         // List형태의 Data를 Dictionary형태로 변환 후 반환
-        public Dictionary<string, MonsterStat> MakeDict()
+        public Dictionary<int, MonsterData> MakeDict()
         {
-            Dictionary<string, MonsterStat> dic = new Dictionary<string, MonsterStat>();
-            foreach (MonsterStat stat in stats)
-                dic.Add(stat.name, stat);
+            Dictionary<int, MonsterData> dic = new Dictionary<int, MonsterData>();
+            foreach (MonsterData stat in stats)
+                dic.Add(stat.dataId, stat);
 
             return dic;
         }
@@ -69,25 +73,26 @@ namespace Data
 
     #endregion
 
-    #region Item
+    #region ItemData
 
     [Serializable]
-    public class Item
+    public class ItemData
     {
+        public int dataId;
         public string name;
         public string description;
     }
 
     [Serializable]
-    public class ItemData : IData<string, Item>
+    public class ItemDataLoader : IData<int, ItemData>
     {
-        public List<Item> items = new List<Item>();
+        public List<ItemData> items = new List<ItemData>();
 
-        public Dictionary<string, Item> MakeDict()
+        public Dictionary<int, ItemData> MakeDict()
         {   
-            var dic = new Dictionary<string, Item>();
-            foreach (Item item in items)
-                dic.Add(item.name, item);
+            var dic = new Dictionary<int, ItemData>();
+            foreach (ItemData item in items)
+                dic.Add(item.dataId, item);
 
             return dic;
         }
@@ -144,10 +149,11 @@ namespace Data
     }
     #endregion
     
-    #region WeaponData
+    #region EquipmentData
     [Serializable]
-    public class Weapon
+    public class EquipmentData
     {
+        public int DataId;
         public string Name;
         public int Hp;
         public int Attack;
@@ -157,20 +163,27 @@ namespace Data
         public int Strength;
         public int Vitality;
         public int Intelligence;
-        public int Left;
-        public int Right;
+    }
+    #endregion
+    
+    #region WeaponData
+    [Serializable]
+    public class WeaponData : EquipmentData
+    {
+        public int LeftIndex;
+        public int RightIndex;
     }
 
     [Serializable]
-    public class WeaponData : IData<string, Weapon>
+    public class WeaponDataLoader : IData<int, WeaponData>
     {
-        public List<Weapon> weapons = new List<Weapon>();
+        public List<WeaponData> weapons = new List<WeaponData>();
 
-        public Dictionary<string, Weapon> MakeDict()
+        public Dictionary<int, WeaponData> MakeDict()
         {   
-            var dic = new Dictionary<string, Weapon>();
+            var dic = new Dictionary<int, WeaponData>();
             foreach (var weapon in weapons)
-                dic.Add(weapon.Name, weapon);
+                dic.Add(weapon.DataId, weapon);
 
             return dic;
         }
@@ -180,47 +193,25 @@ namespace Data
     #region ArmorData
     
     [Serializable]
-    public class Armor
+    public class ArmorData : EquipmentData
     {
-        public string Name;
-        public int Hp;
-        public int Attack;
-        public int Defense;
-        public int Speed;
-        public int Dexterity;
-        public int Strength;
-        public int Vitality;
-        public int Intelligence;
-        public int Index;
+        public int ArmorIndex;
     }
 
     [Serializable]
-    public class ArmorData : IData<string, Armor>
+    public class ArmorDataLoader : IData<int, ArmorData>
     {
-        public List<Armor> armors = new List<Armor>();
+        public List<ArmorData> armors = new List<ArmorData>();
 
-        public Dictionary<string, Armor> MakeDict()
+        public Dictionary<int, ArmorData> MakeDict()
         {   
-            var dic = new Dictionary<string, Armor>();
+            var dic = new Dictionary<int, ArmorData>();
             foreach (var armor in armors)
-                dic.Add(armor.Name, armor);
+                dic.Add(armor.DataId, armor);
 
             return dic;
         }
     }
     
     #endregion
-    
-    public struct TestStruct : INetworkSerializable
-    {
-        public Vector3 Position;
-        public int Hp;
-        
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref Position);
-            serializer.SerializeValue(ref Hp);
-        }
-    }
-
 }

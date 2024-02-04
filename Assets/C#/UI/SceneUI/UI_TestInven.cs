@@ -23,7 +23,7 @@ public class UI_TestInven : UI_Scene
         {
             GameObject go = Managers.UIMng.MakeSubItemUI<UI_TestInven_TestItem>(gridPanel.transform).gameObject;
             UI_TestInven_TestItem invenItem = go.GetOrAddComponent<UI_TestInven_TestItem>();
-            invenItem.SetInfo($"Item{i}");
+            invenItem.SetInfo($"ItemData{i}");
         }
     }
 }

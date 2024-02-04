@@ -1,0 +1,16 @@
+﻿{
+  "stats": [
+    {
+      "dataId": 101000,
+      "name": "Kngiht",
+      "hp": 30,
+      "attack": 40,
+      "defense": 5,
+      "dexterity": 40,
+      "speed": 50,
+      "strength": 40,
+      "vitality": 60,
+      "intelligence": 80
+    }
+  ]
+}

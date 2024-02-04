@@ -1,0 +1,25 @@
+{
+  "skills": [
+    {
+      "DataId": 10001,
+      "Name": "기본공격",
+      "ClassName": "NormalAttack",
+      "ComponentName": null,
+      "ProjectileId": 0,
+      "IconLabel": "BattleSkillIcon_01",
+      "AnimName": "attack",
+      "DamageMultiplier": 1.0,
+      "Duration": 0.0,
+      "Isranged": false,
+    },
+    {
+      "DataId": 301001,
+      "Name": "SampleSwordAndShield",
+      "Attack": 15,
+      "Speed": 10,
+      "Strength": 5,
+      "LeftIndex" : 17,
+      "RightIndex": 3
+    }
+  ]
+}

@@ -8,49 +8,25 @@ public class RpcManager
     #region Managers
 
     [ServerRpc]
-    public void StatChangeServerRpc(Define.WorldObject type, ulong id, MonsterStat statStruct)
+    public void StatChangeServerRpc(Define.CreatureType type, ulong id, MonsterStat statStruct)
     {
         StatChangeClientRpc(type, id, statStruct);
     }
     
     [ClientRpc]
-    private void StatChangeClientRpc(Define.WorldObject type, ulong id, MonsterStat statStruct)
+    private void StatChangeClientRpc(Define.CreatureType type, ulong id, MonsterStat statStruct)
     {
-        Managers.GameMng.StatChange(type, id, statStruct);
-    }
-    
-    [ServerRpc]
-    public void SpawnServerRpc(Define.WorldObject type, string path, string name = null)
-    {
-        SpawnClientRpc(type, path, name);
-    }
-    
-    [ClientRpc]
-    private void SpawnClientRpc(Define.WorldObject type, string path, string name = null)
-    {
-        Managers.GameMng.Spawn(type, path, name);
-    }
-    
-    [ServerRpc]
-    public void DespawnServerRpc(Define.WorldObject type, ulong id)
-    {
-        DespawnClientRpc(type, id);
-    }
-    
-    [ClientRpc]
-    private void DespawnClientRpc(Define.WorldObject type, ulong id)
-    {
-        Managers.GameMng.Despawn(type, id);
+        Managers.ObjectMng.StatChange(type, id, statStruct);
     }
 
     [ServerRpc]
-    public void LoadSceneServerRpc(Define.Scene type)
+    public void LoadSceneServerRpc(Define.SceneType type)
     {
         LoadSceneClientRpc(type);
     }
     
     [ClientRpc]
-    private void LoadSceneClientRpc(Define.Scene type)
+    private void LoadSceneClientRpc(Define.SceneType type)
     {
         Managers.SceneMng.LoadScene(type);
     }
@@ -68,8 +44,7 @@ public class RpcManager
     [ClientRpc]
     private void BattleChangeClientRpc(Define.BattleState battleState)
     {
-        BattleSystem battleSystem = GameObject.Find("@BattleSystem").GetOrAddComponent<BattleSystem>();
-        battleSystem.BattleState = battleState;
+
     }
     
     #endregion

@@ -1,72 +1,52 @@
 using UnityEngine;
 
-public class MonsterController : BaseController
+public class MonsterController : CreatureController
 {
-    [ReadOnly(false), SerializeField]
-    protected MonsterStat _stat;
-    public ref MonsterStat Stat { get => ref _stat; }
+    public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
+    public MonsterStat MonsterStat => (MonsterStat)Stat;
     
-    public override void Init()
+    protected override void Init()
     {
         base.Init();
-        WorldObjectType = Define.WorldObject.Monster;
-        _stat = new MonsterStat(gameObject.name);
         
-    //////////////////////////////////////////
-    // TODO - TEST CODE
-        Managers.InputMng.KeyAction -= OnKeyboard;
-        Managers.InputMng.KeyAction += OnKeyboard;
-    }
+        CreatureType = Define.CreatureType.Monster;
 
-    protected void OnKeyboard()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-            AnimState = Define.AnimState.Attack;
-    }
-    //////////////////////////////////////////
-    //}
-    
-    #region Event
-    
-    public override void OnDamage(BaseController attacker, int amount = 1)
-    {
-        var nextState = (AnimState == Define.AnimState.Defend) ? Define.AnimState.DefendHit : Define.AnimState.Hit;
-        var playerAttacker = attacker as PlayerController;
-        Stat.OnDamage(playerAttacker.Stat.Attack, amount);
-        nextState = (_stat.Hp > 0) ? nextState : Define.AnimState.Die;
-        AnimState = nextState;
+        // TODO - TEST CODE
+        Managers.InputMng.KeyAction -= OnKeyboardClick;
+        Managers.InputMng.KeyAction += OnKeyboardClick;
     }
     
-    // 적절한 Animation Timing에서 호출
-    protected override void OnAttackEvent()
+    public override void SetInfo(int templateId)
     {
-        if (_lockTarget != null)
-            _lockTarget.GetComponent<BaseController>().OnDamage(this);
+        base.SetInfo(templateId);
+        
+        Stat = new MonsterStat(MonsterData);
     }
-    
-    // 적절한 Animation Timing에서 호출
-    protected override void OnJumpStart()
-    {
-        // TODO
-    }
-    
-    #endregion
     
     #region Update
 
     protected override void UpdateAttack()
     {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
 
     protected override void UpdateHit()
     {
-        var currentState = _animator.GetCurrentAnimatorStateInfo(0);
+        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
     
     #endregion
+    
+    /*----------------------
+        TODO - TEST CODE
+    ----------------------*/
+    protected void OnKeyboardClick()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            AnimState = Define.AnimState.Attack;
+    }
 }

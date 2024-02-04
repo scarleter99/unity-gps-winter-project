@@ -8,7 +8,7 @@ public class TownScene : BaseScene
     {
         base.Init();
 
-        SceneType = Define.Scene.TownScene;
+        SceneType = Define.SceneType.TownScene;
 
         // UIManager test
         Managers.UIMng.ShowSceneUI<UI_TownScene>();

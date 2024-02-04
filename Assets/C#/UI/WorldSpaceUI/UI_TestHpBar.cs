@@ -11,22 +11,22 @@ public class UI_TestHpBar : UI_Base
         HpBar
     }
 
-    private PlayerController _player;
+    private HeroController _hero;
     private MonsterController _monster;
     
     public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));
-        var controller = transform.parent.GetComponent<BaseController>();
-        switch (controller.WorldObjectType)
+        var controller = transform.parent.GetComponent<CreatureController>();
+        switch (controller.CreatureType)
         {
-            case Define.WorldObject.Player:
-                _player = controller as PlayerController;
+            case Define.CreatureType.Hero:
+                _hero = controller as HeroController;
                 _monster = null;
                 break;
-            case Define.WorldObject.Monster:
+            case Define.CreatureType.Monster:
                 _monster = controller as MonsterController;
-                _player = null;
+                _hero = null;
                 break;
         }
     }
@@ -36,8 +36,8 @@ public class UI_TestHpBar : UI_Base
         Transform parent = transform.parent;
         transform.position = parent.position + Vector3.up * (parent.GetComponent<Collider>().bounds.size.y);
         transform.rotation = Camera.main.transform.rotation;
-        if (_player != null)
-            SetHpRatio(_player.Stat.Hp / (float)_player.Stat.MaxHp);
+        if (_hero != null)
+            SetHpRatio(_hero.Stat.Hp / (float)_hero.Stat.MaxHp);
         else if (_monster != null)
             SetHpRatio(_monster.Stat.Hp / (float)_monster.Stat.MaxHp);
     }

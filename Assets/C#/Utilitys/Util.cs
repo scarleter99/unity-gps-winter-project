@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 추가기능 메소드를 지원하는 클래스
 public class Util : MonoBehaviour
 {
     // go에 T컴포넌트가 있다면 가져오고, 없다면 생성하여 반환

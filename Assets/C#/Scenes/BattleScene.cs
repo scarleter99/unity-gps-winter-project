@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -6,17 +5,15 @@ using UnityEngine;
 
 public class BattleScene : BaseScene
 {
-    private BattleSystem _battleSystem;
-    public BattleSystem BattleSystem { get => _battleSystem; }
-
+    private BattleManager _battleManager;
+    public BattleManager BattleManager { get => _battleManager; }
     
     protected override void Init()
     {
         base.Init();
-        SceneType = Define.Scene.BattleScene;
+        SceneType = Define.SceneType.BattleScene;
 
-        GameObject go = Managers.ResourceMng.Instantiate("Battle/@BattleSystem");
-        _battleSystem = go.GetOrAddComponent<BattleSystem>();
+        Managers.BattleManager.InitBattle();
 
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
     }

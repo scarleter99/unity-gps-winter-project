@@ -1,21 +1,29 @@
 ﻿{
   "weapons": [
     {
+      "DataId": 201000,
       "Name": "SampleSingleSword",
       "Attack": 3,
       "Defense": 2,
       "Dexterity": 10,
       "Speed": 5,
       "Strength": 3,
-      "Right": 1
+      "SkillIdList": [
+        301000
+      ],
+      "RightIndex": 1
     },
     {
+      "DataId": 201001,
       "Name": "SampleSwordAndShield",
       "Attack": 15,
       "Speed": 10,
       "Strength": 5,
-      "Left" : 17,
-      "Right": 3
+      "SkillIdList": [
+        301000
+      ],
+      "LeftIndex" : 17,
+      "RightIndex": 3
     }
   ]
 }
