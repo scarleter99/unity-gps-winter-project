@@ -11,21 +11,21 @@ public class UI_TestHpBar : UI_Base
         HpBar
     }
 
-    private HeroController _hero;
-    private MonsterController _monster;
+    private Hero _hero;
+    private Monster _monster;
     
     public override void Init()
     {
         Bind<GameObject>(typeof(GameObjects));
-        var controller = transform.parent.GetComponent<CreatureController>();
+        var controller = transform.parent.GetComponent<Creature>();
         switch (controller.CreatureType)
         {
             case Define.CreatureType.Hero:
-                _hero = controller as HeroController;
+                _hero = controller as Hero;
                 _monster = null;
                 break;
             case Define.CreatureType.Monster:
-                _monster = controller as MonsterController;
+                _monster = controller as Monster;
                 _hero = null;
                 break;
         }

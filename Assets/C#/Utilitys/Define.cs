@@ -192,9 +192,11 @@
     public enum UIEvent
     {
         Click,
+        DoubleClick,
         Drag,
         Enter,
         Exit,
+        Stay,
     }
 
     public enum MouseEvent
