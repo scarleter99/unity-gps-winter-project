@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Object = UnityEngine.Object;
 
 // 모든 Scene의 조상 클래스
 public abstract class BaseScene : MonoBehaviour
@@ -13,7 +15,12 @@ public abstract class BaseScene : MonoBehaviour
     {
         Init();
     }
-    
+
+    private void Update()
+    {
+        Managers.InputMng.OnUpdate();
+    }
+
     protected virtual void Init()
     {
         // TODO - TEST CODE: 나중엔 최초 Scene에서만 실행

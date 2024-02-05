@@ -12,22 +12,4 @@ public abstract class Armor: Equipment
 
         ArmorIndex = ArmorData.ArmorIndex;
     }
-    
-    public override void Equip(Hero hero)
-    {
-        base.Equip(hero);
-        
-        if (ArmorIndex != 0)
-            Owner.ChangeArmorVisibility(ArmorType, ArmorIndex, true);
-    }
-
-    public override void UnEquip()
-    {
-        Owner.HeroStat.DetachEquipment(EquipmentData);
-        
-        if (ArmorIndex != 0)
-            Owner.ChangeArmorVisibility(ArmorType, ArmorIndex, false);
-
-        Owner = null;
-    }
 }

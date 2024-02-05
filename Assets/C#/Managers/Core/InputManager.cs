@@ -28,10 +28,9 @@ public class InputManager
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-
+        
         if (KeyAction != null && Input.anyKey)
         {
-            Debug.Log("OnKeyboardClick");
             KeyAction.Invoke();
         }
 

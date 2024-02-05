@@ -23,11 +23,6 @@ public abstract class Weapon: Equipment
     {
         base.Equip(hero);
         
-        if (LeftIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, true);
-        if (RightIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, true);
-
         Skill1.Owner = Owner;
         Skill2.Owner = Owner;
         Skill3.Owner = Owner;
@@ -35,12 +30,6 @@ public abstract class Weapon: Equipment
 
     public override void UnEquip()
     {
-        if (LeftIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, false);
-        if (RightIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, false);
-        
-        Owner = null;
         Skill1.Owner = null;
         Skill2.Owner = null;
         Skill3.Owner = null;

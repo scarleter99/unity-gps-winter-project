@@ -21,11 +21,10 @@ public abstract class Equipment
     public virtual void Equip(Hero hero)
     {
         Owner = hero;
-        Owner.HeroStat.AttachEquipment(EquipmentData);
     }
 
     public virtual void UnEquip()
     {
-        Owner.HeroStat.DetachEquipment(EquipmentData);
+        Owner = null;
     }
 }

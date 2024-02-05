@@ -42,16 +42,6 @@ public class Managers : MonoBehaviour
     public static RpcManager RpcMng => Instance._rpcMng;
     #endregion
 
-    private void Awake()
-    {
-        Init();
-    }
-    
-    private void Update()
-    {
-        _inputMng.OnUpdate();
-    }
-
     static void Init()
     {
         if (s_instance == null && Initialized == false)

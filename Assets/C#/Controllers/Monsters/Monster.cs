@@ -24,7 +24,6 @@ public abstract class Monster : Creature
     }
     
     #region Update
-
     protected override void UpdateAttack()
     {
         var currentState = Animator.GetCurrentAnimatorStateInfo(0);
@@ -38,7 +37,6 @@ public abstract class Monster : Creature
         if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
             AnimState = Define.AnimState.Idle;
     }
-    
     #endregion
     
     /*----------------------

@@ -12,8 +12,7 @@ public abstract class Hero : Creature
     public GameObject RightHand { get; protected set; }
     
     public Bag Bag { get; protected set; }
-    protected Weapon Weapon;
-
+    public Weapon Weapon { get; protected set; }
     public Define.WeaponType WeaponType => Weapon.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
     
@@ -45,8 +44,8 @@ public abstract class Hero : Creature
         CreatureStat = new HeroStat(HeroData);
     }
 
+    // TODO - Data Id로 무기 및 아머를 장착하도록 구현
     #region Weapon
-
     public void ChangeAnimator()
     {
         string path = "Animator Controllers/Players/" + WeaponType.ToString();
@@ -56,84 +55,88 @@ public abstract class Hero : Creature
     public void EquipWeapon(Weapon equippingWeapon)
     {
         if (Weapon != null)
-            if (WeaponType == equippingWeapon.WeaponType)
-                return;
-        
-        Weapon?.UnEquip(); 
-        equippingWeapon.Equip(this);
-        Weapon = equippingWeapon;
-    }
-    
-    public void UnEquipArmor()
-    {
-       Weapon?.UnEquip();
-       Weapon = null;
-    }
-    
-    public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
-    {
-        switch (weaponSide)
         {
-            case Define.WeaponSide.Left:
-                LeftHand.transform.GetChild(index).gameObject.SetActive(isActive);
-                break;
-            case Define.WeaponSide.Right:
-                RightHand.transform.GetChild(index).gameObject.SetActive(isActive);
-                break;
+            if (Weapon.WeaponData.DataId == equippingWeapon.WeaponData.DataId)
+                return;
+            UnEquipWeapon();
+        }
+        
+        Weapon = equippingWeapon;
+        HeroStat.AttachEquipment(Weapon.EquipmentData);
+        Weapon.Equip(this);
+        ChangeWeaponVisibility(true);
+    }
+    
+    public void UnEquipWeapon()
+    {
+        if (Weapon != null)
+        {
+            HeroStat.DetachEquipment(Weapon.EquipmentData);
+            Weapon.UnEquip();
+            ChangeWeaponVisibility(false);
+            Weapon = null;
         }
     }
     
+    public void ChangeWeaponVisibility(bool isActive)
+    {
+        int leftIndex = Weapon.WeaponData.LeftIndex;
+        int rightIndex = Weapon.WeaponData.RightIndex;
+        if (leftIndex != 0)
+        {
+            LeftHand.transform.GetChild(leftIndex).gameObject.SetActive(isActive);
+        }
+        if (rightIndex != 0)
+        {
+            RightHand.transform.GetChild(rightIndex).gameObject.SetActive(isActive);
+        }
+    }
     #endregion
     
     #region Armor
-    public Armor GetArmor(Define.ArmorType armorType)
-    {
-        return Armors[armorType];
-    }
-
     public void EquipArmor(Armor equippingArmor)
     {
-        // Unequip previous armor
-        Armor currentArmor = Armors[equippingArmor.ArmorType];
-        if (currentArmor != null)
+        Define.ArmorType armorType = equippingArmor.ArmorType;
+        if (Armors[armorType] != null)
         {
-            if (currentArmor.ArmorType == equippingArmor.ArmorType)
+            if (Armors[armorType].ArmorData.DataId == equippingArmor.ArmorData.DataId)
                 return;
-            currentArmor.UnEquip();
+            UnEquipArmor(armorType);
         }
-        else
-            ChangeArmorVisibility(equippingArmor.ArmorType, 1, false);
-
-        // Equip new armor
-        Armors[equippingArmor.ArmorType] = equippingArmor;
-        if (Armors[equippingArmor.ArmorType] != null)
-            Armors[equippingArmor.ArmorType].Equip(this);
+        
+        Armors[armorType] = equippingArmor;
+        HeroStat.AttachEquipment(Armors[armorType].EquipmentData);
+        Armors[armorType].Equip(this);
+        ChangeArmorVisibility(armorType ,true);
     }
 
     public void UnEquipArmor(Define.ArmorType armorType)
     {
-        var currentArmor = Armors[armorType];
-        if (currentArmor != null)
-            currentArmor.UnEquip();
-
-        Armors[armorType] = null;
+        if (Armors[armorType] != null)
+        {
+            HeroStat.DetachEquipment(Armors[armorType].EquipmentData);
+            Armors[armorType].UnEquip();
+            ChangeArmorVisibility(armorType, false);
+            Armors[armorType] = null;
+        }
     }
 
-    public void ChangeArmorVisibility(Define.ArmorType armorType, int index, bool isActive)
+    public void ChangeArmorVisibility(Define.ArmorType armorType, bool isActive)
     {
+        int idx = Armors[armorType].ArmorData.ArmorIndex;
         switch (armorType)
         {
              case Define.ArmorType.Body: 
-                 transform.GetChild(index - 1).gameObject.SetActive(isActive);
+                 transform.GetChild(idx - 1).gameObject.SetActive(isActive);
                  break; 
              case Define.ArmorType.Cloak:
-                 transform.GetChild(index + 19).gameObject.SetActive(isActive);
+                 transform.GetChild(idx + 19).gameObject.SetActive(isActive);
                  break;
              case Define.ArmorType.HeadAccessory:
-                 Head.transform.GetChild(index - 1).gameObject.SetActive(isActive);
+                 Head.transform.GetChild(idx - 1).gameObject.SetActive(isActive);
                  break;
              case Define.ArmorType.Helmet:
-                 Head.transform.GetChild(index + 96).gameObject.SetActive(isActive);
+                 Head.transform.GetChild(idx + 96).gameObject.SetActive(isActive);
                  break;
         }
     }
