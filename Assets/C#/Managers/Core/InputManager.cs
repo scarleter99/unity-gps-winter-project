@@ -3,24 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.PlayerLoop;
 
 // 게임 내 모든 입력 처리
 public class InputManager
 {
-    public Action KeyAction = null;
-    public Action<Define.MouseEvent> MouseAction = null;
+    public Action KeyAction;
+    public Action<Define.MouseEvent> MouseAction;
 
-    private bool _pressed = false;
-    private float _pressedTime = 0;
+    private bool _pressed;
+    private float _pressedTime;
 
+    public void Init()
+    {
+        KeyAction = null;
+        MouseAction = null;
+        
+        _pressed = false;
+        _pressedTime = 0;
+    }
+    
     // 입력이 없다면 바로 리턴, 입력이 있다면 KeyAction/MouseAction을 Invoke
     public void OnUpdate()
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-        
+
         if (KeyAction != null && Input.anyKey)
+        {
+            Debug.Log("OnKeyboardClick");
             KeyAction.Invoke();
+        }
 
         if (MouseAction != null)
         {

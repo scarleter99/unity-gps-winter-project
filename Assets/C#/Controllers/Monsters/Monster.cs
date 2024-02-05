@@ -1,15 +1,13 @@
 using UnityEngine;
 
-public class Monster : Creature
+public abstract class Monster : Creature
 {
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
-    public MonsterStat MonsterStat => (MonsterStat)Stat;
+    public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
     
     protected override void Init()
     {
         base.Init();
-        
-        CreatureType = Define.CreatureType.Monster;
 
         // TODO - TEST CODE
         Managers.InputMng.KeyAction -= OnKeyboardClick;
@@ -18,9 +16,11 @@ public class Monster : Creature
     
     public override void SetInfo(int templateId)
     {
+        CreatureType = Define.CreatureType.Monster;
+        
         base.SetInfo(templateId);
         
-        Stat = new MonsterStat(MonsterData);
+        CreatureStat = new MonsterStat(MonsterData);
     }
     
     #region Update

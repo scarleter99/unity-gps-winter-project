@@ -8,18 +8,19 @@ public abstract class Creature : MonoBehaviour
     
     public ulong Id { get; set; }
     public int DataId { get; protected set; }
-    public Define.CreatureType CreatureType { get; protected set; } = Define.CreatureType.None;
+    public Define.CreatureType CreatureType { get; protected set; }
     public Data.CreatureData CreatureData { get; protected set; }
-    public IStat Stat { get; protected set; }
+    public IStat CreatureStat { get; protected set; }
     
-    public Define.HeroTurnState HeroTurnState { get; protected set; } = Define.HeroTurnState.Wait;
-    private Define.AnimState _animState = Define.AnimState.Idle;
+    public Define.CreatureBattleState CreatureBattleState { get; set; }
+    private Define.AnimState _animState;
     public Define.AnimState AnimState
     {
         get => _animState;
         protected set
         {
             _animState = value;
+            /* TEMP CODE
             Random random = new Random();
 
             bool isPlayer = CreatureType == Define.CreatureType.Hero;
@@ -72,6 +73,7 @@ public abstract class Creature : MonoBehaviour
             }
 
             _stateHash = Animator.StringToHash(stateName);
+            */
         }
     }
     public int Row { get; set; }
@@ -86,11 +88,6 @@ public abstract class Creature : MonoBehaviour
     private void Start()
     {
         Init();
-    }
-    
-    private void Update()
-    {
-        ChangeAnim();
     }
 
     protected virtual void Init()
@@ -110,7 +107,7 @@ public abstract class Creature : MonoBehaviour
 
         gameObject.name = $"{CreatureData.dataId}_{CreatureData.name}";
         
-        HeroTurnState = Define.HeroTurnState.Wait;
+        CreatureBattleState = Define.CreatureBattleState.Wait;
         AnimState = Define.AnimState.Idle;
     }
 
@@ -158,7 +155,7 @@ public abstract class Creature : MonoBehaviour
 
     public virtual void ChangeStat(IStat statStruct)
     {
-        Stat = statStruct;
+        CreatureStat = statStruct;
     }
     
     public virtual void DoAction(ulong targetId)
@@ -182,19 +179,41 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
+    #region Event
+    
     // Animation의 적절한 타이밍에서 호출
-    public virtual void HandleAction()
+    public virtual void OnHandleAction()
     {
         CurrentAction.HandleAction(TargetCreature.Id);
+        CreatureBattleState = Define.CreatureBattleState.Wait;
+        
         TargetCreature = null;
+        
+        Managers.BattleMng.NextTurn();
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
     public virtual void OnDamage(Creature attacker, int amount = 1)
     {
-        Stat.OnDamage(attacker.Stat.Attack, amount);
+        CreatureStat.OnDamage(attacker.CreatureStat.Attack, amount);
+        if (CreatureStat.Hp <= 0)
+        {
+            OnDead();
+            return;
+        }
+
         // TODO - 피격 애니메이션 실행
     }
+    
+    public virtual void OnDead()
+    {
+        CreatureBattleState = Define.CreatureBattleState.Dead;
+        // TODO - 사망 애니메이션 실행
+    }
+    
+
+    #endregion
+    
     
     #region Update
 
@@ -226,7 +245,7 @@ public abstract class Creature : MonoBehaviour
         if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
         {
             /* TODO - 현재 오류 발생
-            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleManager.ActionType;
+            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleMng.ActionType;
             switch (nextAct)
             {
                 case Define.ActionType.Attack:

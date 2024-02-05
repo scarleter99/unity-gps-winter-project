@@ -8,11 +8,11 @@ public abstract class Weapon: Equipment
     public BaseSkill Skill1;
     public BaseSkill Skill2;
     public BaseSkill Skill3;
-
-    public Weapon() { EquipmentType = Define.EquipmentType.Weapon; }
     
-    protected override void SetInfo(int templateId)
+    public override void SetInfo(int templateId)
     {
+        EquipmentType = Define.EquipmentType.Weapon;
+        
         base.SetInfo(templateId);
 
         LeftIndex = WeaponData.LeftIndex;
@@ -21,6 +21,8 @@ public abstract class Weapon: Equipment
     
     public override void Equip(Hero hero)
     {
+        base.Equip(hero);
+        
         if (LeftIndex != 0)
             Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, true);
         if (RightIndex != 0)

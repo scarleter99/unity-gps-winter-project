@@ -1,7 +1,9 @@
 public class SampleBody1 : Armor
 {
-    public SampleBody1() : base()
+    public override void SetInfo(int templateId)
     {
         ArmorType = Define.ArmorType.Body;
+        
+        base.SetInfo(templateId);
     }
 }

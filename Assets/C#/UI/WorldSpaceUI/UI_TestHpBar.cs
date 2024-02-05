@@ -37,9 +37,9 @@ public class UI_TestHpBar : UI_Base
         transform.position = parent.position + Vector3.up * (parent.GetComponent<Collider>().bounds.size.y);
         transform.rotation = Camera.main.transform.rotation;
         if (_hero != null)
-            SetHpRatio(_hero.Stat.Hp / (float)_hero.Stat.MaxHp);
+            SetHpRatio(_hero.CreatureStat.Hp / (float)_hero.CreatureStat.MaxHp);
         else if (_monster != null)
-            SetHpRatio(_monster.Stat.Hp / (float)_monster.Stat.MaxHp);
+            SetHpRatio(_monster.CreatureStat.Hp / (float)_monster.CreatureStat.MaxHp);
     }
 
     public void SetHpRatio(float ratio)

@@ -5,7 +5,7 @@ public class Strike : BaseSkill
 {
     Creature target;
     
-    public void SetInfo()
+    public Strike() : base()
     {
         ActionType = Define.ActionType.MeleeAttack;
         ActionTargetType = Define.ActionTargetType.Single;

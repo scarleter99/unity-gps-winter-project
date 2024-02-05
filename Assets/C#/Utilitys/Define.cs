@@ -135,6 +135,13 @@
     
     #region State
     
+    public enum CreatureBattleState
+    {
+        Wait,
+        Action,
+        Dead
+    }
+    
     public enum AnimState
     {
         Attack,
@@ -153,20 +160,13 @@
     
     public enum BattleState
     {
+        Init,
         MonsterTurn,
         SelectAction,
         SelectTarget,
         ActionProceed,
     }
     
-    public enum HeroTurnState
-    {
-        Wait,
-        Action,
-        End,
-        Dead
-    }
-
     public enum AreaState
     {
         Idle,
@@ -175,16 +175,6 @@
         Encounter,
         Boss,
     }
-    public enum BattleManagerTurnState
-    {
-
-    }
-    
-    public enum CreatureTurnState
-    {
-
-    }
-    
 
     #endregion
     

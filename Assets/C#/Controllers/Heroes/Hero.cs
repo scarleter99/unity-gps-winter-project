@@ -1,45 +1,31 @@
 using System;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
-public class Hero : Creature
+public abstract class Hero : Creature
 {
     public Data.HeroData HeroData => CreatureData as Data.HeroData;
-    public HeroStat HeroStat => (HeroStat)Stat;
+    public HeroStat HeroStat => (HeroStat)CreatureStat;
 
     public GameObject Head { get; protected set; }
     public GameObject LeftHand { get; protected set; }
     public GameObject RightHand { get; protected set; }
     
     public Bag Bag { get; protected set; }
-    protected Weapon _weapon;
-    public Weapon Weapon 
-    { 
-        get => _weapon; 
-        set { 
-            _weapon?.UnEquip(); 
-            value.Equip(this);
-            _weapon = value;
-        }
-    }
+    protected Weapon Weapon;
+
     public Define.WeaponType WeaponType => Weapon.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
-    
-    [SerializeField]
-    protected Vector3 _attackPosOffset;
     
     protected override void Init()
     {
         base.Init();
         
-        CreatureType = Define.CreatureType.Hero;
-        
         Head = Util.FindChild(gameObject, "head", true);
         LeftHand = Util.FindChild(gameObject, "weapon_l", true);
         RightHand = Util.FindChild(gameObject, "weapon_r", true);
         
-        Bag = new Bag(transform);
+        //Bag = new Bag(transform);
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
@@ -47,13 +33,16 @@ public class Hero : Creature
         // TODO - TEST CODE
         Managers.InputMng.KeyAction -= OnKeyboardClick;
         Managers.InputMng.KeyAction += OnKeyboardClick;
+        
     }
     
     public override void SetInfo(int templateId)
     {
+        CreatureType = Define.CreatureType.Hero;
+        
         base.SetInfo(templateId);
         
-        Stat = new HeroStat(HeroData);
+        CreatureStat = new HeroStat(HeroData);
     }
 
     #region Weapon
@@ -66,15 +55,19 @@ public class Hero : Creature
     
     public void EquipWeapon(Weapon equippingWeapon)
     {
-        _weapon?.UnEquip(); 
+        if (Weapon != null)
+            if (WeaponType == equippingWeapon.WeaponType)
+                return;
+        
+        Weapon?.UnEquip(); 
         equippingWeapon.Equip(this);
-        _weapon = equippingWeapon;
+        Weapon = equippingWeapon;
     }
     
     public void UnEquipArmor()
     {
-       _weapon?.UnEquip();
-       _weapon = null;
+       Weapon?.UnEquip();
+       Weapon = null;
     }
     
     public void ChangeWeaponVisibility(Define.WeaponSide weaponSide, int index, bool isActive)
@@ -101,9 +94,13 @@ public class Hero : Creature
     public void EquipArmor(Armor equippingArmor)
     {
         // Unequip previous armor
-        var currentArmor = Armors[equippingArmor.ArmorType];
+        Armor currentArmor = Armors[equippingArmor.ArmorType];
         if (currentArmor != null)
+        {
+            if (currentArmor.ArmorType == equippingArmor.ArmorType)
+                return;
             currentArmor.UnEquip();
+        }
         else
             ChangeArmorVisibility(equippingArmor.ArmorType, 1, false);
 
@@ -196,12 +193,28 @@ public class Hero : Creature
         else if (Input.GetKeyDown(KeyCode.Alpha2))
             Bag.UseItem(this, 1);
         else if (Input.GetKeyDown(KeyCode.Alpha3))
-            EquipArmor(new SampleBody1());
+        {
+            Weapon weapon = new SampleSingleSword();
+            weapon.SetInfo(Define.WEAPON_SAMPLESINGLESWORD_ID);
+            EquipWeapon(weapon);
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
-            EquipArmor(new SampleBody2());
+        {
+            Weapon weapon = new SampleSwordAndShield();
+            weapon.SetInfo(Define.WEAPON_SAMPLESWORDANDSHIELD_ID);
+            EquipWeapon(weapon);
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
-            EquipWeapon(new SampleSingleSword());
+        {
+            Armor body = new SampleBody1();
+            body.SetInfo(Define.ARMOR_SAMPLEBODY1_ID);
+            EquipArmor(body);
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
-            EquipWeapon(new SampleSingleSword());
+        {
+            Armor body = new SampleBody2();
+            body.SetInfo(Define.ARMOR_SAMPLEBODY2_ID);
+            EquipArmor(body);
+        }
     }
 }

@@ -1184,9 +1184,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5122791751604887389}
   - component: {fileID: 5122791751595274401}
-  - component: {fileID: -5986162248236083481}
   - component: {fileID: 5437132030139747033}
   - component: {fileID: 1601101343002890642}
+  - component: {fileID: -5795243612444854825}
   m_Layer: 8
   m_Name: Bat
   m_TagString: Monster
@@ -1232,21 +1232,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &-5986162248236083481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5122791751604650877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 871a379cd45f5bb4392e2f217ed238cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animState: 6
-  _turnState: 0
-  _lockTarget: {fileID: 0}
 --- !u!136 &5437132030139747033
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1277,6 +1262,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &-5795243612444854825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5122791751604650877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 663e04e7014b461bb9ea89aabe7d4c6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5122791751604650879
 GameObject:
   m_ObjectHideFlags: 0

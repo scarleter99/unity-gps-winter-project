@@ -9,6 +9,6 @@ public class Item1 : BaseItem
 
     public override void Use(Creature owner)
     {
-        owner.Stat.RecoverHp(40);
+        owner.CreatureStat.RecoverHp(40);
     }
 }

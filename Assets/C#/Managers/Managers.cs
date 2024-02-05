@@ -5,18 +5,20 @@ using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
+    public static bool Initialized { get; set; } = false;
+    
     private static Managers s_instance;
     public static Managers Instance { get { Init(); return s_instance; } }
 
-#region Contents
+    #region Contents
     private ObjectManager _objectMng = new ObjectManager();
     private BattleManager _battleMng = new BattleManager();
     
     public static ObjectManager ObjectMng => Instance._objectMng;
-    public static BattleManager BattleManager => Instance._battleMng;
-#endregion
+    public static BattleManager BattleMng => Instance._battleMng;
+    #endregion
 
-#region Core
+    #region Core
     private DataManager _dataMng = new DataManager();
     private InputManager _inputMng = new InputManager();
     private PoolManager _poolMng = new PoolManager();
@@ -38,9 +40,9 @@ public class Managers : MonoBehaviour
     public static NetworkManagerEx NetworkMng => Instance._networkMng;
     public static ServerManager ServerMng => Instance._serverMng;
     public static RpcManager RpcMng => Instance._rpcMng;
-#endregion
+    #endregion
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -52,8 +54,10 @@ public class Managers : MonoBehaviour
 
     static void Init()
     {
-        if (s_instance == null)
+        if (s_instance == null && Initialized == false)
         {
+            Initialized = true;
+            
             GameObject go = GameObject.Find("@Managers");
             if (go == null)
             {
@@ -62,14 +66,8 @@ public class Managers : MonoBehaviour
             }
             
             DontDestroyOnLoad(go);
+            
             s_instance = go.GetComponent<Managers>();
-
-            s_instance._dataMng.Init();
-            s_instance._networkMng.Init();
-            s_instance._serverMng.Init();
-            s_instance._soundMng.Init();
-            s_instance._poolMng.Init();
-            s_instance._battleMng.Init();
         }
     }
     

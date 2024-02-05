@@ -8,7 +8,7 @@ public abstract class Equipment
     public Hero Owner { get; protected set; }
     
     // 수동 실행
-    protected virtual void SetInfo(int templateId)
+    public virtual void SetInfo(int templateId)
     {
         DataTemplateId = templateId;
         
