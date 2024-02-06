@@ -8,24 +8,21 @@ public abstract class Weapon: Equipment
     public BaseSkill Skill1;
     public BaseSkill Skill2;
     public BaseSkill Skill3;
-
-    public Weapon() { EquipmentType = Define.EquipmentType.Weapon; }
     
-    protected override void SetInfo(int templateId)
+    public override void SetInfo(int templateId)
     {
+        EquipmentType = Define.EquipmentType.Weapon;
+        
         base.SetInfo(templateId);
 
         LeftIndex = WeaponData.LeftIndex;
         RightIndex = WeaponData.RightIndex;
     }
     
-    public override void Equip(HeroController heroController)
+    public override void Equip(Hero hero)
     {
-        if (LeftIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, true);
-        if (RightIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, true);
-
+        base.Equip(hero);
+        
         Skill1.Owner = Owner;
         Skill2.Owner = Owner;
         Skill3.Owner = Owner;
@@ -33,12 +30,6 @@ public abstract class Weapon: Equipment
 
     public override void UnEquip()
     {
-        if (LeftIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Left, LeftIndex, false);
-        if (RightIndex != 0)
-            Owner.ChangeWeaponVisibility(Define.WeaponSide.Right, RightIndex, false);
-        
-        Owner = null;
         Skill1.Owner = null;
         Skill2.Owner = null;
         Skill3.Owner = null;

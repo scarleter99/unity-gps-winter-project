@@ -38,11 +38,11 @@ public class UI_EnemyStat : UI_Base
 
     public void ConnectPlayerStat(MonsterStat stat)
     {
-        stat.OnStatChanged += ChangeMonsterStatUI;
+        stat.StatChangeAction += ChangeMonsterStatUI;
 
         OnClaer?.Invoke();
         OnClaer = null;
-        OnClaer += () => stat.OnStatChanged -= ChangeMonsterStatUI;
+        OnClaer += () => stat.StatChangeAction -= ChangeMonsterStatUI;
     }
 
     private void ChangeMonsterStatUI(MonsterStat monsterStat)

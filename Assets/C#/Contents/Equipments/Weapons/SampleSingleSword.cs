@@ -2,13 +2,10 @@ using UnityEngine;
 
 public class SampleSingleSword : Weapon
 {
-    public SampleSingleSword() : base()
+    public override void SetInfo(int templateId)
     {
         WeaponType = Define.WeaponType.SingleSword;
-    }
-    
-    protected override void SetInfo(int templateId)
-    {
+        
         base.SetInfo(templateId);
 
         Skill1 = new Strike();

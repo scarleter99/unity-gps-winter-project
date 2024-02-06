@@ -9,7 +9,7 @@ public class SampleItem : BaseItem
         ItemType = Define.ItemType.Buff;
     }
     
-    public override void Use(CreatureController owner)
+    public override void Use(Creature owner)
     {
         // debug
         Debug.Log($"ItemData {ItemData.name} description : {Description}");

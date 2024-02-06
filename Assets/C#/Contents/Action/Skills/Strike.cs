@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Strike : BaseSkill
 {
-    CreatureController target;
+    Creature target;
     
-    public void SetInfo()
+    public Strike() : base()
     {
         ActionType = Define.ActionType.MeleeAttack;
         ActionTargetType = Define.ActionTargetType.Single;
@@ -15,9 +15,9 @@ public class Strike : BaseSkill
     
     public override void HandleAction(ulong targetId)
     {
-        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out HeroController hero))
+        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out Hero hero))
             target = hero;
-        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out MonsterController monster))
+        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out Monster monster))
             target = monster;
         
         target.OnDamage(Owner);

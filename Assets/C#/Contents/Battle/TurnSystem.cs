@@ -18,11 +18,11 @@ public class TurnSystem
             CurrentTurn = 0;
     }
 
-    public CreatureController CurrentTurnCreature()
+    public Creature CurrentTurnCreature()
     {
-        if (Managers.ObjectMng.Heroes.TryGetValue(Turns[CurrentTurn], out HeroController hero))
+        if (Managers.ObjectMng.Heroes.TryGetValue(Turns[CurrentTurn], out Hero hero))
             return hero;
-        if (Managers.ObjectMng.Monsters.TryGetValue(Turns[CurrentTurn], out MonsterController monster))
+        if (Managers.ObjectMng.Monsters.TryGetValue(Turns[CurrentTurn], out Monster monster))
             return monster;
         
         Debug.Log("Failed to get CurrentTurnCreature");

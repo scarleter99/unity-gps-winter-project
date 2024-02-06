@@ -56,7 +56,7 @@ public class Util : MonoBehaviour
 
         return transform.gameObject;
     }
-
+    
     public static Mesh SpriteToMesh(Sprite sprite)
     {
         Mesh mesh = new()

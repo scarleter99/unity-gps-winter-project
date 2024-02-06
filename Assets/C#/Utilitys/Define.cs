@@ -1,7 +1,6 @@
 ﻿public class Define
 {
     #region Type
-    
     public enum CreatureType
     {
         None,
@@ -104,7 +103,6 @@
     #endregion
     
     #region Attribute
-    
     public enum Stat
     {
         Name,
@@ -130,10 +128,15 @@
         Left,
         Right,
     }
-    
     #endregion
     
     #region State
+    public enum CreatureBattleState
+    {
+        Wait,
+        Action,
+        Dead
+    }
     
     public enum AnimState
     {
@@ -153,20 +156,13 @@
     
     public enum BattleState
     {
+        Init,
         MonsterTurn,
         SelectAction,
         SelectTarget,
         ActionProceed,
     }
     
-    public enum HeroTurnState
-    {
-        Wait,
-        Action,
-        End,
-        Dead
-    }
-
     public enum AreaState
     {
         Idle,
@@ -175,26 +171,17 @@
         Encounter,
         Boss,
     }
-    public enum BattleManagerTurnState
-    {
-
-    }
-    
-    public enum CreatureTurnState
-    {
-
-    }
-    
-
     #endregion
     
     #region Event
     public enum UIEvent
     {
         Click,
+        DoubleClick,
         Drag,
         Enter,
         Exit,
+        Stay,
     }
 
     public enum MouseEvent
@@ -204,12 +191,10 @@
         PointerUp,
         Click,
     }
-
     #endregion
     
     // Name은 나중에 Json으로 관리
     #region Name
-
     public enum AreaName
     {   
         Forest,
@@ -224,12 +209,10 @@
     {
         Sword,
     }
-
     #endregion
 
     // DataId는 나중에 Json으로 관리
     #region DataId
-    
     public const int HERO_KNIGHT_ID = 101000;
 
     public const int MONSTER_BAT_ID = 102000;
@@ -239,11 +222,9 @@
     
     public const int ARMOR_SAMPLEBODY1_ID = 202000;
     public const int ARMOR_SAMPLEBODY2_ID = 202001;
-
     #endregion
 
     #region NonContent
-    
     public enum Layer
     {
         Ground = 6,
@@ -256,6 +237,5 @@
     {
         QuarterView,
     }
-    
     #endregion
 }

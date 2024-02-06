@@ -1,10 +1,12 @@
 ﻿{
   "items": [
     {
+      "dataId": 301000,
       "name": "SampleItem",
       "description": "This is sample item."
     },
     {
+      "dataId": 301001,
       "name": "SampleItem2",
       "description": "This is sample item2."
     }

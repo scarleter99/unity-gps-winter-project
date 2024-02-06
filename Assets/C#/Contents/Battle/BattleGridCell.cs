@@ -6,7 +6,7 @@ public class BattleGridCell : MonoBehaviour
 {   
     public Define.GridSide GridSide { get; protected set; }
     
-    public CreatureController CellCreature { get; set; }
+    public Creature CellCreature { get; set; }
     
     public int Row { get; protected set; }
     public int Col { get; protected set; }

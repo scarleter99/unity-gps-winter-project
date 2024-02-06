@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Object = UnityEngine.Object;
 
 // 모든 Scene의 조상 클래스
 public abstract class BaseScene : MonoBehaviour
@@ -13,15 +15,30 @@ public abstract class BaseScene : MonoBehaviour
     {
         Init();
     }
-    
+
+    private void Update()
+    {
+        Managers.InputMng.OnUpdate();
+    }
+
     protected virtual void Init()
     {
-        Object obj1 = GameObject.FindObjectOfType(typeof(NetworkManager));
-        Object obj3 = GameObject.FindObjectOfType(typeof(EventSystem));
+        // TODO - TEST CODE: 나중엔 최초 Scene에서만 실행
+        Managers.InputMng.Init();
+        Managers.DataMng.Init();
+        Managers.NetworkMng.Init();
+        Managers.ServerMng.Init();
+        Managers.SoundMng.Init();
+        Managers.PoolMng.Init();
+        Managers.ObjectMng.Init();
+        Managers.BattleMng.Init();
+        
+        Object obj1 = FindObjectOfType(typeof(NetworkManager));
+        Object obj2 = FindObjectOfType(typeof(EventSystem));
         
         if (obj1 == null)
             Managers.ResourceMng.Instantiate("Network/NetworkManager").name = "@NetworkManager";
-        if (obj3 == null)
+        if (obj2 == null)
             Managers.ResourceMng.Instantiate("UI/EventSystem").name = "@EventSystem";
     }
     

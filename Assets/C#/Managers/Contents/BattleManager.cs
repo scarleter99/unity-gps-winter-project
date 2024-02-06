@@ -1,20 +1,43 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class BattleManager
 {
     public TurnSystem TurnSystem { get; protected set; }
-    public Define.BattleState BattleState { get; protected set; }
-    
-    public BattleGridCell[,] HeroGrid = new BattleGridCell[3,2];
-    public BattleGridCell[,] MonsterGrid = new BattleGridCell[3,2];
 
-    public CreatureController CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
-    public CreatureController TargetCreature;
+    private Define.BattleState _battleState;
+    public Define.BattleState BattleState
+    {
+        get => _battleState;
+        protected set
+        {
+            switch (value)
+            {
+                case Define.BattleState.SelectAction:
+                    CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
+                    // TODO - Battle Ui 가시화
+                    break;
+                case Define.BattleState.SelectTarget:
+                    // TODO - BattleGridCell로 Target 선택 활성화
+                    break;
+                case Define.BattleState.MonsterTurn:
+                    CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
+                    CurrentTurnCreature.DoAction(GetRandomCreature(Managers.ObjectMng.Heroes));
+                    break;
+            }
+        }
+    }
+
+    public BattleGridCell[,] HeroGrid { get; protected set; } = new BattleGridCell[2, 3];
+    public BattleGridCell[,] MonsterGrid { get; protected set; } = new BattleGridCell[2, 3];
+
+    public Creature CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
+    public Creature TargetCreature;
 
     public void Init()
     {
+        TurnSystem = new TurnSystem();
+        
         Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
     }
@@ -25,7 +48,7 @@ public class BattleManager
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
         GameObject monsterSide = Util.FindChild(battleGrid, "MonsterSide");
 
-        for (int row = 0; row < 3; row++)
+        for (int row = 0; row < 2; row++)
         {
             for (int col = 0; col < 3; col++)
             {
@@ -35,21 +58,52 @@ public class BattleManager
                 MonsterGrid[row, col].SetRowCol(row, col);
             }
         }
-
-
+        
         SpawnCreatures();
+        
         SetTurns();
+        _battleState = Define.BattleState.Init;
+        
+        NextTurn(true);
     }
 
     private void SpawnCreatures()
     {
         // TODO - TEST CODE
-        SpawnHero(1000, 0, 0);
-        SpawnHero(1001, 1, 0);
-        SpawnHero(1002, 2, 1);
-        SpawnMonster(Define.MONSTER_BAT_ID, 0, 0);
-        SpawnMonster(Define.MONSTER_BAT_ID, 1, 0);
-        SpawnMonster(Define.MONSTER_BAT_ID, 2, 1);
+        SpawnHero(10000, 0, 0);
+        SpawnHero(10001, 0, 1);
+        SpawnHero(10002, 1, 2);
+        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 0);
+        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 1);
+        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 1, 2);
+    }
+    
+    public Hero SpawnHero(ulong heroId, int row, int col)
+    {
+        Hero hero = Managers.ObjectMng.Heroes[heroId];
+        HeroGrid[row, col].CellCreature = hero;
+        hero.transform.position = HeroGrid[row, col].transform.position;
+        hero.Row = row;
+        hero.Col = col;
+
+        return hero;
+    }
+    
+    public Monster SpawnMonster<T>(int monsterDataId, int row, int col) where T : Monster
+    {
+        Monster monster = Managers.ObjectMng.SpawnMonster<T>(monsterDataId);
+        HeroGrid[row, col].CellCreature = monster;
+        monster.transform.position = MonsterGrid[row, col].transform.position;
+        
+        // 180도 회전
+        Vector3 currentRotation = monster.transform.rotation.eulerAngles;
+        currentRotation.y += 180f;
+        monster.transform.rotation = Quaternion.Euler(currentRotation);
+        
+        monster.Row = row;
+        monster.Col = col;
+        
+        return monster;
     }
     
     private void SetTurns()
@@ -65,12 +119,12 @@ public class BattleManager
         TurnSystem.Init(turns);
     }
 
-    public void NextTurn()
+    public void NextTurn(bool isInit = false)
     {
-        TurnSystem.NextTurn();
+        if (isInit == false)
+            TurnSystem.NextTurn();
         
-        CreatureController currentTurnCreature = TurnSystem.CurrentTurnCreature();
-        switch (currentTurnCreature.CreatureType)
+        switch (CurrentTurnCreature.CreatureType)
         {
             case Define.CreatureType.Hero:
                 BattleState = Define.BattleState.SelectAction;
@@ -79,28 +133,6 @@ public class BattleManager
                 BattleState = Define.BattleState.MonsterTurn;
                 break;
         }
-    }
-
-    public HeroController SpawnHero(ulong heroId, int row, int col)
-    {
-        HeroController hero = Managers.ObjectMng.Heroes[heroId];
-        HeroGrid[row, col].CellCreature = hero;
-        hero.transform.position = HeroGrid[row, col].transform.position;
-        hero.Row = row;
-        hero.Col = col;
-
-        return hero;
-    }
-    
-    public MonsterController SpawnMonster(int monsterDataId, int row, int col)
-    {
-        MonsterController monster = Managers.ObjectMng.Spawn<MonsterController>(monsterDataId);
-        HeroGrid[row, col].CellCreature = monster;
-        monster.transform.position = HeroGrid[row, col].transform.position;
-        monster.Row = row;
-        monster.Col = col;
-        
-        return monster;
     }
     
     private void HandleMouseInput(Define.MouseEvent mouseEvent)
@@ -122,11 +154,15 @@ public class BattleManager
         if (Physics.Raycast(ray, out RaycastHit rayHit, maxDistance: 100f, layerMask: LayerMask.GetMask("BattleGridCell")))
         {
             BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
+            
+            Hero currentTurnHero = CurrentTurnCreature as Hero;
             TargetCreature = gridCell.CellCreature;
-            
-            HeroController currentHero = CurrentTurnCreature as HeroController;
-            currentHero.DoAction(TargetCreature.Id);
-            
+
+            if (currentTurnHero != null) 
+                currentTurnHero.DoAction(TargetCreature.Id);
+            else
+                Debug.Log("Failed to ClickGirdCell");
+
             // TODO - DEBUG CODE
             Debug.DrawLine(Camera.main.transform.position, rayHit.point);
             
@@ -134,6 +170,16 @@ public class BattleManager
         }
 
         return false;
+    }
+    
+    ulong GetRandomCreature(Dictionary<ulong, Hero> dictionary)
+    {
+        List<ulong> keysList = new List<ulong>(dictionary.Keys);
+        
+        int randomIndex = Random.Range(0, keysList.Count);
+        ulong randomKey = keysList[randomIndex];
+
+        return randomKey;
     }
 
     #region Prev GridCell Color Code

@@ -28,5 +28,5 @@ public abstract class BaseItem : MonoBehaviour
         gameObject.name = $"{ItemData.dataId}_{ItemData.name}";
     }
     
-    public abstract void Use(CreatureController owner);
+    public abstract void Use(Creature owner);
 }
