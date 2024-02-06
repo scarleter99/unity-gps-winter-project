@@ -41,7 +41,7 @@ public abstract class Creature : MonoBehaviour
         else
             CreatureData = Managers.DataMng.MonsterDataDict[templateId];
 
-        gameObject.name = $"{CreatureData.dataId}_{CreatureData.name}";
+        gameObject.name = $"{CreatureData.DataId}_{CreatureData.Name}";
         
         CreatureBattleState = Define.CreatureBattleState.Wait;
         AnimState = Define.AnimState.Idle;
@@ -65,9 +65,9 @@ public abstract class Creature : MonoBehaviour
             return;
         }
 
-        switch (CurrentAction.ActionType)
+        switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionType.MeleeAttack:
+            case Define.ActionAttribute.MeleeAttack:
                 // TODO - 애니메이션 실행
                 Debug.Log("MeleeAttack");
                 break;
@@ -243,9 +243,9 @@ public abstract class Creature : MonoBehaviour
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
-    public virtual void OnDamage(Creature attacker, int amount = 1)
+    public void OnDamage(int damage, int attackCount = 1)
     {
-        CreatureStat.OnDamage(attacker.CreatureStat.Attack, amount);
+        CreatureStat.OnDamage(damage, attackCount);
         if (CreatureStat.Hp <= 0)
         {
             OnDead();
@@ -255,11 +255,19 @@ public abstract class Creature : MonoBehaviour
         AnimState = Define.AnimState.Hit;
     }
     
-    public virtual void OnDead()
+    public void OnDead()
     {
         CreatureBattleState = Define.CreatureBattleState.Dead;
         AnimState = Define.AnimState.Die;
     }
-    
+
+    public void OnHeal(int heal)
+    {
+        CreatureStat.OnHeal(heal);
+
+        // TODO - 회복 애니메이션 실행
+    }
+
     #endregion
+
 }

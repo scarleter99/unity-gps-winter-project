@@ -59,7 +59,7 @@ public class BattleManager
             }
         }
         
-        SpawnCreatures();
+        PlaceAllCreatures();
         
         SetTurns();
         _battleState = Define.BattleState.Init;
@@ -67,16 +67,18 @@ public class BattleManager
         NextTurn(true);
     }
 
-    private void SpawnCreatures()
+    private void PlaceAllCreatures()
     {
         // TODO - TEST CODE
-        SpawnHero(10000, 0, 0);
-        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 0);
-        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 1);
-        SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 1, 2);
+        PlaceHero(10000, 0, 0);
+        PlaceHero(10001, 0, 1);
+        PlaceHero(10002, 1, 2);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 0);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 1);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 1, 2);
     }
     
-    public Hero SpawnHero(ulong heroId, int row, int col)
+    public Hero PlaceHero(ulong heroId, int row, int col)
     {
         Hero hero = Managers.ObjectMng.Heroes[heroId];
         HeroGrid[row, col].CellCreature = hero;
@@ -87,9 +89,9 @@ public class BattleManager
         return hero;
     }
     
-    public Monster SpawnMonster<T>(int monsterDataId, int row, int col) where T : Monster
+    public Monster SpawnAndPlaceMonster(int monsterDataId, int row, int col)
     {
-        Monster monster = Managers.ObjectMng.SpawnMonster<T>(monsterDataId);
+        Monster monster = Managers.ObjectMng.SpawnMonster(monsterDataId);
         HeroGrid[row, col].CellCreature = monster;
         monster.transform.position = MonsterGrid[row, col].transform.position;
         

@@ -12,7 +12,9 @@ public class BattleScene : BaseScene
         SceneType = Define.SceneType.BattleScene;
         
         // TODO - TEST CODE
-        Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
+        Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
+        Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
+        Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
         
         Managers.BattleMng.InitBattle();
 

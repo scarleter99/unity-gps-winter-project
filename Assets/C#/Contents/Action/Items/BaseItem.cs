@@ -1,32 +1,30 @@
-using System;
-using UnityEngine;
-
-public abstract class BaseItem : MonoBehaviour
+public abstract class BaseItem : BaseAction
 {
-    public ulong Id { get; set; }
-    public int DataTemplateId { get; protected set; }
     public Data.ItemData ItemData { get; protected set; }
     public Define.ItemType ItemType { get; protected set; }
-    public string Description { get => ItemData.description; }
+    
+    public Bag Bag { get; set; }
+    public int Idx { get; set; }
+    public int Count { get; set; }
 
-    private void Start()
+    public override void SetInfo(int templateId, Creature owner, Bag bag, int idx, int addNum)
     {
-        
-    }
-
-    protected virtual void Init()
-    {
-        
-    }
-
-    public virtual void SetInfo(int templateId)
-    {
-        DataTemplateId = templateId;
+        DataId = templateId;
 
         ItemData = Managers.DataMng.ItemDataDict[templateId];
         
-        gameObject.name = $"{ItemData.dataId}_{ItemData.name}";
+        Owner = owner;
+        Bag = bag;
+        Idx = idx;
+        Count += addNum;
+        
+        base.SetInfo(templateId, owner, bag, idx, addNum);
     }
     
-    public abstract void Use(Creature owner);
+    public override void HandleAction(ulong targetId)
+    {
+        Count--;
+        if (Count <= 0)
+            Bag.Items[Idx] = null;
+    }
 }

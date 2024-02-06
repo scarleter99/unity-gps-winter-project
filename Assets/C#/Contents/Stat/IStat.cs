@@ -6,6 +6,6 @@ public interface IStat
     public int Attack { get; set; }
     public int Defense { get; set; }
     public int Speed { get; set; }
-    public void OnDamage(int attackerAttack, int attackCount = 1);
-    public void RecoverHp(int amount);
+    public void OnDamage(int damage, int attackCount = 1);
+    public void OnHeal(int amount);
 }

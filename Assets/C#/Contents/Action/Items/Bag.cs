@@ -1,56 +1,74 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bag
-{ 
-    public List<Data.BagItem> Items { get; protected set; }
+{
+    public Hero Owner { get; set; }
+    public List<BaseItem> Items { get; protected set; }
     public int Gold { get; protected set; }
 
-    public Bag(Transform player)
+    public void SetInfo()
     {
-     Items = new List<Data.BagItem>(6);
-     for (int i = 0; i < 6; i++)
-         Items.Add(new Data.BagItem());
-
-     GameObject itemCollection = new GameObject { name = "ItemBag" };
-     itemCollection.transform.parent = player;
-
-     // TODO - TEST CODE
-     StoreItem("Items/Item1", 0, 4, itemCollection.transform);
-     StoreItem("Items/SampleItem", 1, 5, itemCollection.transform);
-    }
-
-    private void DestroyItemIfPossible(int index)
-    {
-        if (Items[index].IsNull() || Items[index].count > 0)
-            return;
+        Items = new List<BaseItem>(6);
+        for (int i = 0; i < 6; i++)
+            Items.Add(null);
         
-        Managers.ResourceMng.Destroy(Items[index].item.gameObject);
-        Items[index] = new Data.BagItem();
+        Gold = 0;
     }
     
-    // ItemData 교체 혹은 새로 주울 때 호출
-    public void StoreItem(string path, int index, int count = 1, Transform parent = null)
+    public BaseItem StoreItem(int itemDataId, int addNum = 1)
     {
-        DestroyItemIfPossible(index);
-        Items[index] = new Data.BagItem(Managers.ResourceMng.Instantiate(path, parent).GetComponent<BaseItem>(), count);
+        int currentItemIdx = IsInBag(itemDataId);
+        if (currentItemIdx != -1)
+        {
+            Items[currentItemIdx].Count += addNum;
+            return Items[currentItemIdx];
+        }
+        
+        string className = Managers.DataMng.ItemDataDict[itemDataId].Name;
+        BaseItem item = Activator.CreateInstance(Type.GetType(className)) as BaseItem;
+        if (item == null)
+            return null;
+        
+        for (int idx = 0; idx < Items.Count; idx++)
+        {
+            if (Items[idx] == null)
+            {
+                item.SetInfo(itemDataId, Owner, this, idx, addNum);
+                Items[idx] = item;
+                break;
+            }
+            Debug.Log("Failed to StoreItem: Bag is Full");
+        }
+        
+        return item;
     }
     
-    // 아이템 사용
-    public void UseItem(Creature user, int index)
+    // 비전투 중 아이템 사용
+    public void UseItem(int idx, ulong targetId)
     {
-        var selectedIndex = Items[index];
-        if (selectedIndex.IsNull())
+        BaseItem usedItem = Items[idx];
+        if (usedItem == null)
             return;
         
-        selectedIndex.item.Use(user);
-        selectedIndex.count--;
+        usedItem.HandleAction(targetId);
         
-        // debug
-        Debug.Log($"ItemData Used! Name : {selectedIndex.item.ItemData.name}, Count : {selectedIndex.count}");
+        if (usedItem.Count == 0)
+            Items[idx] = null;
+    }
 
-        DestroyItemIfPossible(index);
+    public int IsInBag(int itemDataId)
+    {
+        for (int idx = 0; idx < Items.Count; idx++)
+        {
+            if (Items[idx] == null)
+                continue;
+            
+            if (Items[idx].DataId == itemDataId)
+                return idx;
+        }
+
+        return -1;
     }
 }
