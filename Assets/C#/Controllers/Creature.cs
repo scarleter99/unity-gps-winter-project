@@ -105,7 +105,7 @@ public abstract class Creature : MonoBehaviour
         else
             CreatureData = Managers.DataMng.MonsterDataDict[templateId];
 
-        gameObject.name = $"{CreatureData.dataId}_{CreatureData.name}";
+        gameObject.name = $"{CreatureData.DataId}_{CreatureData.Name}";
         
         CreatureBattleState = Define.CreatureBattleState.Wait;
         AnimState = Define.AnimState.Idle;
@@ -170,9 +170,9 @@ public abstract class Creature : MonoBehaviour
             return;
         }
 
-        switch (CurrentAction.ActionType)
+        switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionType.MeleeAttack:
+            case Define.ActionAttribute.MeleeAttack:
                 // TODO - 애니메이션 실행
                 Debug.Log("MeleeAttack");
                 break;
@@ -193,24 +193,29 @@ public abstract class Creature : MonoBehaviour
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
-    public virtual void OnDamage(Creature attacker, int amount = 1)
+    public void OnDamage(int damage, int attackCount = 1)
     {
-        CreatureStat.OnDamage(attacker.CreatureStat.Attack, amount);
+        CreatureStat.OnDamage(damage, attackCount);
         if (CreatureStat.Hp <= 0)
         {
             OnDead();
             return;
         }
-
         // TODO - 피격 애니메이션 실행
     }
     
-    public virtual void OnDead()
+    public void OnDead()
     {
         CreatureBattleState = Define.CreatureBattleState.Dead;
         // TODO - 사망 애니메이션 실행
     }
-    
+
+    public void OnHeal(int heal)
+    {
+        CreatureStat.OnHeal(heal);
+
+        // TODO - 회복 애니메이션 실행
+    }
 
     #endregion
     
@@ -245,13 +250,13 @@ public abstract class Creature : MonoBehaviour
         if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
         {
             /* TODO - 현재 오류 발생
-            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleMng.ActionType;
+            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleMng.ActionAttribute;
             switch (nextAct)
             {
-                case Define.ActionType.Attack:
+                case Define.ActionAttribute.Attack:
                     AnimState = Define.AnimState.Attack;
                     break;
-                case Define.ActionType.SkillUse:
+                case Define.ActionAttribute.SkillUse:
                     AnimState = Define.AnimState.Skill;
                     break;
             }

@@ -24,7 +24,10 @@ public abstract class Hero : Creature
         LeftHand = Util.FindChild(gameObject, "weapon_l", true);
         RightHand = Util.FindChild(gameObject, "weapon_r", true);
         
-        //Bag = new Bag(transform);
+        Bag = new Bag();
+        Bag.SetInfo();
+        Bag.Owner = this;
+        
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
@@ -192,9 +195,17 @@ public abstract class Hero : Creature
     {
         // TODO - Test Code
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            Bag.UseItem(this, 0);
+        {
+            BaseItem item = Bag.StoreItem(Define.ITEM_HEALPORTION_ID);
+            Debug.Log($"{item.ItemData.Name}: {item.Count}");
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
-            Bag.UseItem(this, 1);
+        {
+            int itemIdx = 0;
+            Bag.UseItem(itemIdx, this.Id);
+            if (Bag.Items[itemIdx] != null)
+                Debug.Log($"{Bag.Items[itemIdx].ItemData.Name}: {Bag.Items[itemIdx].Count}");
+        }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             Weapon weapon = new SampleSingleSword();

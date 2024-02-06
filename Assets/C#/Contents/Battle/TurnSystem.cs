@@ -3,7 +3,7 @@
 public class TurnSystem
 {
     public ulong[] Turns { get; protected set; }
-    public int CurrentTurn { get; protected set; } = 0;
+    public int CurrentTurn { get; protected set; }
 
     public void Init(ulong[] turns)
     {

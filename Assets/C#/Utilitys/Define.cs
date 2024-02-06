@@ -46,15 +46,7 @@
         Recover,
     }
     
-    public enum ActionType
-    {
-        None,
-        MeleeAttack,
-        RangedAttack,
-        Buff,
-        Heal,
-        Move
-    }
+    
     
     public enum ActionTargetType
     {
@@ -117,17 +109,23 @@
         Dexterity,
     }
     
+    public enum ActionAttribute
+    {
+        None,
+        MeleeAttack,
+        RangedAttack,
+        Buff,
+        Heal,
+        Move
+    }
+    
     public enum GridSide
     {
         HeroSide,
         MonsterSide,
     }
-
-    public enum WeaponSide
-    {
-        Left,
-        Right,
-    }
+    
+    
     #endregion
     
     #region State
@@ -222,8 +220,18 @@
     
     public const int ARMOR_SAMPLEBODY1_ID = 202000;
     public const int ARMOR_SAMPLEBODY2_ID = 202001;
+
+    public const int ITEM_HEALPORTION_ID = 301000;
+    
+    public const int SKILL_STRIKE_ID = 401000;
     #endregion
 
+    #region Path
+    public const string HERO_PATH = "Heroes";
+    public const string MONSTER_PATH = "Monsters";
+    #endregion
+    
+    
     #region NonContent
     public enum Layer
     {

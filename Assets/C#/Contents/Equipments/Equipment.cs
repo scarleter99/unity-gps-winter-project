@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 public abstract class Equipment
 {
-    public int DataTemplateId { get; protected set; }
+    public int DataId { get; protected set; }
     public Define.EquipmentType EquipmentType { get; protected set; }
     public Data.EquipmentData EquipmentData { get; protected set; }
     public Hero Owner { get; protected set; }
@@ -10,7 +8,7 @@ public abstract class Equipment
     // 수동 실행
     public virtual void SetInfo(int templateId)
     {
-        DataTemplateId = templateId;
+        DataId = templateId;
         
         if (EquipmentType == Define.EquipmentType.Weapon)
             EquipmentData = Managers.DataMng.WeaponDataDict[templateId];
