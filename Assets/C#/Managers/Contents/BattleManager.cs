@@ -31,6 +31,7 @@ public class BattleManager
     public BattleGridCell[,] HeroGrid { get; protected set; } = new BattleGridCell[2, 3];
     public BattleGridCell[,] MonsterGrid { get; protected set; } = new BattleGridCell[2, 3];
 
+    private BattleGridCell _currentMouseoverCell;
     public Creature CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
     public Creature TargetCreature;
 
@@ -140,36 +141,25 @@ public class BattleManager
         switch (mouseEvent)
         {
             case Define.MouseEvent.Click:
-                if (BattleState == Define.BattleState.SelectTarget)
+                if (BattleState == Define.BattleState.SelectTarget && GetMouseoverCell())
                     ClickGridCell();
                 break;
-            // TODO - MouseHOver시 색바뀌기 구현
+            case Define.MouseEvent.Hover:
+                GetMouseoverCell();
+                break;
         }
     }
     
-    public bool ClickGridCell()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    public void ClickGridCell()
+    {   
+        Hero currentTurnHero = CurrentTurnCreature as Hero;
+        TargetCreature = _currentMouseoverCell.CellCreature;
 
-        if (Physics.Raycast(ray, out RaycastHit rayHit, maxDistance: 100f, layerMask: LayerMask.GetMask("BattleGridCell")))
-        {
-            BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
-            
-            Hero currentTurnHero = CurrentTurnCreature as Hero;
-            TargetCreature = gridCell.CellCreature;
+        if (currentTurnHero != null) 
+            currentTurnHero.DoAction(TargetCreature.Id);
+        else
+            Debug.Log("No currentTurnHero!");
 
-            if (currentTurnHero != null) 
-                currentTurnHero.DoAction(TargetCreature.Id);
-            else
-                Debug.Log("Failed to ClickGirdCell");
-
-            // TODO - DEBUG CODE
-            Debug.DrawLine(Camera.main.transform.position, rayHit.point);
-            
-            return true;
-        }
-
-        return false;
     }
     
     ulong GetRandomCreature(Dictionary<ulong, Hero> dictionary)
@@ -182,65 +172,25 @@ public class BattleManager
         return randomKey;
     }
 
-    #region Prev GridCell Color Code
-    /*
-    // 셀 나타내는 사각형 스프라이트
-    // 그리드의 y좌표를 지면보다 약간 높게 설정해야 보임
-    private SpriteRenderer _indicator;
-    private Color _originalColor;
-    
-    // 마우스를 그리드 셀 위로 가져다 대면 해당 셀 색을 바꿈
-    public void HandleMouseHover(Vector3 worldPosition)
+    private bool GetMouseoverCell()
     {
-        GetGridPosition(worldPosition, out int x, out int z);
-        //Debug.Log($"{z}, {x}");
-        if (x >= 0 && x < _width && z >= 0 && z < _height)
-        {
-            _currentMouseoverCell?.OnMouseExit();
-            _currentMouseoverCell = _gridArray[z, x];
-            _currentMouseoverCell?.OnMouseEnter();
-        }
-        else
-        {
-            ResetMouseHover();
-        }
-    }
-    
-    public void ResetMouseHover()
-    {
-        _currentMouseoverCell?.OnMouseExit();
-        _currentMouseoverCell = null;
-    }
-    
-    public void OnMouseEnter()
-    {
-        if (_side == Define.GridSide.HeroSide)
-        {
-            ChangeColor(Color.green);
-        }
-        else if (_side == Define.GridSide.MonsterSide)
-        {
-            ChangeColor(Color.red);
-        }
-    }
+        _currentMouseoverCell?.MouseExit();
 
-    private void ChangeColor(Color color, float duration = 0.3f)
-    {
-        KillColorTween();
-        _colorTween = _indicator.DOColor(color, duration).OnComplete(() => { _colorTween = null; });
-    }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-    public void OnMouseExit()
-    {   
-        ChangeColor(_originalColor);
-    }
+        if (Physics.Raycast(ray, out RaycastHit rayHit, maxDistance: 100f, layerMask: LayerMask.GetMask("BattleGridCell")))
+        {
+            BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
 
-    // 기존 진행중인 colorTween을 중지, 삭제
-    private void KillColorTween()
-    {
-        _colorTween?.Kill();
-        _colorTween = null;
+            _currentMouseoverCell = gridCell;
+            
+            if (gridCell != null)
+            {
+                _currentMouseoverCell.MouseEnter();
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
-    */
-    #endregion
 }

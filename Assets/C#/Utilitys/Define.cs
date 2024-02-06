@@ -190,6 +190,7 @@
         PointerDown,
         PointerUp,
         Click,
+        Hover,
     }
     #endregion
     
