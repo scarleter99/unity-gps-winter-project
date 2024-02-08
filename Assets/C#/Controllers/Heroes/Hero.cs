@@ -141,50 +141,7 @@ public abstract class Hero : Creature
         }
     }
     #endregion
-    
-    #region Update
-    
-    protected override void UpdateAttack()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.shortNameHash == _stateHash)
-        {
-            var elapsedTime = currentState.normalizedTime;
-            if (elapsedTime >= 0.98f) 
-            {
-                switch (WeaponType)
-                {
-                    case Define.WeaponType.DoubleSword:
-                    case Define.WeaponType.SingleSword:
-                    case Define.WeaponType.Spear:
-                    case Define.WeaponType.SwordAndShield:
-                    case Define.WeaponType.TwoHandedSword:
-                        AnimState = Define.AnimState.JumpBack;
-                        break;
-                }
-            }
-            else if (elapsedTime >= 0.8f)
-            {
-                switch (WeaponType)
-                {
-                    case Define.WeaponType.Bow:
-                    case Define.WeaponType.Wand:
-                        AnimState = Define.AnimState.Idle;
-                        break;
-                }
-            }
-        }
-    }
 
-    protected override void UpdateHit()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
-
-    #endregion
-    
     /*----------------------
         TODO - TEST CODE
     ----------------------*/

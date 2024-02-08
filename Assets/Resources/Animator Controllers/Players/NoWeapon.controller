@@ -169,7 +169,7 @@ AnimatorStateMachine:
     m_Position: {x: 840, y: -160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3194841909654369820}
-    m_Position: {x: 430, y: -160, z: 0}
+    m_Position: {x: -390, y: 10, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -629,7 +629,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Die02_NoWeapon
+  m_Name: Die2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -790,13 +790,13 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: NeedsJump
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
