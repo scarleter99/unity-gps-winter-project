@@ -1,6 +1,4 @@
-using System;
 using System.Text;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = System.Random;
 
@@ -75,13 +73,14 @@ public abstract class Creature : MonoBehaviour
     
     #region AnimationControl
     
-    // jump에서 사용
-    protected bool _needsJump;
-    protected Vector3 _comebackPos; 
+    // 공격하기 전 접근 단계에서 사용
+    protected Define.ApproachType _approachType;
+    protected Vector3 _comebackPos;
     
     // animator controller bool hash
-    protected static readonly int _bHashAttack = UnityEngine.Animator.StringToHash("AttackFinished");
-    protected static readonly int _bHashJump = UnityEngine.Animator.StringToHash("NeedsJump");
+    protected static readonly int _hashbAttack = UnityEngine.Animator.StringToHash("AttackFinished");
+    protected static readonly int _hashbJump = UnityEngine.Animator.StringToHash("NeedsJump");
+    protected static readonly int _hashbMove = UnityEngine.Animator.StringToHash("NeedsMove");
     
     // state hash
     protected static readonly int _hashAttack = UnityEngine.Animator.StringToHash("Attack1");
@@ -91,6 +90,7 @@ public abstract class Creature : MonoBehaviour
     protected static readonly int _hashIdle = UnityEngine.Animator.StringToHash("Idle");
     protected static readonly int _hashJump = UnityEngine.Animator.StringToHash("Jump");
     protected static readonly int _hashMove = UnityEngine.Animator.StringToHash("Move");
+    protected static readonly int _hashMoveAttack = UnityEngine.Animator.StringToHash("MoveBeforeAttack");
     protected static readonly int _hashVictory = UnityEngine.Animator.StringToHash("Victory");
     
     // randomly selected states
@@ -106,17 +106,8 @@ public abstract class Creature : MonoBehaviour
             switch (value)
             {
                 case Define.AnimState.Attack:
-                    Animator.SetBool(_bHashAttack, false);
-                    if (_needsJump)
-                    {
-                        Animator.SetBool(_bHashJump, true);
-                        Animator.Play(_hashJump);
-                    }
-                    else
-                    {
-                        Animator.SetBool(_bHashJump, false);
-                        Animator.Play(_hashAttack);
-                    }
+                    // TODO - Skill에 따른 ApproachType 변경 기능 추가?
+                    ApproachBeforeAttack();
                     break;
                 case Define.AnimState.Defend:
                     Animator.Play(_hashDefend);
@@ -147,6 +138,31 @@ public abstract class Creature : MonoBehaviour
             }
 
             _animState = value;
+        }
+    }
+
+    protected void ApproachBeforeAttack()
+    {
+        Animator.SetBool(_hashbAttack, false);
+        _comebackPos = transform.position;
+        
+        switch (_approachType)
+        {
+            case Define.ApproachType.Jump:
+                Animator.SetBool(_hashbJump, true);
+                Animator.SetBool(_hashbMove, false);
+                Animator.Play(_hashJump);
+                break;
+            case Define.ApproachType.InPlace:
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, false);
+                Animator.Play(_hashAttack);
+                break;
+            case Define.ApproachType.Move:
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, true);
+                Animator.Play(_hashMoveAttack);
+                break;
         }
     }
 

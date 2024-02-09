@@ -64,6 +64,13 @@
         Vertical,
     }
     
+    public enum ApproachType
+    {
+        InPlace,
+        Jump,
+        Move,
+    }
+    
     public enum AreaTileType
     {   
         Invalid,
