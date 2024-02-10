@@ -83,23 +83,23 @@ public abstract class Creature : MonoBehaviour
     [SerializeField] protected Vector3 _approachOffset;
 
     // animator controller bool hash
-    protected static readonly int _hashbFAttack = UnityEngine.Animator.StringToHash("AttackFinished");
-    protected static readonly int _hashbFMove = UnityEngine.Animator.StringToHash("MoveFinished");
-    protected static readonly int _hashbNJump = UnityEngine.Animator.StringToHash("NeedsJump");
-    protected static readonly int _hashbNMove = UnityEngine.Animator.StringToHash("NeedsMove");
+    protected static readonly int _hashbAttack = UnityEngine.Animator.StringToHash("AttackFinished");
+    protected static readonly int _hashbApproach = UnityEngine.Animator.StringToHash("ApproachFinished");
+    protected static readonly int _hashbJump = UnityEngine.Animator.StringToHash("NeedsJump");
+    protected static readonly int _hashbMove = UnityEngine.Animator.StringToHash("NeedsMove");
     
     // state hash
-    protected static readonly int _hashAttack = UnityEngine.Animator.StringToHash("Attack1");
     protected static readonly int _hashDefend = UnityEngine.Animator.StringToHash("Defend");
     protected static readonly int _hashDefendHit = UnityEngine.Animator.StringToHash("DefendHit");
     protected static readonly int _hashDizzy = UnityEngine.Animator.StringToHash("Dizzy");
     protected static readonly int _hashIdle = UnityEngine.Animator.StringToHash("Idle");
     protected static readonly int _hashJump = UnityEngine.Animator.StringToHash("Jump");
     protected static readonly int _hashMove = UnityEngine.Animator.StringToHash("Move");
-    protected static readonly int _hashMoveAttack = UnityEngine.Animator.StringToHash("MoveBeforeAttack");
+    protected static readonly int _hashMoveAttack = UnityEngine.Animator.StringToHash("MoveApproach");
     protected static readonly int _hashVictory = UnityEngine.Animator.StringToHash("Victory");
     
     // randomly selected states
+    protected StringBuilder _stringAttack = new ("Attack");
     protected StringBuilder _stringDie = new ("Die");
     protected StringBuilder _stringHit = new ("Hit");
     
@@ -151,25 +151,29 @@ public abstract class Creature : MonoBehaviour
 
     protected void ApproachBeforeAttack()
     {
-        Animator.SetBool(_hashbFAttack, false);
+        // TODO - TEST CODE
+        _stringAttack.Append("1");
+        
+        Animator.SetBool(_hashbAttack, false);
+        Animator.SetBool(_hashbApproach, false);
         _comebackPos = transform.position;
         _moveDOTriggered = false;
         
         switch (_approachType)
         {
             case Define.ApproachType.Jump:
-                Animator.SetBool(_hashbNJump, true);
-                Animator.SetBool(_hashbNMove, false);
+                Animator.SetBool(_hashbJump, true);
+                Animator.SetBool(_hashbMove, false);
                 Animator.Play(_hashJump);
                 break;
             case Define.ApproachType.InPlace:
-                Animator.SetBool(_hashbNJump, false);
-                Animator.SetBool(_hashbNMove, false);
-                Animator.Play(_hashAttack);
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, false);
+                Animator.Play(_stringAttack.ToString());
                 break;
             case Define.ApproachType.Move:
-                Animator.SetBool(_hashbNJump, false);
-                Animator.SetBool(_hashbNMove, true);
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, true);
                 Animator.Play(_hashMoveAttack);
                 break;
         }
@@ -218,15 +222,15 @@ public abstract class Creature : MonoBehaviour
         {
             _moveDOTriggered = true;
             float duration = _approachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
-            if (Animator.GetBool(_hashbFAttack))
+            if (Animator.GetBool(_hashbAttack))
             {
                 transform.DOMove(_comebackPos, duration)
-                    .OnComplete(() => { Animator.SetBool(_hashbFMove, true); });
+                    .OnComplete(() => { _stringAttack.Remove(6, 1); Animator.SetBool(_hashbApproach, true); });
             }
             else
             {
                 transform.DOMove(TargetCreature.transform.position + _approachOffset, duration)
-                    .OnComplete(() => { Animator.SetBool(_hashbFMove, true); });
+                    .OnComplete(() => { Animator.SetTrigger(_stringAttack.ToString()); });
             }
         }
     }
@@ -234,7 +238,8 @@ public abstract class Creature : MonoBehaviour
     public void OnAttackEnd()
     {
         _moveDOTriggered = false;
-        Animator.SetBool(_hashbFAttack, true);
+        Animator.SetBool(_hashbAttack, true);
+        Animator.SetBool(_hashbApproach, false);
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
@@ -256,6 +261,5 @@ public abstract class Creature : MonoBehaviour
         AnimState = Define.AnimState.Die;
     }
     
-
     #endregion
 }

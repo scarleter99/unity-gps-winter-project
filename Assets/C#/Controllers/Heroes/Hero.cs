@@ -1,4 +1,4 @@
-using System;
+ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -142,14 +142,7 @@ public abstract class Hero : Creature
         }
     }
     #endregion
-
-    /*----------------------
-        TODO - TEST CODE
-    ----------------------*/
-    void Update()
-    {
-        OnKeyboardClick();
-    }
+    
     private void OnKeyboardClick()
     {
         /////////////////////////////////////////////////////////////
