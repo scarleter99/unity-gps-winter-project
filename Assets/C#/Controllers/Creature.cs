@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using System.Text;
+using DG.Tweening;
 using UnityEngine;
 using Random = System.Random;
 
@@ -50,6 +52,7 @@ public abstract class Creature : MonoBehaviour
         CreatureStat = statStruct;
     }
     
+    // 턴제에서 본인 턴일 때 사용할 함수
     public virtual void DoAction(ulong targetId)
     {
         if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out Hero hero))
@@ -76,11 +79,14 @@ public abstract class Creature : MonoBehaviour
     // 공격하기 전 접근 단계에서 사용
     protected Define.ApproachType _approachType;
     protected Vector3 _comebackPos;
-    
+    protected bool _moveDOTriggered;
+    [SerializeField] protected Vector3 _approachOffset;
+
     // animator controller bool hash
-    protected static readonly int _hashbAttack = UnityEngine.Animator.StringToHash("AttackFinished");
-    protected static readonly int _hashbJump = UnityEngine.Animator.StringToHash("NeedsJump");
-    protected static readonly int _hashbMove = UnityEngine.Animator.StringToHash("NeedsMove");
+    protected static readonly int _hashbFAttack = UnityEngine.Animator.StringToHash("AttackFinished");
+    protected static readonly int _hashbFMove = UnityEngine.Animator.StringToHash("MoveFinished");
+    protected static readonly int _hashbNJump = UnityEngine.Animator.StringToHash("NeedsJump");
+    protected static readonly int _hashbNMove = UnityEngine.Animator.StringToHash("NeedsMove");
     
     // state hash
     protected static readonly int _hashAttack = UnityEngine.Animator.StringToHash("Attack1");
@@ -103,10 +109,12 @@ public abstract class Creature : MonoBehaviour
         get => _animState;
         protected set
         {
+            if (!Animator)
+                return;
+            
             switch (value)
             {
                 case Define.AnimState.Attack:
-                    // TODO - Skill에 따른 ApproachType 변경 기능 추가?
                     ApproachBeforeAttack();
                     break;
                 case Define.AnimState.Defend:
@@ -143,24 +151,25 @@ public abstract class Creature : MonoBehaviour
 
     protected void ApproachBeforeAttack()
     {
-        Animator.SetBool(_hashbAttack, false);
+        Animator.SetBool(_hashbFAttack, false);
         _comebackPos = transform.position;
+        _moveDOTriggered = false;
         
         switch (_approachType)
         {
             case Define.ApproachType.Jump:
-                Animator.SetBool(_hashbJump, true);
-                Animator.SetBool(_hashbMove, false);
+                Animator.SetBool(_hashbNJump, true);
+                Animator.SetBool(_hashbNMove, false);
                 Animator.Play(_hashJump);
                 break;
             case Define.ApproachType.InPlace:
-                Animator.SetBool(_hashbJump, false);
-                Animator.SetBool(_hashbMove, false);
+                Animator.SetBool(_hashbNJump, false);
+                Animator.SetBool(_hashbNMove, false);
                 Animator.Play(_hashAttack);
                 break;
             case Define.ApproachType.Move:
-                Animator.SetBool(_hashbJump, false);
-                Animator.SetBool(_hashbMove, true);
+                Animator.SetBool(_hashbNJump, false);
+                Animator.SetBool(_hashbNMove, true);
                 Animator.Play(_hashMoveAttack);
                 break;
         }
@@ -193,7 +202,6 @@ public abstract class Creature : MonoBehaviour
 
     #region Event
     
-    // Animation의 적절한 타이밍에서 호출
     public virtual void OnHandleAction()
     {
         CurrentAction.HandleAction(TargetCreature.Id);
@@ -202,6 +210,31 @@ public abstract class Creature : MonoBehaviour
         TargetCreature = null;
         
         Managers.BattleMng.NextTurn();
+    }
+
+    public void OnApproachStart()
+    {
+        if (!_moveDOTriggered)
+        {
+            _moveDOTriggered = true;
+            float duration = _approachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
+            if (Animator.GetBool(_hashbFAttack))
+            {
+                transform.DOMove(_comebackPos, duration)
+                    .OnComplete(() => { Animator.SetBool(_hashbFMove, true); });
+            }
+            else
+            {
+                transform.DOMove(TargetCreature.transform.position + _approachOffset, duration)
+                    .OnComplete(() => { Animator.SetBool(_hashbFMove, true); });
+            }
+        }
+    }
+
+    public void OnAttackEnd()
+    {
+        _moveDOTriggered = false;
+        Animator.SetBool(_hashbFAttack, true);
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
@@ -214,13 +247,13 @@ public abstract class Creature : MonoBehaviour
             return;
         }
 
-        // TODO - 피격 애니메이션 실행
+        AnimState = Define.AnimState.Hit;
     }
     
     public virtual void OnDead()
     {
         CreatureBattleState = Define.CreatureBattleState.Dead;
-        // TODO - 사망 애니메이션 실행
+        AnimState = Define.AnimState.Die;
     }
     
 

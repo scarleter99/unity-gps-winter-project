@@ -17,7 +17,7 @@
     
     public enum WeaponType
     {
-        None,
+        NoWeapon,
         Bow,
         DoubleSword,
         SingleSword,

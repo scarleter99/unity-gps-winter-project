@@ -65,6 +65,7 @@ public abstract class Hero : Creature
         HeroStat.AttachEquipment(Weapon.EquipmentData);
         Weapon.Equip(this);
         ChangeWeaponVisibility(true);
+        ChangeAnimator();
     }
     
     public void UnEquipWeapon()
@@ -145,8 +146,13 @@ public abstract class Hero : Creature
     /*----------------------
         TODO - TEST CODE
     ----------------------*/
+    void Update()
+    {
+        OnKeyboardClick();
+    }
     private void OnKeyboardClick()
     {
+        /////////////////////////////////////////////////////////////
         // TODO - Test Code
         if (Input.GetKeyDown(KeyCode.Alpha1))
             Bag.UseItem(this, 0);
@@ -176,5 +182,14 @@ public abstract class Hero : Creature
             body.SetInfo(Define.ARMOR_SAMPLEBODY2_ID);
             EquipArmor(body);
         }
+        else if (Input.GetKeyDown(KeyCode.T))
+        {
+            TargetCreature = GameObject.Find("@Monsters").transform.GetChild(0).GetComponent<Creature>();
+            AnimState = Define.AnimState.Attack;
+            CurrentAction = new Strike();
+            CurrentAction.Owner = this;
+        }
+        /////////////////////////////////////////////////////////////
     }
+    
 }
