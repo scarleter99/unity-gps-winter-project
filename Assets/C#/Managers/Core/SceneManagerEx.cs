@@ -50,7 +50,7 @@ public class SceneManagerEx
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
         }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
-        SceneManager.MoveGameObjectToScene(GameObject.Find("@Players"), SceneManager.GetSceneByName(sceneName)); // 전투씬으로 플레이어 옮김
+        SceneManager.MoveGameObjectToScene(GameObject.Find("@Heroes"), SceneManager.GetSceneByName(sceneName)); // 전투씬으로 플레이어 옮김
 
         yield return loadingScreen.Fade(true); // fade in, LoadingUI 삭제
     }
@@ -63,7 +63,7 @@ public class SceneManagerEx
         UI_Loading loadingScreen = Managers.UIMng.ShowSceneUI<UI_Loading>();
         yield return loadingScreen.Fade(false); // fade out
 
-        SceneManager.MoveGameObjectToScene(GameObject.Find("@Players"), SceneManager.GetSceneByName(areasceneName)); // 구역씬으로 플레이어 복귀
+        SceneManager.MoveGameObjectToScene(GameObject.Find("@Heroes"), SceneManager.GetSceneByName(areasceneName)); // 구역씬으로 플레이어 복귀
 
         var battleScene = SceneManager.GetSceneByName(battlesceneName);
         if (battleScene.isLoaded)

@@ -1,11 +1,11 @@
 using UnityEngine;
 using static Define;
 
-public sealed class BossTile : HexGridCell
+public sealed class BossTile : AreaGridTile
 {
     private const string _iconPath = "Area/icon_boss";
 
-    public BossTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
+    public BossTile(Vector3 position) : base(position)
     {
         _indicatorColor = new Color(138 / 255f, 0 / 255f, 255 / 255f, 255 / 255f);
         _fillColor = new Color(85 / 255f, 0 / 255f, 163 / 255f, 222 / 255f);
@@ -19,7 +19,7 @@ public sealed class BossTile : HexGridCell
        _indicator.color = _indicatorColor;
        _fill.color = _fillColor;
 
-        Icon = Managers.ResourceMng.Instantiate(_iconPath, _cellObject.transform, "icon");
+        Icon = Managers.ResourceMng.Instantiate(_iconPath, _tileObject.transform, "icon");
         Icon.transform.position += new Vector3(0, 0, -0.1f);
     }
     public override void OnTileEnter()

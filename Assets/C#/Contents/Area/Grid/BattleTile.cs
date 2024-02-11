@@ -2,12 +2,12 @@ using DG.Tweening;
 using UnityEngine;
 using static Define;
 
-public sealed class BattleTile : HexGridCell
+public sealed class BattleTile : AreaGridTile
 {
     private const string _iconPath = "Area/icon_battle";
 
 
-    public BattleTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject)
+    public BattleTile(Vector3 position) : base(position)
     {
         _indicatorColor = new Color(255f / 255f, 20f / 255f, 20f / 255f, 200f / 255f);
         _fillColor = new Color(255f / 255f, 0f / 255f, 0f / 255f, 50f / 255f);
@@ -21,7 +21,7 @@ public sealed class BattleTile : HexGridCell
        _indicator.color = _indicatorColor;
        _fill.color = _fillColor;
 
-        Icon = Managers.ResourceMng.Instantiate(_iconPath, _cellObject.transform, "icon");
+        Icon = Managers.ResourceMng.Instantiate(_iconPath, _tileObject.transform, "icon");
     }
 
     public override void OnTileEnter()

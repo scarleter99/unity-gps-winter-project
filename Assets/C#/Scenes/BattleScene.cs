@@ -12,13 +12,13 @@ public class BattleScene : BaseScene
         SceneType = Define.SceneType.BattleScene;
         
         // TODO - TEST CODE
-        Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
-        Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
-        Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
+        //Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
+        //Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
+        //Managers.ObjectMng.SpawnHero<Knight>(Define.HERO_KNIGHT_ID);
         
         Managers.BattleMng.InitBattle();
 
-        //Managers.UIMng.ShowSceneUI<UI_BattleScene>();
+        Managers.UIMng.ShowSceneUI<UI_BattleScene>();
     }
 
     public override void Clear()

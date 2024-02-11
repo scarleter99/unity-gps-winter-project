@@ -1,9 +1,9 @@
 using UnityEngine;
 using static Define;
 
-public sealed class NormalTile : HexGridCell
+public sealed class NormalTile : AreaGridTile
 {
-    public NormalTile(int x, int z, GameObject cellObject, float size = 1) : base(x, z, cellObject, size)
+    public NormalTile(Vector3 position) : base(position)
     {
         _indicatorColor = _indicatorOriginalColor;
         _fillColor = _fillOriginalColor;
