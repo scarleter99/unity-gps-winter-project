@@ -1,4 +1,6 @@
-using System;
+using System.Linq.Expressions;
+using System.Text;
+using DG.Tweening;
 using UnityEngine;
 using Random = System.Random;
 
@@ -13,78 +15,12 @@ public abstract class Creature : MonoBehaviour
     public IStat CreatureStat { get; protected set; }
     
     public Define.CreatureBattleState CreatureBattleState { get; set; }
-    private Define.AnimState _animState;
-    public Define.AnimState AnimState
-    {
-        get => _animState;
-        protected set
-        {
-            _animState = value;
-            /* TEMP CODE
-            Random random = new Random();
-
-            bool isPlayer = CreatureType == Define.CreatureType.Hero;
-            int minIndex = 1;
-            int maxHitIndex = isPlayer ? 3 : 2;
-            int maxDieIndex = isPlayer ? 3 : 2;
-            int index;
-
-            string stateName = "";
-            switch (_animState)
-            {
-                case Define.AnimState.Attack:
-                    Animator.Play(stateName = "Attack1");
-                    break;
-                case Define.AnimState.Defend:
-                    Animator.Play(stateName = "Defend");
-                    break;
-                case Define.AnimState.DefendHit:
-                    Animator.Play(stateName = "DefendHit");
-                    break;
-                case Define.AnimState.Die:
-                    index = random.Next(minIndex, maxDieIndex);
-                    Animator.Play(stateName = $"Die{index}");
-                    break;
-                case Define.AnimState.Dizzy:
-                    Animator.Play(stateName = "Dizzy");
-                    break;
-                case Define.AnimState.Hit:
-                    index = random.Next(minIndex, maxHitIndex);
-                    Animator.Play(stateName = $"Hit{index}");
-                    break;
-                case Define.AnimState.Idle:
-                    Animator.CrossFade(stateName = "Idle", 0.2f);
-                    break;
-                case Define.AnimState.JumpBack:
-                    Animator.Play(stateName = "Jump");
-                    break;
-                case Define.AnimState.JumpFront:
-                    Animator.Play(stateName = "Jump");
-                    _comebackPos = transform.position;
-                    break;
-                case Define.AnimState.Move:
-                    Animator.Play(stateName = "Move");
-                    break;
-                //case Define.AnimState.Skill:
-                //    break;
-                case Define.AnimState.Victory:
-                    Animator.Play(stateName = "Victory");
-                    break;
-            }
-
-            _stateHash = Animator.StringToHash(stateName);
-            */
-        }
-    }
     public int Row { get; set; }
     public int Col { get; set; }
 
     public BaseAction CurrentAction { get; set; }
     public Creature TargetCreature { get; protected set; }
-    
-    protected int _stateHash;
-    protected Vector3 _comebackPos; // jump에서 사용
-    
+
     private void Start()
     {
         Init();
@@ -111,53 +47,12 @@ public abstract class Creature : MonoBehaviour
         AnimState = Define.AnimState.Idle;
     }
 
-    protected void ChangeAnim()
-    {
-        switch (AnimState)
-        {
-            case Define.AnimState.Attack:
-                UpdateAttack();
-                break;
-            case Define.AnimState.Defend:
-                UpdateDefend();
-                break;
-            case Define.AnimState.DefendHit:
-                UpdateDefendHit();
-                break;
-            case Define.AnimState.Die:
-                UpdateDie();
-                break;
-            case Define.AnimState.Dizzy:
-                UpdateDizzy();
-                break;
-            case Define.AnimState.Hit:
-                UpdateHit();
-                break;
-            case Define.AnimState.Idle:
-                UpdateIdle();
-                break;
-            case Define.AnimState.JumpBack:
-                UpdateJumpBack();
-                break;
-            case Define.AnimState.JumpFront:
-                UpdateJumpFront();
-                break;
-            case Define.AnimState.Move:
-                UpdateMove();
-                break;
-            //case Define.AnimState.Skill:
-            //    break;
-            case Define.AnimState.Victory:
-                UpdateVictory();
-                break;
-        }
-    }
-
     public virtual void ChangeStat(IStat statStruct)
     {
         CreatureStat = statStruct;
     }
     
+    // 턴제에서 본인 턴일 때 사용할 함수
     public virtual void DoAction(ulong targetId)
     {
         if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out Hero hero))
@@ -178,10 +73,139 @@ public abstract class Creature : MonoBehaviour
                 break;
         }
     }
+    
+    #region AnimationControl
+    
+    // 공격하기 전 접근 단계에서 사용
+    protected Define.ApproachType _approachType;
+    protected Vector3 _comebackPos;
+    protected bool _moveDOTriggered;
+    [SerializeField] protected Vector3 _approachOffset;
+
+    // animator controller bool hash
+    protected static readonly int _hashbAttack = UnityEngine.Animator.StringToHash("AttackFinished");
+    protected static readonly int _hashbApproach = UnityEngine.Animator.StringToHash("ApproachFinished");
+    protected static readonly int _hashbJump = UnityEngine.Animator.StringToHash("NeedsJump");
+    protected static readonly int _hashbMove = UnityEngine.Animator.StringToHash("NeedsMove");
+    
+    // state hash
+    protected static readonly int _hashDefend = UnityEngine.Animator.StringToHash("Defend");
+    protected static readonly int _hashDefendHit = UnityEngine.Animator.StringToHash("DefendHit");
+    protected static readonly int _hashDizzy = UnityEngine.Animator.StringToHash("Dizzy");
+    protected static readonly int _hashIdle = UnityEngine.Animator.StringToHash("Idle");
+    protected static readonly int _hashJump = UnityEngine.Animator.StringToHash("Jump");
+    protected static readonly int _hashMove = UnityEngine.Animator.StringToHash("Move");
+    protected static readonly int _hashMoveAttack = UnityEngine.Animator.StringToHash("MoveApproach");
+    protected static readonly int _hashVictory = UnityEngine.Animator.StringToHash("Victory");
+    
+    // randomly selected states
+    protected StringBuilder _stringAttack = new ("Attack");
+    protected StringBuilder _stringDie = new ("Die");
+    protected StringBuilder _stringHit = new ("Hit");
+    
+    protected Define.AnimState _animState;
+    public virtual Define.AnimState AnimState
+    {
+        get => _animState;
+        protected set
+        {
+            if (!Animator)
+                return;
+            
+            switch (value)
+            {
+                case Define.AnimState.Attack:
+                    ApproachBeforeAttack();
+                    break;
+                case Define.AnimState.Defend:
+                    Animator.Play(_hashDefend);
+                    break;
+                case Define.AnimState.DefendHit:
+                    Animator.Play(_hashDefendHit);
+                    break;
+                case Define.AnimState.Die:
+                    PlayRandomAnimation(value);
+                    break;
+                case Define.AnimState.Dizzy:
+                    Animator.Play(_hashDizzy);
+                    break;
+                case Define.AnimState.Hit:
+                    PlayRandomAnimation(value);
+                    break;
+                case Define.AnimState.Idle:
+                    Animator.Play(_hashIdle);
+                    break;
+                case Define.AnimState.Move:
+                    Animator.Play(_hashMove);
+                    break;
+                //case Define.AnimState.Skill:
+                //    break;
+                case Define.AnimState.Victory:
+                    Animator.Play(_hashVictory);
+                    break;
+            }
+
+            _animState = value;
+        }
+    }
+
+    protected void ApproachBeforeAttack()
+    {
+        // TODO - TEST CODE
+        _stringAttack.Append("1");
+        
+        Animator.SetBool(_hashbAttack, false);
+        Animator.SetBool(_hashbApproach, false);
+        _comebackPos = transform.position;
+        _moveDOTriggered = false;
+        
+        switch (_approachType)
+        {
+            case Define.ApproachType.Jump:
+                Animator.SetBool(_hashbJump, true);
+                Animator.SetBool(_hashbMove, false);
+                Animator.Play(_hashJump);
+                break;
+            case Define.ApproachType.InPlace:
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, false);
+                Animator.Play(_stringAttack.ToString());
+                break;
+            case Define.ApproachType.Move:
+                Animator.SetBool(_hashbJump, false);
+                Animator.SetBool(_hashbMove, true);
+                Animator.Play(_hashMoveAttack);
+                break;
+        }
+    }
+
+    protected void PlayRandomAnimation(Define.AnimState state)
+    {
+        Random random = new Random();
+
+        bool isPlayer = CreatureType == Define.CreatureType.Hero;
+        int maxIndex = isPlayer ? 3 : 2;
+        int index = random.Next(1, maxIndex);
+        
+        switch (state)
+        {
+            case Define.AnimState.Die:
+                _stringDie.Append(index.ToString());
+                Animator.Play(_stringDie.ToString());
+                _stringDie.Remove(_stringDie.Length - 2, 1);
+                break;
+            case Define.AnimState.Hit:
+                _stringHit.Append(index.ToString());
+                Animator.Play(_stringHit.ToString());
+                _stringHit.Remove(_stringHit.Length - 2, 1);
+                break;
+        }
+    }
+    
+    #endregion
 
     #region Event
     
-    // Animation의 적절한 타이밍에서 호출
     public virtual void OnHandleAction()
     {
         CurrentAction.HandleAction(TargetCreature.Id);
@@ -190,6 +214,32 @@ public abstract class Creature : MonoBehaviour
         TargetCreature = null;
         
         Managers.BattleMng.NextTurn();
+    }
+
+    public void OnApproachStart()
+    {
+        if (!_moveDOTriggered)
+        {
+            _moveDOTriggered = true;
+            float duration = _approachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
+            if (Animator.GetBool(_hashbAttack))
+            {
+                transform.DOMove(_comebackPos, duration)
+                    .OnComplete(() => { _stringAttack.Remove(6, 1); Animator.SetBool(_hashbApproach, true); });
+            }
+            else
+            {
+                transform.DOMove(TargetCreature.transform.position + _approachOffset, duration)
+                    .OnComplete(() => { Animator.SetTrigger(_stringAttack.ToString()); });
+            }
+        }
+    }
+
+    public void OnAttackEnd()
+    {
+        _moveDOTriggered = false;
+        Animator.SetBool(_hashbAttack, true);
+        Animator.SetBool(_hashbApproach, false);
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
@@ -202,65 +252,14 @@ public abstract class Creature : MonoBehaviour
             return;
         }
 
-        // TODO - 피격 애니메이션 실행
+        AnimState = Define.AnimState.Hit;
     }
     
     public virtual void OnDead()
     {
         CreatureBattleState = Define.CreatureBattleState.Dead;
-        // TODO - 사망 애니메이션 실행
+        AnimState = Define.AnimState.Die;
     }
     
-
-    #endregion
-    
-    
-    #region Update
-
-    protected virtual void UpdateAttack() { }
-    protected virtual void UpdateDefend() { }
-    protected virtual void UpdateDefendHit() { }
-    
-    protected virtual void UpdateDie()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        // if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
-        //     Managers.ObjectMng.Despawn(this.gameObject);
-    }
-    
-    protected virtual void UpdateDizzy() { }
-    protected virtual void UpdateHit() { }
-    protected virtual void UpdateIdle() { }
-
-    protected virtual void UpdateJumpBack()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
-    
-    protected virtual void UpdateJumpFront()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.98f && currentState.shortNameHash == _stateHash)
-        {
-            /* TODO - 현재 오류 발생
-            var nextAct = (Managers.SceneMng.CurrentScene as BattleScene)?.BattleMng.ActionType;
-            switch (nextAct)
-            {
-                case Define.ActionType.Attack:
-                    AnimState = Define.AnimState.Attack;
-                    break;
-                case Define.ActionType.SkillUse:
-                    AnimState = Define.AnimState.Skill;
-                    break;
-            }
-            */
-        }
-    }
-    
-    protected virtual void UpdateMove() { }
-    protected virtual void UpdateVictory() { }
-
     #endregion
 }

@@ -17,7 +17,7 @@
     
     public enum WeaponType
     {
-        None,
+        NoWeapon,
         Bow,
         DoubleSword,
         SingleSword,
@@ -62,6 +62,13 @@
         Cross,
         Horizontal,
         Vertical,
+    }
+    
+    public enum ApproachType
+    {
+        InPlace,
+        Jump,
+        Move,
     }
     
     public enum AreaTileType
@@ -147,8 +154,6 @@
         Dizzy,
         Hit,
         Idle,
-        JumpFront,
-        JumpBack,
         Move,
         Skill,
         Victory

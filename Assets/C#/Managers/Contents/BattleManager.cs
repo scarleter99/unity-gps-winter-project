@@ -71,8 +71,6 @@ public class BattleManager
     {
         // TODO - TEST CODE
         SpawnHero(10000, 0, 0);
-        SpawnHero(10001, 0, 1);
-        SpawnHero(10002, 1, 2);
         SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 0);
         SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 1);
         SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 1, 2);
