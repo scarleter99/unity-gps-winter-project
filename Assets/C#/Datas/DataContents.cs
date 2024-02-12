@@ -39,8 +39,8 @@ namespace Data
         public Dictionary<int, HeroData> MakeDict()
         {
             Dictionary<int, HeroData> dic = new Dictionary<int, HeroData>();
-            foreach (HeroData stat in heroes)
-                dic.Add(stat.DataId, stat);
+            foreach (HeroData hero in heroes)
+                dic.Add(hero.DataId, hero);
 
             return dic;
         }
@@ -64,13 +64,40 @@ namespace Data
         public Dictionary<int, MonsterData> MakeDict()
         {
             Dictionary<int, MonsterData> dic = new Dictionary<int, MonsterData>();
-            foreach (MonsterData stat in monsters)
-                dic.Add(stat.DataId, stat);
+            foreach (MonsterData monster in monsters)
+                dic.Add(monster.DataId, monster);
 
             return dic;
         }
     }
 
+    #endregion
+
+    #region MonsterSquadData
+    public class MonsterSquadData
+    {
+        public int DataId;
+        public string Name;
+        public int Level;
+        public List<int> Line1 = new List<int>();
+        public List<int> Line2 = new List<int>();
+    }
+
+    [Serializable]
+    public class MonsterSquadDataLoader : IData<int, MonsterSquadData>
+    {
+        public List<MonsterSquadData> monsterSquads = new List<MonsterSquadData>();
+
+        // List형태의 Data를 Dictionary형태로 변환 후 반환
+        public Dictionary<int, MonsterSquadData> MakeDict()
+        {
+            Dictionary<int, MonsterSquadData> dic = new Dictionary<int, MonsterSquadData>();
+            foreach (MonsterSquadData squad in monsterSquads)
+                dic.Add(squad.DataId, squad);
+
+            return dic;
+        }
+    }
     #endregion
 
     #region ItemData

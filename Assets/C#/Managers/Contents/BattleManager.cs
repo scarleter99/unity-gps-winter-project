@@ -41,10 +41,12 @@ public class BattleManager
         Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
     }
-
+    
+    #region InitBattle
     public void InitBattle()
     {
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
+        battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
         GameObject monsterSide = Util.FindChild(battleGrid, "MonsterSide");
 
@@ -59,14 +61,14 @@ public class BattleManager
             }
         }
         
+        _battleState = Define.BattleState.Init;
+        
         PlaceAllCreatures();
         
         SetTurns();
-        _battleState = Define.BattleState.Init;
-        
         NextTurn(true);
     }
-
+    
     private void PlaceAllCreatures()
     {
         // TODO - TEST CODE
@@ -118,7 +120,9 @@ public class BattleManager
         
         TurnSystem.Init(turns);
     }
+    #endregion
 
+    #region Battle
     public void NextTurn(bool isInit = false)
     {
         if (isInit == false)
@@ -181,7 +185,8 @@ public class BattleManager
 
         return randomKey;
     }
-
+    #endregion
+    
     #region Prev GridCell Color Code
     /*
     // 셀 나타내는 사각형 스프라이트
