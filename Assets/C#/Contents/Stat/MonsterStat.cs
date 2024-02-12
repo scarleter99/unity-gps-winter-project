@@ -29,25 +29,25 @@ public struct MonsterStat: IStat, INetworkSerializable
     public MonsterStat(Data.MonsterData monsterData)
     {
         StatChangeAction = null;
-        _name = monsterData.name;
-        _hp = monsterData.hp;
-        _maxHp = monsterData.hp;
-        _attack = monsterData.attack;
-        _defense = monsterData.defense;
-        _speed = monsterData.speed;
+        _name = monsterData.Name;
+        _hp = monsterData.Hp;
+        _maxHp = monsterData.Hp;
+        _attack = monsterData.Attack;
+        _defense = monsterData.Defense;
+        _speed = monsterData.Speed;
     }
     
     #region Event
-    public void OnDamage(int attackerAttack, int attackCount = 1)
+    public void OnDamage(int damage, int attackCount = 1)
     {
-        int damage = Mathf.Max(attackerAttack - Defense, 1);
+        int trueDamage = Mathf.Max(damage - Defense, 1);
         if (attackCount > 1)
-            damage = Mathf.Max(damage / attackCount, 1);
+            trueDamage = Mathf.Max(trueDamage / attackCount, 1);
 
-        Hp = Mathf.Clamp(Hp - damage, 0, MaxHp);
+        Hp = Mathf.Clamp(Hp - trueDamage, 0, MaxHp);
     }
 
-    public void RecoverHp(int amount)
+    public void OnHeal(int amount)
     {
         Hp = Mathf.Clamp(Hp + amount, 0, MaxHp);
     }

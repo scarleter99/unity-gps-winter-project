@@ -42,29 +42,29 @@ public struct HeroStat : IStat, INetworkSerializable
     public HeroStat(Data.HeroData heroData)
     {
         StatChangeAction = null;
-        _name = heroData.name;
-        _hp = heroData.hp;
-        _maxHp = heroData.hp;
-        _attack = heroData.attack;
-        _defense = heroData.defense;
-        _speed = heroData.speed;
-        _strength = heroData.strength;
-        _vitality = heroData.vitality;
-        _intelligence = heroData.intelligence;
-        _dexterity = heroData.dexterity;
+        _name = heroData.Name;
+        _hp = heroData.Hp;
+        _maxHp = heroData.Hp;
+        _attack = heroData.Attack;
+        _defense = heroData.Defense;
+        _speed = heroData.Speed;
+        _strength = heroData.Strength;
+        _vitality = heroData.Vitality;
+        _intelligence = heroData.Intelligence;
+        _dexterity = heroData.Dexterity;
     }
     
     #region Event
-    public void OnDamage(int attackerAttack, int attackCount = 1)
+    public void OnDamage(int damage, int attackCount = 1)
     {
-        int damage = Mathf.Max(attackerAttack - Defense, 1);
+        int trueDamage = Mathf.Max(damage - Defense, 1);
         if (attackCount > 1)
-            damage = Mathf.Max(damage / attackCount, 1);
+            trueDamage = Mathf.Max(trueDamage / attackCount, 1);
 
-        Hp = Mathf.Clamp(Hp - damage, 0, MaxHp);
+        Hp = Mathf.Clamp(Hp - trueDamage, 0, MaxHp);
     }
 
-    public void RecoverHp(int amount)
+    public void OnHeal(int amount)
     {
         Hp = Mathf.Clamp(Hp + amount, 0, MaxHp);
     }

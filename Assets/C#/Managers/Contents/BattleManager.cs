@@ -42,10 +42,12 @@ public class BattleManager
         Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
     }
-
+    
+    #region InitBattle
     public void InitBattle()
     {
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
+        battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
         GameObject monsterSide = Util.FindChild(battleGrid, "MonsterSide");
 
@@ -60,26 +62,28 @@ public class BattleManager
             }
         }
         
-        SpawnCreatures();
-        
-        SetTurns();
         _battleState = Define.BattleState.Init;
         
-        //NextTurn(true);
-    }
 
-    private void SpawnCreatures()
-    {
-        // TODO - TEST CODE
-        //SpawnHero(10000, 0, 0);
-        //SpawnHero(10001, 0, 1);
-        //SpawnHero(10002, 1, 2);
-        //SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 0);
-        //SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 0, 1);
-        //SpawnMonster<Bat>(Define.MONSTER_BAT_ID, 1, 2);
+        PlaceAllCreatures();
+        
+        SetTurns();
+        NextTurn(true);
+
     }
     
-    public Hero SpawnHero(ulong heroId, int row, int col)
+    private void PlaceAllCreatures()
+    {
+        // TODO - TEST CODE
+        PlaceHero(10000, 0, 0);
+        PlaceHero(10001, 0, 1);
+        PlaceHero(10002, 1, 2);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 0);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 1);
+        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 1, 2);
+    }
+    
+    public Hero PlaceHero(ulong heroId, int row, int col)
     {
         Hero hero = Managers.ObjectMng.Heroes[heroId];
         HeroGrid[row, col].CellCreature = hero;
@@ -90,9 +94,9 @@ public class BattleManager
         return hero;
     }
     
-    public Monster SpawnMonster<T>(int monsterDataId, int row, int col) where T : Monster
+    public Monster SpawnAndPlaceMonster(int monsterDataId, int row, int col)
     {
-        Monster monster = Managers.ObjectMng.SpawnMonster<T>(monsterDataId);
+        Monster monster = Managers.ObjectMng.SpawnMonster(monsterDataId);
         HeroGrid[row, col].CellCreature = monster;
         monster.transform.position = MonsterGrid[row, col].transform.position;
         
@@ -119,7 +123,9 @@ public class BattleManager
         
         TurnSystem.Init(turns);
     }
+    #endregion
 
+    #region Battle
     public void NextTurn(bool isInit = false)
     {
         if (isInit == false)
@@ -171,7 +177,7 @@ public class BattleManager
 
         return randomKey;
     }
-
+  
     private bool GetMouseoverCell()
     {
         _currentMouseoverCell?.MouseExit();
@@ -183,7 +189,7 @@ public class BattleManager
             BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
 
             _currentMouseoverCell = gridCell;
-            
+
             if (gridCell != null)
             {
                 _currentMouseoverCell.MouseEnter();

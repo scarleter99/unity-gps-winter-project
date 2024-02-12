@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 public class ObjectManager
-{ 
+{
 	public Dictionary<ulong, Hero> Heroes { get; protected set; }
     public Dictionary<ulong, Monster> Monsters { get; protected set; }
     
@@ -31,44 +33,34 @@ public class ObjectManager
     public Transform MonsterRoot { get { return GetRootTransform("@Monsters"); } }
     #endregion
     
-    public T Spawn<T>(int dataId, string path) where T : Creature
-	{
-		string prefabName = typeof(T).Name;
-
-		GameObject go = Managers.ResourceMng.Instantiate($"{path}/{prefabName}");
-		go.name = prefabName;
+    public Hero SpawnHero(int heroDataId)
+    {
+	    string className = Managers.DataMng.HeroDataDict[heroDataId].Name;
+		GameObject go = Managers.ResourceMng.Instantiate($"{Define.HERO_PATH}/{className}");
+		Hero hero = go.GetComponent<Hero>();
+		
+		hero.SetInfo(heroDataId);
 		go.transform.position = Vector3.zero;
+		hero.transform.parent = HeroRoot;
+		hero.Id = NextHeroId;
+		Heroes[NextHeroId++] = hero;
 		
-		Creature creature = go.GetComponent<Creature>();
-		creature.SetInfo(dataId);
-		
-		switch (creature.CreatureType)
-		{
-			case Define.CreatureType.Hero:
-				creature.transform.parent = HeroRoot;
-				Hero hero = creature as Hero;
-				Heroes[NextHeroId++] = hero;
-				creature.Id = NextHeroId;
-				break;
-			case Define.CreatureType.Monster:
-				creature.transform.parent = MonsterRoot;
-				Monster monster = creature as Monster;
-				Monsters[NextMonsterId++] = monster;
-				creature.Id = NextMonsterId;
-				break;
-		}
-		
-		return creature as T;
+		return hero;
 	}
-
-    public T SpawnHero<T>(int dataId) where T : Hero
-    {
-	    return Spawn<T>(dataId, "Heroes");
-    }
     
-    public T SpawnMonster<T>(int dataId) where T : Monster
+    public Monster SpawnMonster(int monsterDataId)
     {
-	    return Spawn<T>(dataId, "Monsters");
+	    string className = Managers.DataMng.MonsterDataDict[monsterDataId].Name;
+	    GameObject go = Managers.ResourceMng.Instantiate($"{Define.MONSTER_PATH}/{className}");
+	    Monster monster = go.GetComponent<Monster>();
+		
+	    monster.SetInfo(monsterDataId);
+	    go.transform.position = Vector3.zero;
+	    monster.transform.parent = MonsterRoot;
+	    monster.Id = NextMonsterId;
+	    Monsters[NextMonsterId++] = monster;
+		
+	    return monster;
     }
     
     public void Despawn(Define.CreatureType creatureType, ulong id)
@@ -104,5 +96,27 @@ public class ObjectManager
 			    Debug.Log("Failed to ChangeStat");
 			    break;
 	    }
+    }
+
+    public Creature GetCreatureWithId(ulong id)
+    {
+	    Creature creature = null;
+	    if (Managers.ObjectMng.Heroes.TryGetValue(id, out Hero hero))
+		    creature = hero;
+	    if (Managers.ObjectMng.Monsters.TryGetValue(id, out Monster monster))
+		    creature = monster;
+
+	    return creature;
+    }
+    
+    public CreatureData GetCreatureDataWithDataId(int dataId)
+    {
+	    CreatureData creatureData = null;
+	    if (Managers.DataMng.HeroDataDict.TryGetValue(dataId, out HeroData heroData))
+		    creatureData = heroData;
+	    if (Managers.DataMng.MonsterDataDict.TryGetValue(dataId, out MonsterData monsterData))
+		    creatureData = monsterData;
+
+	    return creatureData;
     }
 }

@@ -1,10 +1,11 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Monster : Creature
 {
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
-    
+
     protected override void Init()
     {
         base.Init();
@@ -22,23 +23,7 @@ public abstract class Monster : Creature
         
         CreatureStat = new MonsterStat(MonsterData);
     }
-    
-    #region Update
-    protected override void UpdateAttack()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
 
-    protected override void UpdateHit()
-    {
-        var currentState = Animator.GetCurrentAnimatorStateInfo(0);
-        if (currentState.normalizedTime >= 0.8f && currentState.shortNameHash == _stateHash)
-            AnimState = Define.AnimState.Idle;
-    }
-    #endregion
-    
     /*----------------------
         TODO - TEST CODE
     ----------------------*/

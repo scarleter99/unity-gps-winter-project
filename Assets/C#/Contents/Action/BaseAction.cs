@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using UnityEngine;
-
-public abstract class BaseAction
+﻿public abstract class BaseAction
 {
-    public Define.ActionType ActionType;
-    public Define.ActionTargetType ActionTargetType = Define.ActionTargetType.Single;
+    public int DataId { get; protected set; }
+    
+    public Define.ActionAttribute ActionAttribute;
+    public Define.ActionTargetType ActionTargetType;
 
     public Creature Owner { get; set; }
-
-    public BaseAction()
+    
+    public virtual void SetInfo(int templateId, Creature owner, Bag bag, int idx, int addNum)
     {
-        
+        Owner = owner;
     }
     
     public abstract void HandleAction(ulong targetId);
