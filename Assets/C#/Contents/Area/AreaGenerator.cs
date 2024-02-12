@@ -117,27 +117,10 @@ public class AreaGenerator
     private void CreateTile(int x, int z, AreaTileType tileType)
     {
         Vector3 worldPosition = _grid.GetWorldPosition(x, z, 1.02f);
-        AreaGridTile tile;
-        switch (tileType)
-        {
-            case AreaTileType.Normal:
-                tile = new NormalTile(worldPosition);
-                break;
-            case AreaTileType.Battle:
-                tile = new BattleTile(worldPosition);
-                break;
-            case AreaTileType.Encounter:
-                tile = new EncounterTile(worldPosition);
-                break;
-            case AreaTileType.Boss:
-                tile = new BossTile(worldPosition);
-                break;
-            default:
-                tile = new NormalTile(worldPosition);
-                break;
-        }
 
-        _grid.SetGridCell(x, z, tile);
+        AreaGridTile tile = TileFactory.CreateTile(worldPosition, tileType);
+
+        _grid.SetTile(x, z, tile);
         _grid.SetTileType(x, z, tileType);
         // for test  ////////
         //InstantiateGridPositionText(x, z);

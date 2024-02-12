@@ -27,6 +27,7 @@ public class AreaManager
     private List<GameObject> _players = new();
 
     private Vector3 _currentPlayerPosition;
+    private AreaGridTile _currentTile; // 현재 플레이어가 밟고있는 타일
     private Vector3 _currentMouseoverPosition;
 
     private Camera _areaCamera;
@@ -43,6 +44,7 @@ public class AreaManager
         {
             _turnCount = value;
             if (TurnCount != 0 && TurnCount % _suddendeathTimer == 0) HandleSuddendeath();
+            else AreaState = AreaState.Idle;
         }
     }
     private int _suddendeathTimer; // timer번의 이동마다 맨 밑 타일 파괴됨.
@@ -54,8 +56,9 @@ public class AreaManager
 
     public void Init()
     {
-        // TODO: 게임 시작 씬에서 이 Init을 실행한다면, 밑의 코드는 지우고 GenerateMap() 등을 다른 곳에서 호출해야함 
+        // TODO: AreaManager는 Manager이므로 게임 시작 씬에서 이 Init을 실행한다면, 밑의 코드는 지우고 GenerateMap() 등을 다른 곳에서 호출해야함 
         if (Managers.SceneMng.CurrentScene.SceneType != SceneType.AreaScene) return;
+
         GenerateMap();
         InitCamera();
         SpawnPlayers();
@@ -101,27 +104,26 @@ public class AreaManager
 
     private void GenerateMap()
     {
-        AreaGenerator _areaGenerator = new AreaGenerator(AreaName, new Vector3(100, 0, 100));
-        _areaGenerator.GenerateMap();
-        _grid = _areaGenerator.Grid;
+        AreaGenerator areaGenerator = new AreaGenerator(AreaName, new Vector3(100, 0, 100));
+        areaGenerator.GenerateMap();
+        _grid = areaGenerator.Grid;
     }
 
     private void SpawnPlayers()
     {
         Vector3 spawnOriginPos = _grid.GetWorldPosition(_grid.Width / 2, 0, 1.02f);
         _currentPlayerPosition = spawnOriginPos;
+        _currentTile = _grid.GetTile(_grid.Width / 2, 0);
         for (int i = 0; i < 3; i++)
         {
-
             GameObject player = Managers.ObjectMng.SpawnHero<Knight>(HERO_KNIGHT_ID).gameObject;
             player.transform.position = spawnOriginPos + new Vector3(HERO_SPAWN_POSITION_OFFSET[i].x, 0, HERO_SPAWN_POSITION_OFFSET[i].y);
             _players.Add(player);
-
         }
 
     }
 
-    public bool GetMouseoverCell()
+    private bool GetMouseoverCell()
     {
         Ray ray = _areaCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -146,13 +148,12 @@ public class AreaManager
             _players[i].transform.LookAt(destWithOffset);
             moveSequence.Join(_players[i].transform.DOMove(destWithOffset, 0.7f));
         }
-        moveSequence.Play().OnComplete(() => {OnMoveFinish(destination);});
-    }
-
-    private void OnMoveFinish(Vector3 currentPosition)
-    {
-        _currentPlayerPosition = currentPosition;
-        _grid.OnTileEnter(currentPosition);
+        moveSequence.Play().OnComplete(() =>
+        {
+            _currentPlayerPosition = destination;
+            _currentTile = _grid.GetTile(destination);
+            _currentTile.OnTileEnter();
+        });
     }
 
     private void InitCamera()
@@ -162,6 +163,8 @@ public class AreaManager
         _areaCamera = _cameraController.transform.GetComponentInChildren<Camera>();
     }
 
+    // OnBattleSceneLoadStart에 포함되지 않은 이유: 밑의 전투씬 전환 시 흐름 참조
+    // 카메라 정지 -> 로딩화면 Fade in -> Area의 빛, 카메라 비활성화 (OnBattleSceneLoadStart) -> 배틀 씬 로딩 시작 및 완료 -> 로딩화면 Fade out
     public void FreezeCamera()
     {
         _cameraController.GetComponent<AreaCameraController>().Freeze = true;
@@ -182,17 +185,29 @@ public class AreaManager
         _light.SetActive(true);
         _cameraController.SetActive(true);
         
-        foreach (var player in _players)
-        {
-            player.transform.position = _currentPlayerPosition + new Vector3(HERO_SPAWN_POSITION_OFFSET[_players.IndexOf(player)].x, 0, HERO_SPAWN_POSITION_OFFSET[_players.IndexOf(player)].y);
-        }
+        OnTileEventFinish();
+    }
 
-        _grid.OnTileEventFinish(_currentPlayerPosition);
-        TurnCount++;
+    public void OnTileEventFinish()
+    {
+        switch (_currentTile.TileType)
+        {
+            case AreaTileType.Normal:
+                break;
+            case AreaTileType.Battle:
+                _currentTile.OnTileEventFinish();
+                _grid.ChangeTile(_currentPlayerPosition, AreaTileType.Normal);
+                break;
+        }
+        Managers.AreaMng.TurnCount++;
     }
 
     private void HandleSuddendeath()
     {
-        
+        if (_suddendeathCount == _grid.Height - 2) return;
+
+        _grid.HandleSuddendeath(_suddendeathCount);
+        _suddendeathCount++;
+        AreaState = AreaState.Idle;
     }
 }

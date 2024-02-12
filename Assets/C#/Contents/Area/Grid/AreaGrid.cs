@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using static Define;
 
@@ -105,7 +106,7 @@ public class AreaGrid
         }
     }
 
-    public void SetGridCell(int x, int z, AreaGridTile gridObject)
+    public void SetTile(int x, int z, AreaGridTile gridObject)
     {
         _tileArray[z,x] = gridObject;
     }
@@ -115,9 +116,15 @@ public class AreaGrid
         _typeArray[z, x] = tileType;
     }
     
-    public AreaGridTile GetGridCell(int x, int z)
+    public AreaGridTile GetTile(int x, int z)
     {
         return _tileArray[z,x];
+    }
+
+    public AreaGridTile GetTile(Vector3 worldPosition)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        return GetTile(x, z);
     }
 
     public bool IsTileEmpty(int x, int z)
@@ -206,18 +213,28 @@ public class AreaGrid
         }
     }
 
-    public void OnTileEnter(Vector3 worldPosition)
+    public void ChangeTile(Vector3 tileWorldPosition, AreaTileType newType)
     {
-        GetGridPosition(worldPosition, out int x, out int z);
-        GetGridCell(x, z).OnTileEnter();
+        GetGridPosition(tileWorldPosition, out int x, out int z);
+        AreaGridTile oldTile = GetTile(x, z);
+        oldTile.DestroyIcon();
+
+        AreaGridTile newTile = TileFactory.CreateTile(tileWorldPosition, newType, oldTile.TileObject);
+
+        SetTile(x, z, newTile);
+        SetTileType(x, z, newType);
     }
 
-    public void OnTileEventFinish(Vector3 worldPosition)
+    public void HandleSuddendeath(int z)
     {
-        GetGridPosition(worldPosition, out int x, out int z);
-        GetGridCell(x, z).OnTileEventFinish();
+        for (int x = 0; x < _width; x++)
+        {   
+            if (IsPositionMoveable(x, z)) ChangeTile(GetWorldPosition(x, z), AreaTileType.Destroyed);
+            // TODO: 정예몹 전투 진입 구현 완료 시, DestroyedTile의 OnTileEnter 호출하여 바로 전투로 진입할 수 있도록 하기
+        }
     }
 }
+
 
 #region legacy: 유효한 그리드인지 확인해주는 2차원 bool _isValid 초기화. 맵을 미리 생성해 두는 것으로 결정되어 현재 사용하지 않음
 //private void InitializeIsValid()
