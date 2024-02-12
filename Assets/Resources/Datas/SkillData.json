@@ -1,0 +1,10 @@
+﻿{
+  "skills": [
+    {
+      "DataId": 401000,
+      "Name": "Strike",
+      "CoinNum": 3,
+      "ReducedStat": 0
+    }
+  ]
+}

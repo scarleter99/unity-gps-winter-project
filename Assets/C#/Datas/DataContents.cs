@@ -10,12 +10,12 @@ namespace Data
     [Serializable]
     public class CreatureData
     {
-        public int dataId;
-        public string name;
-        public int hp;
-        public int attack;
-        public int defense;
-        public int speed;
+        public int DataId;
+        public string Name;
+        public int Hp;
+        public int Attack;
+        public int Defense;
+        public int Speed;
     }
     #endregion
     
@@ -24,23 +24,23 @@ namespace Data
     [Serializable]
     public class HeroData : CreatureData
     {
-        public int dexterity;
-        public int strength;
-        public int vitality;
-        public int intelligence;
+        public int Strength;
+        public int Vitality;
+        public int Intelligence;
+        public int Dexterity;
     }
 
     [Serializable]
     public class HeroDataLoader : IData<int, HeroData>
     {
-        public List<HeroData> stats = new List<HeroData>();
+        public List<HeroData> heroes = new List<HeroData>();
 
         // List형태의 Data를 Dictionary형태로 변환 후 반환
         public Dictionary<int, HeroData> MakeDict()
         {
             Dictionary<int, HeroData> dic = new Dictionary<int, HeroData>();
-            foreach (HeroData stat in stats)
-                dic.Add(stat.dataId, stat);
+            foreach (HeroData hero in heroes)
+                dic.Add(hero.DataId, hero);
 
             return dic;
         }
@@ -58,14 +58,14 @@ namespace Data
     [Serializable]
     public class MonsterDataLoader : IData<int, MonsterData>
     {
-        public List<MonsterData> stats = new List<MonsterData>();
+        public List<MonsterData> monsters = new List<MonsterData>();
 
         // List형태의 Data를 Dictionary형태로 변환 후 반환
         public Dictionary<int, MonsterData> MakeDict()
         {
             Dictionary<int, MonsterData> dic = new Dictionary<int, MonsterData>();
-            foreach (MonsterData stat in stats)
-                dic.Add(stat.dataId, stat);
+            foreach (MonsterData monster in monsters)
+                dic.Add(monster.DataId, monster);
 
             return dic;
         }
@@ -73,14 +73,42 @@ namespace Data
 
     #endregion
 
+    #region MonsterSquadData
+    public class MonsterSquadData
+    {
+        public int DataId;
+        public string Name;
+        public int Level;
+        public List<int> Line1 = new List<int>();
+        public List<int> Line2 = new List<int>();
+    }
+
+    [Serializable]
+    public class MonsterSquadDataLoader : IData<int, MonsterSquadData>
+    {
+        public List<MonsterSquadData> monsterSquads = new List<MonsterSquadData>();
+
+        // List형태의 Data를 Dictionary형태로 변환 후 반환
+        public Dictionary<int, MonsterSquadData> MakeDict()
+        {
+            Dictionary<int, MonsterSquadData> dic = new Dictionary<int, MonsterSquadData>();
+            foreach (MonsterSquadData squad in monsterSquads)
+                dic.Add(squad.DataId, squad);
+
+            return dic;
+        }
+    }
+    #endregion
+
     #region ItemData
 
     [Serializable]
     public class ItemData
     {
-        public int dataId;
-        public string name;
-        public string description;
+        public int DataId;
+        public string Name;
+        public string Description;
+        public int Heal;
     }
 
     [Serializable]
@@ -92,59 +120,9 @@ namespace Data
         {   
             var dic = new Dictionary<int, ItemData>();
             foreach (ItemData item in items)
-                dic.Add(item.dataId, item);
+                dic.Add(item.DataId, item);
 
             return dic;
-        }
-    }
-    #endregion
-    
-    #region BagItem
-
-    public class BagItem
-    {
-        public BaseItem item;
-        public int count;
-        public BagItem() { item = null; count = 0; }
-        public BagItem(BaseItem item, int count) { this.item = item; this.count = count; }
-        public bool IsNull() { return item == null && count == 0; }
-    }
-
-    #endregion
-
-    #region AreaData
-    [Serializable]
-    public class AreaData
-    {
-        public string name; // AreaName enum의 값과 같아야 함
-        public string basemap;
-        public int width;
-        public int height;
-        public int battleTileNum;
-        public int encounterTileNum;
-        public string mapPrefabPath;
-    }
-
-    [Serializable]
-    public class AreaDataSet : IData<Define.AreaName, AreaData>
-    {
-        public List<AreaData> areadatas = new();
-
-        public Dictionary<Define.AreaName, AreaData> MakeDict()
-        {   
-            var dic = new Dictionary<Define.AreaName, AreaData>();
-            foreach (AreaData areadata in areadatas)
-            {   
-                if (Enum.TryParse(areadata.name, out Define.AreaName areaName))
-                {   
-                    dic.Add(areaName, areadata);
-                }
-                else
-                {
-                    Debug.LogError($"{areadata.name} - No such area name in enum!");
-                }
-            }
-            return dic; 
         }
     }
     #endregion
@@ -191,7 +169,6 @@ namespace Data
     #endregion
     
     #region ArmorData
-    
     [Serializable]
     public class ArmorData : EquipmentData
     {
@@ -212,6 +189,69 @@ namespace Data
             return dic;
         }
     }
+    #endregion
+
+    #region SkillData
+    [Serializable]
+    public class SkillData : EquipmentData
+    {
+        public int DataId;
+        public string Name;
+        public string Description;
+        public int CoinNum;
+        public int ReducedStat;
+    }
+
+    [Serializable]
+    public class SkillDataLoader : IData<int, SkillData>
+    {
+        public List<SkillData> skills = new List<SkillData>();
+
+        public Dictionary<int, SkillData> MakeDict()
+        {   
+            var dic = new Dictionary<int, SkillData>();
+            foreach (var skill in skills)
+                dic.Add(skill.DataId, skill);
+
+            return dic;
+        }
+    }
+    #endregion
     
+    #region AreaData
+    [Serializable]
+    public class AreaData
+    {
+        public string name; // AreaName enum의 값과 같아야 함
+        public string basemap;
+        public int width;
+        public int height;
+        public int battleTileNum;
+        public int encounterTileNum;
+        public string mapPrefabPath;
+    }
+
+    [Serializable]
+    public class AreaDataSet : IData<Define.AreaName, AreaData>
+    {
+        public List<AreaData> areadatas = new();
+
+        public Dictionary<Define.AreaName, AreaData> MakeDict()
+        {   
+            var dic = new Dictionary<Define.AreaName, AreaData>();
+            foreach (AreaData areadata in areadatas)
+            {   
+                if (Enum.TryParse(areadata.name, out Define.AreaName areaName))
+                {   
+                    dic.Add(areaName, areadata);
+                }
+                else
+                {
+                    Debug.LogError($"{areadata.name} - No such area name in enum!");
+                }
+            }
+            return dic; 
+        }
+    }
     #endregion
 }
