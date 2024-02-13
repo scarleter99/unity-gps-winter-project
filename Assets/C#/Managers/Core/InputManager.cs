@@ -35,7 +35,8 @@ public class InputManager
         }
 
         if (MouseAction != null)
-        {
+        {   
+            MouseAction.Invoke(Define.MouseEvent.Hover);
             if (Input.GetMouseButton(0))
             {
                 if (!_pressed)

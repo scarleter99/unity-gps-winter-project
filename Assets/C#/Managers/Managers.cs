@@ -13,9 +13,11 @@ public class Managers : MonoBehaviour
     #region Contents
     private ObjectManager _objectMng = new ObjectManager();
     private BattleManager _battleMng = new BattleManager();
+    private AreaManager _areaMng = new AreaManager();
     
     public static ObjectManager ObjectMng => Instance._objectMng;
     public static BattleManager BattleMng => Instance._battleMng;
+    public static AreaManager AreaMng => Instance._areaMng;
     #endregion
 
     #region Core

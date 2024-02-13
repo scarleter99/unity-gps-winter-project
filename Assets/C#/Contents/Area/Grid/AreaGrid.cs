@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 using static Define;
 
-// XZ를 축으로 하는 그리드
+// XZ를 축으로 하는 육각형 그리드
 // 육각형은 평평한 부분이 위 (flat-top)
-public class HexGrid
+public class AreaGrid
 {
     private int _width;
 
@@ -19,18 +20,17 @@ public class HexGrid
     {
         get => _height;
     }
-    private float _cellwidth;
-    private float _cellheight;
+    private float _tilewidth;
+    private float _tileheight;
     private Vector3 _originPosition;
 
-    private AreaTileType[,] _tileTypeArray;
-    private HexGridCell[,] _gridArray;
+    private AreaTileType[,] _typeArray;
+    private AreaGridTile[,] _tileArray;
     //private bool[,] _isValid;
 
-    private HexGridCell _currentMouseoverCell;
     private GameObject _mouseoverIndicator;
 
-    public HexGrid(int width, int height, Vector3 originposition, float cellwidth = 4, float cellheight = 3.5f)
+    public AreaGrid(int width, int height, Vector3 originposition, float tilewidth = 4, float tileheight = 3.5f)
     {
         if (width % 2 == 0)
         {
@@ -44,10 +44,10 @@ public class HexGrid
         }
         _width = width;
         _height = height;
-        _cellwidth = cellwidth;
-        _cellheight = cellheight;
+        _tilewidth = tilewidth;
+        _tileheight = tileheight;
         _originPosition = originposition;
-        _gridArray = new HexGridCell[height, width];
+        _tileArray = new AreaGridTile[height, width];
         _mouseoverIndicator = Managers.ResourceMng.Instantiate("Area/mouseover_indicator");
         _mouseoverIndicator.transform.position = GetWorldPosition(width / 2, 0, 1.04f);
      
@@ -55,7 +55,7 @@ public class HexGrid
 
     public void InitializeTileTypeArray(int[,] source)
     {
-        _tileTypeArray = new AreaTileType[_height, _width];
+        _typeArray = new AreaTileType[_height, _width];
         for (int z = 0; z < _height; z++)
         {
             for (int x = 0; x < _width; x++)
@@ -63,19 +63,19 @@ public class HexGrid
                 switch (source[z,x])
                 {
                     case -1:
-                        _tileTypeArray[z, x] = AreaTileType.Invalid;
+                        _typeArray[z, x] = AreaTileType.Invalid;
                         break;
                     case 0:
-                        _tileTypeArray[z, x] = AreaTileType.Obstacle;
+                        _typeArray[z, x] = AreaTileType.Obstacle;
                         break;
                     case 1:
-                        _tileTypeArray[z, x] = AreaTileType.Empty;
+                        _typeArray[z, x] = AreaTileType.Empty;
                         break;
                     case 2:
-                        _tileTypeArray[z, x] = AreaTileType.Start;
+                        _typeArray[z, x] = AreaTileType.Start;
                         break;
                     case 3:
-                        _tileTypeArray[z, x] = AreaTileType.Boss;
+                        _typeArray[z, x] = AreaTileType.Boss;
                         break;
                 }
             }
@@ -85,16 +85,16 @@ public class HexGrid
     // 그리드 좌표를 월드 좌표로 변환
     public Vector3 GetWorldPosition(int x, int z, float y = 0)
     {   
-        if (x % 2 == 1) return new Vector3(x * _cellwidth * 0.75f, y, (z+0.5f) * _cellheight) + _originPosition;
-        else return new Vector3(x * _cellwidth * 0.75f, y, z * _cellheight) + _originPosition;
+        if (x % 2 == 1) return new Vector3(x * _tilewidth * 0.75f, y, (z+0.5f) * _tileheight) + _originPosition;
+        else return new Vector3(x * _tilewidth * 0.75f, y, z * _tileheight) + _originPosition;
     }
 
     // 월드 좌표를 그리드 좌표로 변환
     public void GetGridPosition(Vector3 worldPosition, out int x, out int z)
     {
 
-        x = Mathf.RoundToInt((worldPosition.x - (int)_originPosition.x) / (_cellwidth * 0.75f));
-        float tempz = (worldPosition.z - (int)_originPosition.z) / _cellheight;
+        x = Mathf.RoundToInt((worldPosition.x - (int)_originPosition.x) / (_tilewidth * 0.75f));
+        float tempz = (worldPosition.z - (int)_originPosition.z) / _tileheight;
 
         if (x % 2 == 1)
         {
@@ -106,24 +106,30 @@ public class HexGrid
         }
     }
 
-    public void SetGridCell(int x, int z, HexGridCell gridObject)
+    public void SetTile(int x, int z, AreaGridTile gridObject)
     {
-        _gridArray[z,x] = gridObject;
+        _tileArray[z,x] = gridObject;
     }
 
     public void SetTileType(int x, int z, AreaTileType tileType)
     {
-        _tileTypeArray[z, x] = tileType;
+        _typeArray[z, x] = tileType;
     }
     
-    public HexGridCell GetGridCell(int x, int z)
+    public AreaGridTile GetTile(int x, int z)
     {
-        return _gridArray[z,x];
+        return _tileArray[z,x];
+    }
+
+    public AreaGridTile GetTile(Vector3 worldPosition)
+    {
+        GetGridPosition(worldPosition, out int x, out int z);
+        return GetTile(x, z);
     }
 
     public bool IsTileEmpty(int x, int z)
     {
-        return _tileTypeArray[z, x] == AreaTileType.Empty;
+        return _typeArray[z, x] == AreaTileType.Empty;
     }
 
     // 해당 셀의 이웃 6개 타일을 보며 tileType인 타일이 하나라도 있다면 true, 하나도 없다면 false 반환
@@ -132,7 +138,7 @@ public class HexGrid
         List<Vector2Int> neighbors = GetAllNeighbors(x, z);
         foreach (var neighbor in neighbors)
         {
-            if (_tileTypeArray[neighbor.y, neighbor.x] == tileType) return true;
+            if (_typeArray[neighbor.y, neighbor.x] == tileType) return true;
         }
 
         return false;
@@ -145,7 +151,8 @@ public class HexGrid
 
     private bool IsPositionMoveable(int x, int z)
     {
-        return _tileTypeArray[z, x] != AreaTileType.Obstacle && _tileTypeArray[z, x] != AreaTileType.Invalid;
+        if (!IsPositionValid(x, z)) return false;
+        return _typeArray[z, x] != AreaTileType.Obstacle && _typeArray[z, x] != AreaTileType.Invalid;
     }
 
     private bool IsNeighbor(int originx, int originz, int targetx, int targetz)
@@ -189,24 +196,7 @@ public class HexGrid
     public void HandleMouseHover(Vector3 worldPosition)
     {
         GetGridPosition(worldPosition, out int x, out int z);
-        //Debug.Log($"{z}, {x}");
-        if (x >= 0 && x < _width && z >= 0 && z < _height)
-        {
-            //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Reset);
-            _currentMouseoverCell = _gridArray[z, x];
-            _mouseoverIndicator.transform.position = GetWorldPosition(x, z, 1.07f);
-            //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Highlight);
-        }
-        else
-        {
-            ResetMouseHover();
-        }
-    }
-
-    public void ResetMouseHover()
-    {
-        //_currentMouseoverCell?.ChangeColor(TileColorChangeType.Reset);
-        _currentMouseoverCell = null;
+        if (IsPositionMoveable(x, z)) _mouseoverIndicator.transform.position = GetWorldPosition(x, z, 1.07f);
     }
 
     public void ChangeNeighborTilesColor(Vector3 worldPosition, TileColorChangeType colorChangeType)
@@ -218,23 +208,33 @@ public class HexGrid
         {
             if (IsPositionMoveable(neighbor.x, neighbor.y))
             {
-                _gridArray[neighbor.y, neighbor.x].ChangeColor(colorChangeType);
+                _tileArray[neighbor.y, neighbor.x].ChangeColor(colorChangeType);
             }
         }
     }
 
-    public void OnTileEnter(Vector3 worldPosition)
+    public void ChangeTile(Vector3 tileWorldPosition, AreaTileType newType)
     {
-        GetGridPosition(worldPosition, out int x, out int z);
-        GetGridCell(x, z).OnTileEnter();
+        GetGridPosition(tileWorldPosition, out int x, out int z);
+        AreaGridTile oldTile = GetTile(x, z);
+        oldTile.DestroyIcon();
+
+        AreaGridTile newTile = TileFactory.CreateTile(tileWorldPosition, newType, oldTile.TileObject);
+
+        SetTile(x, z, newTile);
+        SetTileType(x, z, newType);
     }
 
-    public void OnTileEventFinish(Vector3 worldPosition)
+    public void HandleSuddendeath(int z)
     {
-        GetGridPosition(worldPosition, out int x, out int z);
-        GetGridCell(x, z).OnTileEventFinish();
+        for (int x = 0; x < _width; x++)
+        {   
+            if (IsPositionMoveable(x, z)) ChangeTile(GetWorldPosition(x, z), AreaTileType.Destroyed);
+            // TODO: 정예몹 전투 진입 구현 완료 시, DestroyedTile의 OnTileEnter 호출하여 바로 전투로 진입할 수 있도록 하기
+        }
     }
 }
+
 
 #region legacy: 유효한 그리드인지 확인해주는 2차원 bool _isValid 초기화. 맵을 미리 생성해 두는 것으로 결정되어 현재 사용하지 않음
 //private void InitializeIsValid()

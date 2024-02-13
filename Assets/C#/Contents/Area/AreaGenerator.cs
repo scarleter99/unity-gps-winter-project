@@ -21,9 +21,9 @@ public class AreaGenerator
     }
     private Vector3 _originPosition;
 
-    private HexGrid _grid;
+    private AreaGrid _grid;
 
-    public HexGrid Grid
+    public AreaGrid Grid
     {
         get => _grid;
     }
@@ -34,13 +34,13 @@ public class AreaGenerator
     private int _encounterTileNum;
 
     private const string TEST_GRID_POSITION_TEXT_PATH = "Area/TestPositionText";
-    private const string GRID_TILE_PATH = "Area/grid_hex";
+    
 
     public AreaGenerator(AreaName areaName, Vector3 originPosition)
     {
         _areaName = areaName;
         _originPosition = originPosition;
-        _grid = new HexGrid(Managers.DataMng.AreaDataDict[_areaName].width, Managers.DataMng.AreaDataDict[_areaName].height, originPosition);
+        _grid = new AreaGrid(Managers.DataMng.AreaDataDict[_areaName].width, Managers.DataMng.AreaDataDict[_areaName].height, originPosition);
         _grid.InitializeTileTypeArray(ParseBasemap(Managers.DataMng.AreaDataDict[_areaName].basemap));
         //Debug.Log(_basemap);
         _battleTileNum = Managers.DataMng.AreaDataDict[_areaName].battleTileNum;
@@ -100,7 +100,7 @@ public class AreaGenerator
     private void InstantiateBaseMap(string path)
     {
         GameObject map = Managers.ResourceMng.Instantiate(path);
-        map.transform.position = _originPosition;
+        map.transform.position = _tileParent.transform.position = _originPosition;
         _map = map;
         _tileParent.transform.SetParent(_map.transform);
     }
@@ -116,29 +116,11 @@ public class AreaGenerator
 
     private void CreateTile(int x, int z, AreaTileType tileType)
     {
-        GameObject tile = Managers.ResourceMng.Instantiate(GRID_TILE_PATH, _tileParent);
-        tile.transform.position = _grid.GetWorldPosition(x, z, 1.02f);
-        HexGridCell cell;
-        switch (tileType)
-        {
-            case AreaTileType.Normal:
-                cell = new NormalTile(x, z, tile);
-                break;
-            case AreaTileType.Battle:
-                cell = new BattleTile(x, z, tile);
-                break;
-            case AreaTileType.Encounter:
-                cell = new EncounterTile(x, z, tile);
-                break;
-            case AreaTileType.Boss:
-                cell = new BossTile(x, z, tile);
-                break;
-            default:
-                cell = new NormalTile(x, z, tile);
-                break;
-        }
+        Vector3 worldPosition = _grid.GetWorldPosition(x, z, 1.02f);
 
-        _grid.SetGridCell(x, z, cell);
+        AreaGridTile tile = TileFactory.CreateTile(worldPosition, tileType);
+
+        _grid.SetTile(x, z, tile);
         _grid.SetTileType(x, z, tileType);
         // for test  ////////
         //InstantiateGridPositionText(x, z);

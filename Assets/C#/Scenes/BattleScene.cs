@@ -18,7 +18,7 @@ public class BattleScene : BaseScene
         
         Managers.BattleMng.InitBattle();
 
-        //Managers.UIMng.ShowSceneUI<UI_BattleScene>();
+        Managers.UIMng.ShowSceneUI<UI_BattleScene>();
     }
 
     public override void Clear()

@@ -1,4 +1,4 @@
-﻿public class Define
+public class Define
 {
     #region Type
     public enum CreatureType
@@ -73,6 +73,7 @@
         Battle,
         Encounter,
         Boss,
+        Destroyed
     }
     
     public enum QuestRewardType
@@ -193,6 +194,7 @@
         PointerDown,
         PointerUp,
         Click,
+        Hover,
     }
     #endregion
     

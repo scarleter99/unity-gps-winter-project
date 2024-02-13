@@ -12,15 +12,16 @@ public class AreaScene : BaseScene
         set
         {
             _areaName = value;
-            _areaSystem.AreaName = value;
+            AreaManager.AreaName = value;
         }
     }
-    private AreaSystem _areaSystem;
+
+    private AreaManager AreaManager;
 
     public AreaState AreaState
     {
-        get => _areaSystem.AreaState;
-        set => _areaSystem.AreaState = value;
+        get => AreaManager.AreaState;
+        set => AreaManager.AreaState = value;
     }
 
     public Action OnBattleSceneLoadStart;
@@ -29,21 +30,20 @@ public class AreaScene : BaseScene
     protected override void Init()
     {
         base.Init();
+        AreaManager = Managers.AreaMng;
         SceneType = SceneType.AreaScene;
-        GameObject areaSystem = Managers.ResourceMng.Instantiate("Area/@AreaSystem");
-        _areaSystem = areaSystem.GetOrAddComponent<AreaSystem>();
         AreaName = AreaName.Forest; // TODO - 나중엔 외부에서 지정해줘야 함
-        _areaSystem.Init();
+        AreaManager.Init();
 
-        OnBattleSceneLoadStart -= _areaSystem.OnBattleSceneLoadStart;
-        OnBattleSceneLoadStart += _areaSystem.OnBattleSceneLoadStart;
-        OnBattleSceneUnloadFinish -= _areaSystem.OnBattleSceneUnloadFinish;
-        OnBattleSceneUnloadFinish += _areaSystem.OnBattleSceneUnloadFinish;
+        OnBattleSceneLoadStart -= AreaManager.OnBattleSceneLoadStart;
+        OnBattleSceneLoadStart += AreaManager.OnBattleSceneLoadStart;
+        OnBattleSceneUnloadFinish -= AreaManager.OnBattleSceneUnloadFinish;
+        OnBattleSceneUnloadFinish += AreaManager.OnBattleSceneUnloadFinish;
     }
 
     public void LoadBattleScene()
     {   
-        _areaSystem.FreezeCamera();
+        AreaManager.FreezeCamera();
         StartCoroutine(Managers.SceneMng.LoadBattleScene());
     }
 
