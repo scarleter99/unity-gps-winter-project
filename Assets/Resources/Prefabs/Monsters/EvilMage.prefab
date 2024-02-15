@@ -1059,7 +1059,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3972964382682190530}
   - component: {fileID: 3972964382691556668}
-  - component: {fileID: 2607789853073514248}
   m_Layer: 8
   m_Name: EvilMage
   m_TagString: Monster
@@ -1105,27 +1104,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2607789853073514248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3972964382682025698}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 871a379cd45f5bb4392e2f217ed238cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animState: 6
-  _turnState: 0
-  _lockTarget: {fileID: 0}
-  _stat:
-    _hp: 0
-    _maxHp: 0
-    _attack: 0
-    _defense: 0
-    _speed: 0
 --- !u!1 &3972964382682025700
 GameObject:
   m_ObjectHideFlags: 0

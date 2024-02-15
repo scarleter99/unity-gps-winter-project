@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -195,8 +195,6 @@ namespace Data
     [Serializable]
     public class SkillData : EquipmentData
     {
-        public int DataId;
-        public string Name;
         public string Description;
         public int CoinNum;
         public int ReducedStat;

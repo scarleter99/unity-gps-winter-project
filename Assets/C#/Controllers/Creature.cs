@@ -268,13 +268,6 @@ public abstract class Creature : MonoBehaviour
         // TODO - 회복 애니메이션 실행
     }
 
-    public void OnHeal(int heal)
-    {
-        CreatureStat.OnHeal(heal);
-
-        // TODO - 회복 애니메이션 실행
-    }
-
     #endregion
 
 }
