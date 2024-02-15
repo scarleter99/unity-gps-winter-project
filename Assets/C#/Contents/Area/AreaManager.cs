@@ -116,7 +116,7 @@ public class AreaManager
         _currentTile = _grid.GetTile(_grid.Width / 2, 0);
         for (int i = 0; i < 3; i++)
         {
-            GameObject player = Managers.ObjectMng.SpawnHero<Knight>(HERO_KNIGHT_ID).gameObject;
+            GameObject player = Managers.ObjectMng.SpawnHero(HERO_KNIGHT_ID).gameObject;
             player.transform.position = spawnOriginPos + new Vector3(HERO_SPAWN_POSITION_OFFSET[i].x, 0, HERO_SPAWN_POSITION_OFFSET[i].y);
             _players.Add(player);
         }
