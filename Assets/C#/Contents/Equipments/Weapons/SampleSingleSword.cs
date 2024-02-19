@@ -9,10 +9,10 @@ public class SampleSingleSword : Weapon
         base.SetInfo(templateId);
 
         Skill1 = new Strike();
-        Skill1.SetInfo(Define.SKILL_STRIKE_ID);
+        Skill1.SetInfo(Define.SKILL_STRIKE_ID, Owner);
         Skill2 = new Strike();
-        Skill2.SetInfo(Define.SKILL_STRIKE_ID);
+        Skill2.SetInfo(Define.SKILL_STRIKE_ID, Owner);
         Skill3 = new Strike();
-        Skill3.SetInfo(Define.SKILL_STRIKE_ID);
+        Skill3.SetInfo(Define.SKILL_STRIKE_ID, Owner);
     }
 }
