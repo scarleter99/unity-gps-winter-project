@@ -48,14 +48,7 @@ public class Bag
     // 비전투 중 아이템 사용
     public void UseItem(int idx, ulong targetId)
     {
-        BaseItem usedItem = Items[idx];
-        if (usedItem == null)
-            return;
         
-        usedItem.HandleAction(targetId);
-        
-        if (usedItem.Count == 0)
-            Items[idx] = null;
     }
 
     public int IsInBag(int itemDataId)
