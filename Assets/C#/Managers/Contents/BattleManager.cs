@@ -221,7 +221,5 @@ public class BattleManager
 
         return randomKey;
     }
-  
-    
     #endregion
 }

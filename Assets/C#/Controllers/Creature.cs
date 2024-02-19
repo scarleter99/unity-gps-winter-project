@@ -263,7 +263,7 @@ public abstract class Creature : MonoBehaviour
 
         // TODO - 회복 애니메이션 실행
     }
-    
+
     public void OnMove(BattleGridCell cell)
     {
         Managers.BattleMng.ReplaceCreature(this, cell);
@@ -272,7 +272,6 @@ public abstract class Creature : MonoBehaviour
         
         StartCoroutine("CoLerpToCell", cell);
     }
-    
     #endregion
     
     IEnumerator CoLerpToCell(BattleGridCell cell)
