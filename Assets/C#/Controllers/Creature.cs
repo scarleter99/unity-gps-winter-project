@@ -192,12 +192,12 @@ public abstract class Creature : MonoBehaviour
             case Define.AnimState.Die:
                 _stringDie.Append(index.ToString());
                 Animator.Play(_stringDie.ToString());
-                _stringDie.Remove(_stringDie.Length - 2, 1);
+                _stringDie.Remove(_stringDie.Length - 1, 1);
                 break;
             case Define.AnimState.Hit:
                 _stringHit.Append(index.ToString());
                 Animator.Play(_stringHit.ToString());
-                _stringHit.Remove(_stringHit.Length - 2, 1);
+                _stringHit.Remove(_stringHit.Length - 1, 1);
                 break;
         }
     }

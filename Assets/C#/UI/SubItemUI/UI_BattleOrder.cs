@@ -8,13 +8,16 @@ using UnityEngine.UI;
 
 public class UI_BattleOrder : UI_Base
 {
-    public event Action<Skill> OnSelectedSkillChanged;
+    public event Action<BaseSkill> OnSelectedSkillChanged;
 
-    private Skill _selectedSkill;
+    private BaseSkill _selectedSkill;
 
-    enum SkillIconGroup
+    enum ActionIcons
     {
-        SkillIcons
+        Attack,
+        Skill,
+        Item,
+        Flee
     }
 
     enum Text
@@ -28,38 +31,12 @@ public class UI_BattleOrder : UI_Base
 
     public override void Init()
     {
-        Bind<GameObject>(typeof(SkillIconGroup));
+        Bind<GameObject>(typeof(ActionIcons));
         Bind<TextMeshProUGUI>(typeof(Text));
     }
 
-    // 임시용 스킬 클래스 ////////////////////
-    public class Skill
-    {
-        public enum SkillTarget
-        {
-            Oneself,
-            OneEnemy,
-            GroupEnemy,
-            OnePlayer,
-            GroupPlayer,
-        }
-
-        public string Name, Description;
-        public int Damage;
-        public int SlotCount;
-        public Define.Stat AffectedStat;
-        public SkillTarget Target;
-        public Sprite Icon;
-
-        public void UseSkill()
-        {
-
-        }
-    }
-    ////////////////////////////////////////
-
     // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 자기 턴이면 해당 함수를 호출하도록 연결
-    private void SetSkills(HeroStat heroStat ,IEnumerable<Skill> skills, bool isMine)
+    private void SetSkills(HeroStat heroStat ,IEnumerable<BaseSkill> skills, bool isMine)
     {
         this.gameObject.SetActive(isMine);
         ClearSkillIcon();
@@ -67,22 +44,29 @@ public class UI_BattleOrder : UI_Base
         int i = 0;
         foreach (var skill in skills)
         {
-            GameObject iconObj = GetGameObject(SkillIconGroup.SkillIcons).transform.GetChild(i++).gameObject;
+            GameObject iconObj = GetGameObject(ActionIcons.Skill).transform.GetChild(i++).gameObject;
 
             void DsiplaySkill(PointerEventData eventData)
             {
                 //iconObj.GetOrAddComponent<Image>().color = new Colo
-
-                GetText(Text.Text_SkillName).text = skill.Name;
-                GetText(Text.Text_SkillDescription).text = skill.Description;
-                GetText(Text.Text_Damage).text = skill.Damage.ToString();
-                GetText(Text.Text_Target).text = skill.Target.ToString();
-                GetText(Text.Text_SlotPercentage).text = skill.AffectedStat switch
+                var skillData = skill.SkillData;
+                GetText(Text.Text_SkillName).text = skillData.Name;
+                GetText(Text.Text_SkillDescription).text = skillData.Description;
+                GetText(Text.Text_Damage).text = Mathf.Max(skill.Owner.CreatureStat.Attack - 
+                                                           skill.Owner.TargetCreature.CreatureStat.Defense, 1f).ToString();
+                GetText(Text.Text_Target).text = skill.Owner.TargetCreature.name;
+                GetText(Text.Text_SlotPercentage).text = skill.ActionAttribute == Define.ActionAttribute.Tempt?
+                    heroStat.Vitality.ToString() : 
+                    (skill.Owner as Hero)?.WeaponType switch
                 {
-                    Define.Stat.Strength => heroStat.Strength.ToString(),
-                    Define.Stat.Vitality => heroStat.Strength.ToString(),
-                    Define.Stat.Dexterity => heroStat.Strength.ToString(),
-                    Define.Stat.Intelligence => heroStat.Strength.ToString(),
+                    Define.WeaponType.NoWeapon => heroStat.Strength.ToString(),
+                    Define.WeaponType.Bow => heroStat.Dexterity.ToString(),
+                    Define.WeaponType.Spear => heroStat.Dexterity.ToString(),
+                    Define.WeaponType.Wand => heroStat.Intelligence.ToString(),
+                    Define.WeaponType.SingleSword => heroStat.Strength.ToString(),
+                    Define.WeaponType.DoubleSword => heroStat.Strength.ToString(),
+                    Define.WeaponType.SwordAndShield => heroStat.Strength.ToString(),
+                    Define.WeaponType.TwoHandedSword => heroStat.Strength.ToString(),
                 } + '%';
 
                 _selectedSkill = skill;
@@ -91,7 +75,7 @@ public class UI_BattleOrder : UI_Base
 
             void UseSkill(PointerEventData eventData)
             {
-                skill.UseSkill();
+                // TODO - BattleState 넘기고 Select Target으로 이어주기
                 this.gameObject.SetActive(false);
             }
 
@@ -103,7 +87,7 @@ public class UI_BattleOrder : UI_Base
 
     private void ClearSkillIcon()
     {
-        foreach (Transform icon in GetGameObject(SkillIconGroup.SkillIcons).transform)
+        foreach (Transform icon in GetGameObject(ActionIcons.Skill).transform)
         {
             icon.gameObject.SetActive(false);
             icon.gameObject.ClearEvent();

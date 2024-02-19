@@ -121,6 +121,7 @@ public class Define
     {
         None,
         MeleeAttack,
+        Tempt,
         RangedAttack,
         Buff,
         Heal,
@@ -228,7 +229,7 @@ public class Define
     public const int ARMOR_SAMPLEBODY1_ID = 202000;
     public const int ARMOR_SAMPLEBODY2_ID = 202001;
 
-    public const int ITEM_HEALPORTION_ID = 301000;
+    public const int ITEM_HEALPOTION_ID = 301000;
     
     public const int SKILL_STRIKE_ID = 401000;
     #endregion

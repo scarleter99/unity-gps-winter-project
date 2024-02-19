@@ -1,4 +1,4 @@
-public class HealPortion : BaseItem
+public class HealPotion : BaseItem
 {
     public Creature Target { get; protected set; }
     

@@ -152,7 +152,7 @@ public abstract class Hero : Creature
         // TODO - Test Code
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            BaseItem item = Bag.StoreItem(Define.ITEM_HEALPORTION_ID);
+            BaseItem item = Bag.StoreItem(Define.ITEM_HEALPOTION_ID);
             Debug.Log($"{item.ItemData.Name}: {item.Count}");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))

@@ -195,6 +195,7 @@ namespace Data
     [Serializable]
     public class SkillData : EquipmentData
     {
+        public string Name;
         public string Description;
         public int CoinNum;
         public int ReducedStat;

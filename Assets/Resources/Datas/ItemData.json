@@ -2,7 +2,7 @@
   "items": [
     {
       "DataId": 301000,
-      "Name": "HealPortion",
+      "Name": "HealPotion",
       "Description": "This is sample item.",
       "Heal": 15
     }

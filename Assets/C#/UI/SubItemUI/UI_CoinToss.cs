@@ -27,7 +27,7 @@ public class UI_CoinToss : UI_Base
     /// <summary>
     /// Stat에 해당하는 이미지 출력
     /// </summary>
-    public void SetStatType(UI_BattleOrder.Skill skill)
+    public void SetStatType(UI_BattleOrder.Base skill)
     {
         Clear();
 
