@@ -16,6 +16,7 @@ public abstract class Hero : Creature
     public Define.WeaponType WeaponType => Weapon.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
     
+    
     protected override void Init()
     {
         base.Init();
@@ -31,11 +32,6 @@ public abstract class Hero : Creature
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
-        
-        // TODO - TEST CODE
-        Managers.InputMng.KeyAction -= OnKeyboardClick;
-        Managers.InputMng.KeyAction += OnKeyboardClick;
-        
     }
     
     public override void SetInfo(int templateId)
@@ -145,55 +141,4 @@ public abstract class Hero : Creature
         }
     }
     #endregion
-    
-    private void OnKeyboardClick()
-    {
-        /////////////////////////////////////////////////////////////
-        // TODO - Test Code
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            BaseItem item = Bag.StoreItem(Define.ITEM_HEALPORTION_ID);
-            Debug.Log($"{item.ItemData.Name}: {item.Count}");
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            int itemIdx = 0;
-            Bag.UseItem(itemIdx, this.Id);
-            if (Bag.Items[itemIdx] != null)
-                Debug.Log($"{Bag.Items[itemIdx].ItemData.Name}: {Bag.Items[itemIdx].Count}");
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Weapon weapon = new SampleSingleSword();
-            weapon.SetInfo(Define.WEAPON_SAMPLESINGLESWORD_ID);
-            EquipWeapon(weapon);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            Weapon weapon = new SampleSwordAndShield();
-            weapon.SetInfo(Define.WEAPON_SAMPLESWORDANDSHIELD_ID);
-            EquipWeapon(weapon);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            Armor body = new SampleBody1();
-            body.SetInfo(Define.ARMOR_SAMPLEBODY1_ID);
-            EquipArmor(body);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            Armor body = new SampleBody2();
-            body.SetInfo(Define.ARMOR_SAMPLEBODY2_ID);
-            EquipArmor(body);
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            TargetCreature = GameObject.Find("@Monsters").transform.GetChild(0).GetComponent<Creature>();
-            AnimState = Define.AnimState.Attack;
-            CurrentAction = new Strike();
-            CurrentAction.Owner = this;
-        }
-        /////////////////////////////////////////////////////////////
-    }
-    
 }

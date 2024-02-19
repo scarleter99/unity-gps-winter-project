@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,18 +23,17 @@ public class BattleManager
                     break;
                 case Define.BattleState.MonsterTurn:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
-                    CurrentTurnCreature.DoAction(GetRandomCreature(Managers.ObjectMng.Heroes));
+                    //CurrentTurnCreature.DoAction(GetRandomCreature(Managers.ObjectMng.Heroes));
                     break;
             }
         }
     }
+    public Creature CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
 
     public BattleGridCell[,] HeroGrid { get; protected set; } = new BattleGridCell[2, 3];
     public BattleGridCell[,] MonsterGrid { get; protected set; } = new BattleGridCell[2, 3];
 
-    private BattleGridCell _currentMouseoverCell;
-    public Creature CurrentTurnCreature => TurnSystem.CurrentTurnCreature();
-    public Creature TargetCreature;
+    public BattleGridCell CurrentMouseOverCell { get; protected set; }
 
     public void Init()
     {
@@ -41,6 +41,20 @@ public class BattleManager
         
         Managers.InputMng.MouseAction -= HandleMouseInput;
         Managers.InputMng.MouseAction += HandleMouseInput;
+    }
+    
+    private void HandleMouseInput(Define.MouseEvent mouseEvent)
+    {
+        switch (mouseEvent)
+        {
+            case Define.MouseEvent.Click:
+                if (BattleState == Define.BattleState.SelectTarget && OnMouseOverCell())
+                    OnClickGridCell();
+                break;
+            case Define.MouseEvent.Hover:
+                OnMouseOverCell();
+                break;
+        }
     }
     
     #region InitBattle
@@ -56,9 +70,9 @@ public class BattleManager
             for (int col = 0; col < 3; col++)
             {
                 HeroGrid[row, col] = Util.FindChild<BattleGridCell>(heroSide, $"BattleGridCell ({row}, {col})");
-                HeroGrid[row, col].SetRowCol(row, col);
+                HeroGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
                 MonsterGrid[row, col] = Util.FindChild<BattleGridCell>(monsterSide, $"BattleGridCell ({row}, {col})");
-                MonsterGrid[row, col].SetRowCol(row, col);
+                MonsterGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
             }
         }
         
@@ -69,7 +83,6 @@ public class BattleManager
         
         SetTurns();
         NextTurn(true);
-
     }
     
     private void PlaceAllCreatures()
@@ -141,34 +154,65 @@ public class BattleManager
                 break;
         }
     }
-    
-    private void HandleMouseInput(Define.MouseEvent mouseEvent)
+
+    public void ReplaceCreature(Creature creature, BattleGridCell cell)
     {
-        switch (mouseEvent)
+        if (cell.GridSide == Define.GridSide.HeroSide) 
+            HeroGrid[creature.Row, creature.Col] = null;
+        else
+            MonsterGrid[creature.Row, creature.Col] = null;
+        cell.CellCreature = creature;
+    }
+    
+    private bool OnMouseOverCell()
+    {
+        CurrentMouseOverCell?.MouseExit();
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit rayHit, maxDistance: 100f, layerMask: LayerMask.GetMask("BattleGridCell")))
         {
-            case Define.MouseEvent.Click:
-                if (BattleState == Define.BattleState.SelectTarget && GetMouseoverCell())
-                    ClickGridCell();
-                break;
-            case Define.MouseEvent.Hover:
-                GetMouseoverCell();
-                break;
+            BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
+
+            CurrentMouseOverCell = gridCell;
+
+            if (gridCell != null)
+            {
+                CurrentMouseOverCell.MouseEnter();
+                return true;
+            }
+        }
+
+        CurrentMouseOverCell = null;
+        
+        return false;
+    }
+    
+    public void OnClickGridCell()
+    {
+        if (CurrentMouseOverCell == null)
+            return;
+        
+        Hero currentTurnHero = CurrentTurnCreature as Hero;
+        if (currentTurnHero != null) 
+            currentTurnHero.DoAction(CurrentMouseOverCell);
+        else
+            Debug.Log("No currentTurnHero!");
+    }
+    
+    public Creature GetCreatureByRowCol(int row, int col, Define.GridSide gridSide)
+    {
+        if (gridSide == Define.GridSide.HeroSide)
+        {
+            return HeroGrid[row, col].CellCreature;
+        }
+        else
+        {
+            return MonsterGrid[row, col].CellCreature;
         }
     }
     
-    public void ClickGridCell()
-    {   
-        Hero currentTurnHero = CurrentTurnCreature as Hero;
-        TargetCreature = _currentMouseoverCell.CellCreature;
-
-        if (currentTurnHero != null) 
-            currentTurnHero.DoAction(TargetCreature.Id);
-        else
-            Debug.Log("No currentTurnHero!");
-
-    }
-    
-    ulong GetRandomCreature(Dictionary<ulong, Hero> dictionary)
+    public ulong GetRandomCreature(Dictionary<ulong, Hero> dictionary)
     {
         List<ulong> keysList = new List<ulong>(dictionary.Keys);
         
@@ -178,25 +222,6 @@ public class BattleManager
         return randomKey;
     }
   
-    private bool GetMouseoverCell()
-    {
-        _currentMouseoverCell?.MouseExit();
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit rayHit, maxDistance: 100f, layerMask: LayerMask.GetMask("BattleGridCell")))
-        {
-            BattleGridCell gridCell = rayHit.transform.gameObject.GetComponent<BattleGridCell>();
-
-            _currentMouseoverCell = gridCell;
-
-            if (gridCell != null)
-            {
-                _currentMouseoverCell.MouseEnter();
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
+    
+    #endregion
 }

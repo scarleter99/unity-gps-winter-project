@@ -1,7 +1,20 @@
-﻿public class Move : BaseAction
+﻿using UnityEngine;
+
+public class Move : BaseAction
 {
-    public override void HandleAction(ulong targetId)
+    public void SetInfo(Creature owner)
     {
+        Owner = owner;
+            
+        ActionAttribute = Define.ActionAttribute.Move;
+        ActionTargetType = Define.ActionTargetType.Single;
+    }
+
+    public override void HandleAction(BattleGridCell cell)
+    {
+        if (cell.CellCreature != null)
+            return;
         
+        Owner.OnMove(cell);
     }
 }

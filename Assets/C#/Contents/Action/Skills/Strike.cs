@@ -3,20 +3,20 @@ using UnityEngine;
 
 public class Strike : BaseSkill
 {
-    public Creature Target { get; protected set; }
-
-    public void SetInfo(int templateId)
+    public void SetInfo(int templateId, Creature owner)
     {
         ActionAttribute = Define.ActionAttribute.MeleeAttack;
         ActionTargetType = Define.ActionTargetType.Single;
         
-        base.SetInfo(templateId);
+        base.SetInfo(templateId, owner);
     }
     
-    public override void HandleAction(ulong targetId)
+    public override void HandleAction(BattleGridCell cell)
     {
-        Target = Managers.ObjectMng.GetCreatureWithId(targetId);
+        if (cell.CellCreature == null)
+            return;
         
-        Target.OnDamage(Owner.CreatureStat.Attack, 1);
+        Creature targetCreature = cell.CellCreature;
+        targetCreature.OnDamage(Owner.CreatureStat.Attack, 1);
     }
 }
