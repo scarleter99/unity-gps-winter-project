@@ -27,28 +27,32 @@ public class UI_CoinToss : UI_Base
     /// <summary>
     /// Stat에 해당하는 이미지 출력
     /// </summary>
-    public void SetStatType(UI_BattleOrder.Base skill)
+    public void SetStatType(BaseSkill skill)
     {
         Clear();
 
-        CoinGroup type = skill.AffectedStat switch
+        CoinGroup type = skill.ActionAttribute == Define.ActionAttribute.Tempt?
+            CoinGroup.VitalityGroup : (skill.Owner as Hero)?.WeaponType switch
         {
-            Define.Stat.Strength => CoinGroup.StrengthGroup,
-            Define.Stat.Vitality => CoinGroup.VitalityGroup,
-            Define.Stat.Dexterity => CoinGroup.DexterityGroup,
-            Define.Stat.Intelligence => CoinGroup.IntelligenceGroup,
+            Define.WeaponType.NoWeapon => CoinGroup.StrengthGroup,
+            Define.WeaponType.Bow => CoinGroup.DexterityGroup,
+            Define.WeaponType.Spear => CoinGroup.DexterityGroup,
+            Define.WeaponType.Wand => CoinGroup.IntelligenceGroup,
+            Define.WeaponType.SingleSword => CoinGroup.StrengthGroup,
+            Define.WeaponType.DoubleSword => CoinGroup.StrengthGroup,
+            Define.WeaponType.SwordAndShield => CoinGroup.StrengthGroup,
+            Define.WeaponType.TwoHandedSword => CoinGroup.StrengthGroup,
         };
 
         GameObject groupObj = GetGameObject(type);
         groupObj.SetActive(true);
         int i = 0;
         foreach (Transform item in groupObj.transform)
-            item.gameObject.SetActive(i++ < skill.SlotCount);
+            item.gameObject.SetActive(i++ < skill.CoinNum);
 
         _currentGroup = type;
-        _count = skill.SlotCount;
+        _count = skill.CoinNum;
     }
-
 
     public void DisplayCoinToss(int successCount)
     {

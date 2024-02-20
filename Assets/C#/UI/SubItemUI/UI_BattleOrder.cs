@@ -53,8 +53,8 @@ public class UI_BattleOrder : UI_Base
                 GetText(Text.Text_SkillName).text = skillData.Name;
                 GetText(Text.Text_SkillDescription).text = skillData.Description;
                 GetText(Text.Text_Damage).text = Mathf.Max(skill.Owner.CreatureStat.Attack - 
-                                                           skill.Owner.TargetCreature.CreatureStat.Defense, 1f).ToString();
-                GetText(Text.Text_Target).text = skill.Owner.TargetCreature.name;
+                                                           skill.Owner.TargetCell.CellCreature.CreatureStat.Defense, 1f).ToString();
+                GetText(Text.Text_Target).text = skill.Owner.TargetCell.CellCreature.name;
                 GetText(Text.Text_SlotPercentage).text = skill.ActionAttribute == Define.ActionAttribute.Tempt?
                     heroStat.Vitality.ToString() : 
                     (skill.Owner as Hero)?.WeaponType switch
