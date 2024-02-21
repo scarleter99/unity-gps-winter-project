@@ -46,8 +46,6 @@ public class Define
         Recover,
     }
     
-    
-    
     public enum ActionTargetType
     {
         Single,
@@ -120,12 +118,18 @@ public class Define
     public enum ActionAttribute
     {
         None,
-        MeleeAttack,
-        Tempt,
-        RangedAttack,
-        Buff,
-        Heal,
-        Move
+        BasicAttack,
+        TauntSkill,
+        AttackSkill,
+        BuffSkill,
+        DebuffSkill,
+        HealSkill,
+        HealItem,
+        BuffItem,
+        DebuffItem,
+        AttackItem,
+        Move,
+        Flee
     }
     
     public enum GridSide

@@ -63,9 +63,8 @@ public abstract class Creature : MonoBehaviour
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.MeleeAttack:
-                // TODO - 애니메이션 실행
-                Debug.Log("MeleeAttack");
+            case Define.ActionAttribute.BasicAttack:
+                AnimState = Define.AnimState.Attack;
                 break;
         }
     }
@@ -73,7 +72,7 @@ public abstract class Creature : MonoBehaviour
     #region AnimationControl
     
     // 공격하기 전 접근 단계에서 사용
-    protected Define.ApproachType _approachType;
+    public Define.ApproachType ApproachType { get; set; }
     protected Vector3 _comebackPos;
     protected bool _moveDOTriggered;
     [SerializeField] protected Vector3 _approachOffset;
@@ -155,7 +154,7 @@ public abstract class Creature : MonoBehaviour
         _comebackPos = transform.position;
         _moveDOTriggered = false;
         
-        switch (_approachType)
+        switch (ApproachType)
         {
             case Define.ApproachType.Jump:
                 Animator.SetBool(_hashbJump, true);
@@ -216,7 +215,7 @@ public abstract class Creature : MonoBehaviour
         if (!_moveDOTriggered)
         {
             _moveDOTriggered = true;
-            float duration = _approachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
+            float duration = ApproachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
             if (Animator.GetBool(_hashbAttack))
             {
                 transform.DOMove(_comebackPos, duration)
@@ -237,7 +236,6 @@ public abstract class Creature : MonoBehaviour
         Animator.SetBool(_hashbApproach, false);
     }
 
-    // TODO - 코인 앞면 수에 비례한 데미지 계산 
     public void OnDamage(int damage, int attackCount = 1)
     {
         CreatureStat.OnDamage(damage, attackCount);
@@ -276,7 +274,7 @@ public abstract class Creature : MonoBehaviour
     
     IEnumerator CoLerpToCell(BattleGridCell cell)
     {
-        while ((transform.position - cell.transform.position).magnitude > 0.001)
+        while ((transform.position - cell.transform.position).magnitude > 0.001f)
         {
             //Debug.Log((transform.position - cell.transform.position).magnitude);
             //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);

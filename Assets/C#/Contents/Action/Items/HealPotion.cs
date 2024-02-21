@@ -4,7 +4,7 @@ public class HealPotion : BaseItem
     
     public override void SetInfo(int templateId, Creature owner, Bag bag, int idx, int addNum)
     {
-        ActionAttribute = Define.ActionAttribute.Heal;
+        ActionAttribute = Define.ActionAttribute.HealItem;
         ActionTargetType = Define.ActionTargetType.Single;
         
         base.SetInfo(templateId, owner, bag, idx, addNum);

@@ -5,7 +5,7 @@ public class Strike : BaseSkill
 {
     public void SetInfo(int templateId, Creature owner)
     {
-        ActionAttribute = Define.ActionAttribute.MeleeAttack;
+        ActionAttribute = Define.ActionAttribute.AttackSkill;
         ActionTargetType = Define.ActionTargetType.Single;
         
         base.SetInfo(templateId, owner);

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -25,33 +26,80 @@ public class UI_CoinToss : UI_Base
     }
 
     /// <summary>
-    /// Stat에 해당하는 이미지 출력
+    /// CoinToss UI 필요할 때만 보이고, 나머지는 숨김
     /// </summary>
-    public void SetStatType(BaseSkill skill)
+    public void ChangeVisibility(BaseAction action)
+    {
+        switch (action.ActionAttribute)
+        {
+            case Define.ActionAttribute.Move:
+            case Define.ActionAttribute.AttackItem:
+            case Define.ActionAttribute.BuffItem:
+            case Define.ActionAttribute.DebuffItem:
+            case Define.ActionAttribute.HealItem:
+                Clear();
+                break;
+            default:
+                SetStatType(action);
+                break;
+        }
+    }
+    
+    private void SetStatType(BaseAction action)
     {
         Clear();
 
-        CoinGroup type = skill.ActionAttribute == Define.ActionAttribute.Tempt?
-            CoinGroup.VitalityGroup : (skill.Owner as Hero)?.WeaponType switch
-        {
-            Define.WeaponType.NoWeapon => CoinGroup.StrengthGroup,
-            Define.WeaponType.Bow => CoinGroup.DexterityGroup,
-            Define.WeaponType.Spear => CoinGroup.DexterityGroup,
-            Define.WeaponType.Wand => CoinGroup.IntelligenceGroup,
-            Define.WeaponType.SingleSword => CoinGroup.StrengthGroup,
-            Define.WeaponType.DoubleSword => CoinGroup.StrengthGroup,
-            Define.WeaponType.SwordAndShield => CoinGroup.StrengthGroup,
-            Define.WeaponType.TwoHandedSword => CoinGroup.StrengthGroup,
-        };
-
-        GameObject groupObj = GetGameObject(type);
+        CoinGroup activatedGroup = ProperStat(action);
+        GameObject groupObj = GetGameObject(activatedGroup);
         groupObj.SetActive(true);
+        
         int i = 0;
-        foreach (Transform item in groupObj.transform)
-            item.gameObject.SetActive(i++ < skill.CoinNum);
+        switch (action.ActionAttribute)
+        {
+            case Define.ActionAttribute.BasicAttack:
+                var attack = action as BasicAttack;
+                foreach (Transform item in groupObj.transform)
+                    item.gameObject.SetActive(i++ < (action as BasicAttack)?.CoinNum);
+                break;
+            case Define.ActionAttribute.Flee:
+                foreach (Transform item in groupObj.transform)
+                    item.gameObject.SetActive(i++ < (action as Flee)?.CoinNum);
+                break;
+            default:
+                foreach (Transform item in groupObj.transform)
+                    item.gameObject.SetActive(i++ < (action as BaseSkill)?.CoinNum);
+                break;
+        }
 
-        _currentGroup = type;
-        _count = skill.CoinNum;
+        _currentGroup = activatedGroup;
+    }
+
+    private CoinGroup ProperStat(BaseAction action)
+    {
+        CoinGroup ret;
+        switch (action.ActionAttribute)
+        {
+            case Define.ActionAttribute.Flee: // case Define.ActionType.Flee:
+                ret = CoinGroup.DexterityGroup;
+                break;
+            default:
+                ret = (action.Owner as Hero)?.WeaponType switch
+                {
+                    Define.WeaponType.NoWeapon => CoinGroup.StrengthGroup,
+                    Define.WeaponType.Bow => CoinGroup.DexterityGroup,
+                    Define.WeaponType.Spear => CoinGroup.DexterityGroup,
+                    Define.WeaponType.Wand => CoinGroup.IntelligenceGroup,
+                    Define.WeaponType.SingleSword => CoinGroup.StrengthGroup,
+                    Define.WeaponType.DoubleSword => CoinGroup.StrengthGroup,
+                    Define.WeaponType.SwordAndShield => CoinGroup.StrengthGroup,
+                    Define.WeaponType.TwoHandedSword => CoinGroup.StrengthGroup,
+                };
+                if (action.ActionAttribute == Define.ActionAttribute.TauntSkill)
+                    ret = CoinGroup.VitalityGroup;
+                break;
+        }
+
+        return ret;
     }
 
     public void DisplayCoinToss(int successCount)
