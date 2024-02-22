@@ -17,6 +17,7 @@ public class DataManager
     public Dictionary<int, Data.ArmorData> ArmorDataDict { get; private set; }
     public Dictionary<int, Data.SkillData> SkillDataDict { get; private set; }
     public Dictionary<Define.AreaName, Data.AreaData> AreaDataDict { get; private set; }
+    public Dictionary<int, Data.QuestData> QuestDataDict { get; private set; }
 
     public void Init()
     {
@@ -27,12 +28,14 @@ public class DataManager
         ArmorDataDict = LoadJson<Data.ArmorDataLoader, int, Data.ArmorData>("ArmorData").MakeDict();
         SkillDataDict = LoadJson<Data.SkillDataLoader, int, Data.SkillData>("SkillData").MakeDict();
         AreaDataDict = LoadJson<Data.AreaDataSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
+        QuestDataDict = LoadJson<Data.QuestDataLoader, int, Data.QuestData>("QuestData").MakeDict();
     }
 
     // path 위치의 Json 파일을 TextAsset 타입으로 로드
     Data LoadJson<Data, Key, Value>(string path) where Data : IData<Key, Value>
     {
         TextAsset textAsset = Managers.ResourceMng.Load<TextAsset>($"Datas/{path}");
+        Debug.Log(textAsset.text);
         return JsonUtility.FromJson<Data>(textAsset.text);
     }
 }

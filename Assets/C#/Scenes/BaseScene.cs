@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -24,15 +24,18 @@ public abstract class BaseScene : MonoBehaviour
     protected virtual void Init()
     {
         // TODO - TEST CODE: 나중엔 최초 Scene에서만 실행
-        Managers.InputMng.Init();
-        Managers.DataMng.Init();
-        Managers.NetworkMng.Init();
-        Managers.ServerMng.Init();
-        Managers.SoundMng.Init();
-        Managers.PoolMng.Init();
-        Managers.ObjectMng.Init();
-        Managers.BattleMng.Init();
-        
+        if (!Managers.ObjectMng.InitComplete)
+        {
+            Managers.InputMng.Init();
+            Managers.DataMng.Init();
+            Managers.NetworkMng.Init();
+            Managers.ServerMng.Init();
+            Managers.SoundMng.Init();
+            Managers.PoolMng.Init();
+            Managers.ObjectMng.Init();
+            Managers.BattleMng.Init();
+        }
+
         Object obj1 = FindObjectOfType(typeof(NetworkManager));
         Object obj2 = FindObjectOfType(typeof(EventSystem));
         

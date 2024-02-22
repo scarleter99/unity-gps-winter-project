@@ -12,7 +12,7 @@ public enum TileColorChangeType
 
 public abstract class AreaGridTile
 {
-    // 스프라이트 등을 갖는 이 타일에 해당하는 게임 오브젝트 (name: grid_hex)
+    // 스프라이트 등을 갖는 이 타일에 해당하는 게임 오브젝트 (Name: grid_hex)
     public GameObject TileObject { get; private set; }
 
     public AreaTileType TileType { get; protected set; }
