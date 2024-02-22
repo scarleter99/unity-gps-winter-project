@@ -16,7 +16,7 @@ public abstract class Creature : MonoBehaviour
 
     public Move Move { get; protected set; }
     
-    public Define.CreatureBattleState CreatureBattleState { get; set; }
+    public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
     public int Row { get; set; }
     public int Col { get; set; }
 
@@ -63,15 +63,14 @@ public abstract class Creature : MonoBehaviour
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.MeleeAttack:
-                // TODO - 애니메이션 실행
-                Debug.Log("MeleeAttack");
+            case Define.ActionAttribute.JumpAttack:
+                AnimState = Define.AnimState.Attack;
+                Debug.Log("JumpAttack");
                 break;
         }
     }
     
     #region AnimationControl
-    
     // 공격하기 전 접근 단계에서 사용
     protected Define.ApproachType _approachType;
     protected Vector3 _comebackPos;
@@ -197,7 +196,6 @@ public abstract class Creature : MonoBehaviour
                 break;
         }
     }
-    
     #endregion
 
     #region Event
@@ -253,7 +251,7 @@ public abstract class Creature : MonoBehaviour
     
     public void OnDead()
     {
-        CreatureBattleState = Define.CreatureBattleState.Dead;
+          CreatureBattleState = Define.CreatureBattleState.Dead;
         AnimState = Define.AnimState.Die;
     }
 

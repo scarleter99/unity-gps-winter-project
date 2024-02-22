@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 
 public class BattleManager
@@ -16,14 +17,12 @@ public class BattleManager
             {
                 case Define.BattleState.SelectAction:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
-                    // TODO - Battle Ui 가시화
                     break;
                 case Define.BattleState.SelectTarget:
-                    // TODO - BattleGridCell로 Target 선택 활성화
+                    // BattleGridCell로 Target 선택 활성화
                     break;
                 case Define.BattleState.MonsterTurn:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
-                    //CurrentTurnCreature.DoAction(GetRandomCreature(Managers.ObjectMng.Heroes));
                     break;
             }
         }
@@ -58,7 +57,7 @@ public class BattleManager
     }
     
     #region InitBattle
-    public void InitBattle()
+    public void InitBattle(int monsterSquadDataId)
     {
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
@@ -78,22 +77,30 @@ public class BattleManager
         
         _battleState = Define.BattleState.Init;
         
-
-        PlaceAllCreatures();
+        PlaceAllCreatures(monsterSquadDataId);
         
         SetTurns();
         NextTurn(true);
     }
     
-    private void PlaceAllCreatures()
+    private void PlaceAllCreatures(int monsterSquadDataId)
     {
         // TODO - TEST CODE
         PlaceHero(10000, 0, 0);
         PlaceHero(10001, 0, 1);
         PlaceHero(10002, 1, 2);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 0);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 1);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 1, 2);
+        
+        MonsterSquadData monsterSquadData = Managers.DataMng.MonsterSquadDataDict[monsterSquadDataId];
+        int line1Col = 0;
+        int line2Col = 0;
+        foreach (int monsterId in monsterSquadData.Line1)
+        {
+            SpawnAndPlaceMonster(monsterId, 0, line1Col++);
+        }
+        foreach (int monsterId in monsterSquadData.Line2)
+        {
+            SpawnAndPlaceMonster(monsterId, 1, line2Col++);
+        }
     }
     
     public Hero PlaceHero(ulong heroId, int row, int col)
