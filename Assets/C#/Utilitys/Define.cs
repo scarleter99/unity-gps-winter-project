@@ -120,7 +120,8 @@ public class Define
     public enum ActionAttribute
     {
         None,
-        MeleeAttack,
+        JumpAttack,
+        MoveAttack,
         RangedAttack,
         Buff,
         Heal,
@@ -251,6 +252,8 @@ public class Define
     public const int ITEM_HEALPORTION_ID = 301000;
     
     public const int SKILL_STRIKE_ID = 401000;
+
+    public const int MONSTERSQUAD_Squad1_ID = 501000;
     #endregion
 
     public const float MOVE_SPEED = 5f;

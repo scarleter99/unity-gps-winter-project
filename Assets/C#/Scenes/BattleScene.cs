@@ -15,8 +15,7 @@ public class BattleScene : BaseScene
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
-        
-        Managers.BattleMng.InitBattle();
+        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_Squad1_ID);
 
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
     }

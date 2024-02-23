@@ -10,14 +10,14 @@ public class HealPortion : BaseItem
         base.SetInfo(templateId, owner, bag, idx, addNum);
     }
 
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell targetCell)
     {
-        if (cell.CellCreature == null)
+        if (targetCell.CellCreature == null)
             return;
         
-        Creature targetCreature = cell.CellCreature;
+        Creature targetCreature = targetCell.CellCreature;
         targetCreature.OnHeal(ItemData.Heal);
         
-        base.HandleAction(cell);
+        base.HandleAction(targetCell);
     }
 }

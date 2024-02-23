@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Monster : Creature
@@ -6,6 +6,24 @@ public abstract class Monster : Creature
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
 
+    public override Define.CreatureBattleState CreatureBattleState
+    {
+        get => base.CreatureBattleState;
+        set
+        {
+            switch (value)
+            {
+                case Define.CreatureBattleState.Wait:
+                    break;
+                case Define.CreatureBattleState.Action:
+                    DoAction(GetRandomHero().Cell);
+                    break;
+                case Define.CreatureBattleState.Dead:
+                    break;
+            }
+        }
+    }
+    
     protected override void Init()
     {
         base.Init();
@@ -22,6 +40,14 @@ public abstract class Monster : Creature
         base.SetInfo(templateId);
         
         CreatureStat = new MonsterStat(MonsterData);
+    }
+    
+    Hero GetRandomHero()
+    {
+        List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
+        ulong randomKey = keysList[Random.Range(0, keysList.Count)];
+
+        return Managers.ObjectMng.Heroes[randomKey];
     }
 
     /*----------------------
