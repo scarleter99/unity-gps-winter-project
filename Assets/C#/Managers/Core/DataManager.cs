@@ -35,7 +35,6 @@ public class DataManager
     Data LoadJson<Data, Key, Value>(string path) where Data : IData<Key, Value>
     {
         TextAsset textAsset = Managers.ResourceMng.Load<TextAsset>($"Datas/{path}");
-        Debug.Log(textAsset.text);
         return JsonUtility.FromJson<Data>(textAsset.text);
     }
 }
