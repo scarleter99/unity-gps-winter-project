@@ -15,6 +15,7 @@ public abstract class Creature : MonoBehaviour
     public IStat CreatureStat { get; protected set; }
 
     public Move Move { get; protected set; }
+    public Flee Flee { get; protected set; }
     
     public Define.CreatureBattleState CreatureBattleState { get; set; }
     public int Row { get; set; }
@@ -23,7 +24,7 @@ public abstract class Creature : MonoBehaviour
     public BaseAction CurrentAction { get; set; }
     public BattleGridCell TargetCell { get; protected set; }
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -33,6 +34,8 @@ public abstract class Creature : MonoBehaviour
         Animator = GetComponent<Animator>();
         Move = new Move();
         Move.SetInfo(this);
+        Flee = new Flee();
+        Flee.SetInfo(this);
     }
     
     // 수동 실행
@@ -63,7 +66,7 @@ public abstract class Creature : MonoBehaviour
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.BasicAttack:
+            case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
                 break;
         }

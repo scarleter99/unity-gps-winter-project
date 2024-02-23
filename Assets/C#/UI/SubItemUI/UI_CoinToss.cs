@@ -33,10 +33,7 @@ public class UI_CoinToss : UI_Base
         switch (action.ActionAttribute)
         {
             case Define.ActionAttribute.Move:
-            case Define.ActionAttribute.AttackItem:
-            case Define.ActionAttribute.BuffItem:
-            case Define.ActionAttribute.DebuffItem:
-            case Define.ActionAttribute.HealItem:
+            case Define.ActionAttribute.SelectBag:
                 Clear();
                 break;
             default:
@@ -48,7 +45,7 @@ public class UI_CoinToss : UI_Base
     private void SetStatType(BaseAction action)
     {
         Clear();
-
+        
         CoinGroup activatedGroup = ProperStat(action);
         GameObject groupObj = GetGameObject(activatedGroup);
         groupObj.SetActive(true);
@@ -56,11 +53,6 @@ public class UI_CoinToss : UI_Base
         int i = 0;
         switch (action.ActionAttribute)
         {
-            case Define.ActionAttribute.BasicAttack:
-                var attack = action as BasicAttack;
-                foreach (Transform item in groupObj.transform)
-                    item.gameObject.SetActive(i++ < (action as BasicAttack)?.CoinNum);
-                break;
             case Define.ActionAttribute.Flee:
                 foreach (Transform item in groupObj.transform)
                     item.gameObject.SetActive(i++ < (action as Flee)?.CoinNum);
@@ -79,7 +71,7 @@ public class UI_CoinToss : UI_Base
         CoinGroup ret;
         switch (action.ActionAttribute)
         {
-            case Define.ActionAttribute.Flee: // case Define.ActionType.Flee:
+            case Define.ActionAttribute.Flee:
                 ret = CoinGroup.DexterityGroup;
                 break;
             default:

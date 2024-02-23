@@ -118,7 +118,6 @@ public class Define
     public enum ActionAttribute
     {
         None,
-        BasicAttack,
         TauntSkill,
         AttackSkill,
         BuffSkill,
@@ -129,7 +128,8 @@ public class Define
         DebuffItem,
         AttackItem,
         Move,
-        Flee
+        Flee,
+        SelectBag
     }
     
     public enum GridSide

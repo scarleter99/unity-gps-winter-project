@@ -16,6 +16,6 @@ public class UI_BattleScene : UI_Scene
 
 		Bind<UI_Base>(typeof(SubItemUI));
 
-		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).OnSelectedActionChanged += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ChangeVisibility;
+		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).SelectedActionChange += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ChangeVisibility;
     }
 }

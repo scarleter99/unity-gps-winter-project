@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BattleManager
 {
@@ -16,7 +18,7 @@ public class BattleManager
             {
                 case Define.BattleState.SelectAction:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Action;
-                    // TODO - Battle Ui 가시화
+                    TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
                     break;
                 case Define.BattleState.SelectTarget:
                     // TODO - BattleGridCell로 Target 선택 활성화
@@ -34,6 +36,9 @@ public class BattleManager
     public BattleGridCell[,] MonsterGrid { get; protected set; } = new BattleGridCell[2, 3];
 
     public BattleGridCell CurrentMouseOverCell { get; protected set; }
+
+    public event Action<Hero> TurnHeroUIChange;
+    public event Action<Monster> TurnMonsterUIChange;
 
     public void Init()
     {

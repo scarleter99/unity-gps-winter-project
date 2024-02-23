@@ -10,7 +10,8 @@ public abstract class Hero : Creature
     public GameObject Head { get; protected set; }
     public GameObject LeftHand { get; protected set; }
     public GameObject RightHand { get; protected set; }
-    
+
+    public SelectBag SelectBag { get; protected set; }
     public Bag Bag { get; protected set; }
     public Weapon Weapon { get; protected set; }
     public Define.WeaponType WeaponType => Weapon.WeaponType;
@@ -24,7 +25,9 @@ public abstract class Hero : Creature
         Head = Util.FindChild(gameObject, "head", true);
         LeftHand = Util.FindChild(gameObject, "weapon_l", true);
         RightHand = Util.FindChild(gameObject, "weapon_r", true);
-        
+
+        SelectBag = new SelectBag();
+        SelectBag.SetInfo(this);
         Bag = new Bag();
         Bag.SetInfo();
         Bag.Owner = this;

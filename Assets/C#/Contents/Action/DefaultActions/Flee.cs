@@ -10,6 +10,7 @@ public class Flee : BaseAction
             
         ActionAttribute = Define.ActionAttribute.Flee;
         ActionTargetType = Define.ActionTargetType.Single;
+        CoinNum = 3;
     }
 
     public override void HandleAction(BattleGridCell cell)

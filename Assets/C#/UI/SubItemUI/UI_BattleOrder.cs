@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class UI_BattleOrder : UI_Base
 {
-    public event Action<BaseAction> OnSelectedActionChanged;
+    public event Action<BaseAction> SelectedActionChange;
 
     private BaseAction _selectedAction;
     private static readonly string _stringDamage = "Damage";
@@ -24,11 +24,11 @@ public class UI_BattleOrder : UI_Base
     
     enum ActionGroup
     {
-        Attack,
         Skill1,
         Skill2,
         Skill3,
         Item,
+        Move,
         Flee
     }
 
@@ -49,26 +49,56 @@ public class UI_BattleOrder : UI_Base
         Bind<TextMeshProUGUI>(typeof(Text));
     }
 
-    public void BindDefaultActions(Hero hero, IEnumerable<BaseAction> actions, bool isMine)
+    private void OnEnable()
     {
-        ClearDefaultActionIcon();
+        Managers.BattleMng.TurnHeroUIChange += EnableBattleOrderUI;
+    }
+
+    private void OnDisable()
+    {
+        Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
+    }
+
+    public void EnableBattleOrderUI(Hero hero)
+    {
+        BindDefaultActions(hero);
+        SetSkills(hero);
+    }
+
+    private void BindDefaultActions(Hero hero)
+    {
+        //ClearDefaultActionIcon();
         
         foreach (ActionGroup singleAction in Enum.GetValues(typeof(ActionGroup)))
         {
-            if (singleAction == ActionGroup.Skill1 || singleAction == ActionGroup.Skill2)
+            if (singleAction == ActionGroup.Skill1 || singleAction == ActionGroup.Skill2 || singleAction == ActionGroup.Skill3)
                 continue;
 
-            var iconObj = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)singleAction).gameObject;
-            var action = actions.ElementAt((int)singleAction);
+            var test = GetGameObject(GameObjects.ActionIcons);
+            var iconObj = test.transform.GetChild((int)singleAction).gameObject;
+            BaseAction action;
+            switch (singleAction)
+            {
+                case ActionGroup.Flee:
+                    action = hero.Flee;
+                    break;
+                case ActionGroup.Move:
+                    action = hero.Move;
+                    break;
+                default: // case ActionGroup.Item:
+                    action = hero.SelectBag;
+                    break;
+            };
             
             // TODO - Test Code, json으로 데이터 관리
             void DisplayAction(PointerEventData eventData)
             {
                 GetText(Text.Text_ActionName).text = action.ToString();
                 GetText(Text.Text_ActionDescription).text = "Test Description check";
-                GetText(Text.Text_DamageNumber).text = (singleAction == ActionGroup.Flee || singleAction == ActionGroup.Item)? 
+                GetText(Text.Text_DamageNumber).text = IsDefaultAction(singleAction)? 
                     _stringBlank : Mathf.Max(hero.HeroStat.Attack - hero.TargetCell.CellCreature.CreatureStat.Defense,1f).ToString();
-                GetText(Text.Text_SlotPercentage).text = (singleAction == ActionGroup.Flee || singleAction == ActionGroup.Item)? 
+                GetText(Text.Text_DamageWord).text = IsDefaultAction(singleAction)? _stringBlank : _stringDamage;
+                GetText(Text.Text_SlotPercentage).text = IsDefaultAction(singleAction)? 
                     _stringBlank: hero.WeaponType switch
                     {
                         Define.WeaponType.NoWeapon => hero.HeroStat.Strength.ToString(),
@@ -80,11 +110,11 @@ public class UI_BattleOrder : UI_Base
                         Define.WeaponType.SwordAndShield => hero.HeroStat.Strength.ToString(),
                         Define.WeaponType.TwoHandedSword => hero.HeroStat.Strength.ToString(),
                     } + '%';
-                GetText(Text.Text_SlotPercentWord).text = (singleAction == ActionGroup.Flee || singleAction == ActionGroup.Item)? 
+                GetText(Text.Text_SlotPercentWord).text = IsDefaultAction(singleAction)? 
                     _stringBlank : _stringPercent;
 
                 _selectedAction = action;
-                OnSelectedActionChanged?.Invoke(_selectedAction);
+                SelectedActionChange?.Invoke(_selectedAction);
             }
 
             void UseAction(PointerEventData eventData)
@@ -99,17 +129,32 @@ public class UI_BattleOrder : UI_Base
         }
     }
 
-    // 스킬 목록을 받아와서 출력. 추후에 Init을 할 때 배틀 시스템의 턴 변경 시마다 자기 턴이면 해당 함수를 호출하도록 연결
-    public void SetSkills(HeroStat heroStat ,IEnumerable<BaseSkill> skills, bool isMine)
+    private bool IsDefaultAction(ActionGroup action)
     {
-        this.gameObject.SetActive(isMine);
-        ClearSkillIcon();
+        return action == ActionGroup.Flee || action == ActionGroup.Item || action == ActionGroup.Move;
+    }
+
+    public void SetSkills(Hero hero)
+    {
+        //ClearSkillIcon();
+        var heroStat = hero.HeroStat;
 
         for (int i = 0; i < 3; i++)
         {
             var iconObj = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)ActionGroup.Skill1 + i).gameObject;
-            var skill = skills.ElementAt(i);
-            
+            var skill = i switch
+            {
+                0 => hero.Weapon?.Skill1,
+                1 => hero.Weapon?.Skill2,
+                2 => hero.Weapon?.Skill3
+            };
+
+            if (skill == null)
+            {
+                iconObj.SetActive(false);
+                continue;
+            }
+
             void DisplaySkill(PointerEventData eventData)
             {
                 //iconObj.GetOrAddComponent<Image>().color = new Colo
@@ -135,7 +180,8 @@ public class UI_BattleOrder : UI_Base
                 } + '%';
 
                 _selectedAction = skill;
-                OnSelectedActionChanged?.Invoke(_selectedAction);
+                SelectedActionChange?.Invoke(_selectedAction);
+                this.gameObject.SetActive(true);
             }
 
             void UseSkill(PointerEventData eventData)
@@ -143,7 +189,7 @@ public class UI_BattleOrder : UI_Base
                 // TODO - BattleState 넘기고 Select Target으로 이어주기
                 this.gameObject.SetActive(false);
             }
-
+            
             iconObj.SetActive(true);
             iconObj.BindEvent(DisplaySkill, Define.UIEvent.Enter);
             iconObj.BindEvent(UseSkill, Define.UIEvent.Click);
