@@ -5,30 +5,28 @@ using DG.Tweening;
 
 public class BattleGridCell : MonoBehaviour
 {
-    [SerializeField] private Define.GridSide _gridSide;
-    public Define.GridSide GridSide { get => _gridSide; protected set => _gridSide = value; }
-    
-    public Creature CellCreature { get; set; }
-    
+    public Define.GridSide GridSide { get; protected set; }
     public int Row { get; protected set; }
     public int Col { get; protected set; }
+    
+    public Creature CellCreature { get; set; }
 
     private SpriteRenderer _indicator;
     private Color _originalColor;
 
     private Tweener _colorTween;
-
-
+    
     private void Start()
     {   
         _indicator = GetComponent<SpriteRenderer>();
         _originalColor = _indicator.color;
     }
 
-    public void SetRowCol(int row, int col)
+    public void SetRowCol(int row, int col, Define.GridSide gridSide)
     {
         Row = row;
         Col = col;
+        GridSide = gridSide;
     }
 
     public void MouseEnter()

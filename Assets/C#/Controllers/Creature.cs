@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+using System.Collections;
 using System.Text;
 using DG.Tweening;
 using UnityEngine;
@@ -13,13 +13,15 @@ public abstract class Creature : MonoBehaviour
     public Define.CreatureType CreatureType { get; protected set; }
     public Data.CreatureData CreatureData { get; protected set; }
     public IStat CreatureStat { get; protected set; }
+
+    public MoveAction MoveAction { get; protected set; }
     
-    public Define.CreatureBattleState CreatureBattleState { get; set; }
-    public int Row { get; set; }
-    public int Col { get; set; }
+    public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
+    
+    public BattleGridCell Cell { get; set; }
 
     public BaseAction CurrentAction { get; set; }
-    public Creature TargetCreature { get; protected set; }
+    public BattleGridCell TargetCell { get; protected set; }
 
     private void Start()
     {
@@ -29,6 +31,8 @@ public abstract class Creature : MonoBehaviour
     protected virtual void Init()
     {
         Animator = GetComponent<Animator>();
+        MoveAction = new MoveAction();
+        MoveAction.SetInfo(this);
     }
     
     // 수동 실행
@@ -53,29 +57,20 @@ public abstract class Creature : MonoBehaviour
     }
     
     // 턴제에서 본인 턴일 때 사용할 함수
-    public virtual void DoAction(ulong targetId)
+    public virtual void DoAction(BattleGridCell cell)
     {
-        if (Managers.ObjectMng.Heroes.TryGetValue(targetId, out Hero hero))
-            TargetCreature = hero;
-        if (Managers.ObjectMng.Monsters.TryGetValue(targetId, out Monster monster))
-            TargetCreature = monster;
-        if (TargetCreature == null)
-        {
-            Debug.Log("Failed to DoAction");
-            return;
-        }
+        TargetCell = cell;
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.MeleeAttack:
-                // TODO - 애니메이션 실행
-                Debug.Log("MeleeAttack");
+            case Define.ActionAttribute.JumpAttack:
+                AnimState = Define.AnimState.Attack;
+                Debug.Log("JumpAttack");
                 break;
         }
     }
     
     #region AnimationControl
-    
     // 공격하기 전 접근 단계에서 사용
     protected Define.ApproachType _approachType;
     protected Vector3 _comebackPos;
@@ -201,17 +196,15 @@ public abstract class Creature : MonoBehaviour
                 break;
         }
     }
-    
     #endregion
 
     #region Event
-    
     public virtual void OnHandleAction()
     {
-        CurrentAction.HandleAction(TargetCreature.Id);
+        CurrentAction.HandleAction(TargetCell);
         CreatureBattleState = Define.CreatureBattleState.Wait;
         
-        TargetCreature = null;
+        TargetCell = null;
         
         Managers.BattleMng.NextTurn();
     }
@@ -229,7 +222,7 @@ public abstract class Creature : MonoBehaviour
             }
             else
             {
-                transform.DOMove(TargetCreature.transform.position + _approachOffset, duration)
+                transform.DOMove(TargetCell.CellCreature.transform.position + _approachOffset, duration)
                     .OnComplete(() => { Animator.SetTrigger(_stringAttack.ToString()); });
             }
         }
@@ -246,6 +239,7 @@ public abstract class Creature : MonoBehaviour
     public void OnDamage(int damage, int attackCount = 1)
     {
         CreatureStat.OnDamage(damage, attackCount);
+        
         if (CreatureStat.Hp <= 0)
         {
             OnDead();
@@ -257,7 +251,7 @@ public abstract class Creature : MonoBehaviour
     
     public void OnDead()
     {
-        CreatureBattleState = Define.CreatureBattleState.Dead;
+          CreatureBattleState = Define.CreatureBattleState.Dead;
         AnimState = Define.AnimState.Die;
     }
 
@@ -268,6 +262,23 @@ public abstract class Creature : MonoBehaviour
         // TODO - 회복 애니메이션 실행
     }
 
+    public void LerpToTargetCell(BattleGridCell targetCell)
+    {
+        StartCoroutine("CoLerpToCell", targetCell);
+    }
     #endregion
+    
+    IEnumerator CoLerpToCell(BattleGridCell cell)
+    {
+        while ((transform.position - cell.transform.position).magnitude > 0.001)
+        {
+            //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
 
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        transform.position = cell.transform.position;
+        yield return null;
+    }
 }

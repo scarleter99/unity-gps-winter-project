@@ -30,7 +30,6 @@ public class Managers : MonoBehaviour
     private UIManager _uiMng = new UIManager();
     private NetworkManagerEx _networkMng = new NetworkManagerEx();
     private ServerManager _serverMng = new ServerManager();
-    private RpcManager _rpcMng = new RpcManager();
     
     public static DataManager DataMng => Instance._dataMng;
     public static InputManager InputMng => Instance._inputMng;
@@ -41,7 +40,6 @@ public class Managers : MonoBehaviour
     public static UIManager UIMng => Instance._uiMng;
     public static NetworkManagerEx NetworkMng => Instance._networkMng;
     public static ServerManager ServerMng => Instance._serverMng;
-    public static RpcManager RpcMng => Instance._rpcMng;
     #endregion
 
     static void Init()

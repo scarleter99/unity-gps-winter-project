@@ -31,7 +31,7 @@ namespace Data
     }
 
     [Serializable]
-    public class HeroDataLoader : IData<int, HeroData>
+    public class HeroLoaderLoader : ILoader<int, HeroData>
     {
         public List<HeroData> heroes = new List<HeroData>();
 
@@ -56,7 +56,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterDataLoader : IData<int, MonsterData>
+    public class MonsterLoaderLoader : ILoader<int, MonsterData>
     {
         public List<MonsterData> monsters = new List<MonsterData>();
 
@@ -84,7 +84,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterSquadDataLoader : IData<int, MonsterSquadData>
+    public class MonsterSquadLoaderLoader : ILoader<int, MonsterSquadData>
     {
         public List<MonsterSquadData> monsterSquads = new List<MonsterSquadData>();
 
@@ -112,7 +112,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ItemDataLoader : IData<int, ItemData>
+    public class ItemLoaderLoader : ILoader<int, ItemData>
     {
         public List<ItemData> items = new List<ItemData>();
 
@@ -153,7 +153,7 @@ namespace Data
     }
 
     [Serializable]
-    public class WeaponDataLoader : IData<int, WeaponData>
+    public class WeaponLoaderLoader : ILoader<int, WeaponData>
     {
         public List<WeaponData> weapons = new List<WeaponData>();
 
@@ -176,7 +176,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ArmorDataLoader : IData<int, ArmorData>
+    public class ArmorLoaderLoader : ILoader<int, ArmorData>
     {
         public List<ArmorData> armors = new List<ArmorData>();
 
@@ -201,7 +201,7 @@ namespace Data
     }
 
     [Serializable]
-    public class SkillDataLoader : IData<int, SkillData>
+    public class SkillLoaderLoader : ILoader<int, SkillData>
     {
         public List<SkillData> skills = new List<SkillData>();
 
@@ -230,7 +230,7 @@ namespace Data
     }
 
     [Serializable]
-    public class AreaDataSet : IData<Define.AreaName, AreaData>
+    public class AreaLoaderSet : ILoader<Define.AreaName, AreaData>
     {
         public List<AreaData> areadatas = new();
 

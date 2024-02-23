@@ -120,7 +120,8 @@ public class Define
     public enum ActionAttribute
     {
         None,
-        MeleeAttack,
+        JumpAttack,
+        MoveAttack,
         RangedAttack,
         Buff,
         Heal,
@@ -198,6 +199,26 @@ public class Define
     }
     #endregion
     
+    #region NonContent
+    public enum Layer
+    {
+        Ground = 6,
+        Block = 7,
+        Monster = 8,
+        Player = 9,
+    }
+    
+    public enum CameraMode
+    {
+        QuarterView,
+    }
+    #endregion
+    
+    #region Path
+    public const string HERO_PATH = "Heroes";
+    public const string MONSTER_PATH = "Monsters";
+    #endregion
+    
     // Name은 나중에 Json으로 관리
     #region Name
     public enum AreaName
@@ -231,26 +252,9 @@ public class Define
     public const int ITEM_HEALPORTION_ID = 301000;
     
     public const int SKILL_STRIKE_ID = 401000;
+
+    public const int MONSTERSQUAD_Squad1_ID = 501000;
     #endregion
 
-    #region Path
-    public const string HERO_PATH = "Heroes";
-    public const string MONSTER_PATH = "Monsters";
-    #endregion
-    
-    
-    #region NonContent
-    public enum Layer
-    {
-        Ground = 6,
-        Block = 7,
-        Monster = 8,
-        Player = 9,
-    }
-    
-    public enum CameraMode
-    {
-        QuarterView,
-    }
-    #endregion
+    public const float MOVE_SPEED = 5f;
 }
