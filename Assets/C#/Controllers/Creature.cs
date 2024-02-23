@@ -14,11 +14,11 @@ public abstract class Creature : MonoBehaviour
     public Data.CreatureData CreatureData { get; protected set; }
     public IStat CreatureStat { get; protected set; }
 
-    public Move Move { get; protected set; }
+    public MoveAction MoveAction { get; protected set; }
     
     public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
-    public int Row { get; set; }
-    public int Col { get; set; }
+    
+    public BattleGridCell Cell { get; set; }
 
     public BaseAction CurrentAction { get; set; }
     public BattleGridCell TargetCell { get; protected set; }
@@ -31,8 +31,8 @@ public abstract class Creature : MonoBehaviour
     protected virtual void Init()
     {
         Animator = GetComponent<Animator>();
-        Move = new Move();
-        Move.SetInfo(this);
+        MoveAction = new MoveAction();
+        MoveAction.SetInfo(this);
     }
     
     // 수동 실행
@@ -262,13 +262,9 @@ public abstract class Creature : MonoBehaviour
         // TODO - 회복 애니메이션 실행
     }
 
-    public void OnMove(BattleGridCell cell)
+    public void LerpToTargetCell(BattleGridCell targetCell)
     {
-        Managers.BattleMng.ReplaceCreature(this, cell);
-        Row = cell.Row;
-        Col = cell.Col;
-        
-        StartCoroutine("CoLerpToCell", cell);
+        StartCoroutine("CoLerpToCell", targetCell);
     }
     #endregion
     
@@ -276,7 +272,6 @@ public abstract class Creature : MonoBehaviour
     {
         while ((transform.position - cell.transform.position).magnitude > 0.001)
         {
-            //Debug.Log((transform.position - cell.transform.position).magnitude);
             //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
             transform.position = Vector3.MoveTowards(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
 

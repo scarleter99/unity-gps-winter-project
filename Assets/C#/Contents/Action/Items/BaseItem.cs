@@ -19,7 +19,7 @@ public abstract class BaseItem : BaseAction
         Count += addNum;
     }
     
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell targetCell)
     {
         Count--;
         if (Count <= 0)

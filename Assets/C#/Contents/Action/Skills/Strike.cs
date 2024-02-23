@@ -11,12 +11,12 @@ public class Strike : BaseSkill
         base.SetInfo(templateId, owner);
     }
     
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell targetCell)
     {
-        if (cell.CellCreature == null)
+        if (targetCell.CellCreature == null)
             return;
         
-        Creature targetCreature = cell.CellCreature;
+        Creature targetCreature = targetCell.CellCreature;
         targetCreature.OnDamage(Owner.CreatureStat.Attack, 1);
     }
 }

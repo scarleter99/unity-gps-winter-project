@@ -16,7 +16,7 @@ public abstract class Monster : Creature
                 case Define.CreatureBattleState.Wait:
                     break;
                 case Define.CreatureBattleState.Action:
-                    DoAction(GetRandomHeroKey(Managers.ObjectMng.Heroes));
+                    DoAction(GetRandomHero().Cell);
                     break;
                 case Define.CreatureBattleState.Dead:
                     break;
@@ -42,14 +42,12 @@ public abstract class Monster : Creature
         CreatureStat = new MonsterStat(MonsterData);
     }
     
-    ulong GetRandomHeroKey(Dictionary<ulong, Hero> heroDict)
+    Hero GetRandomHero()
     {
-        List<ulong> keysList = new List<ulong>(heroDict.Keys);
-        
-        int randomIndex = Random.Range(0, keysList.Count);
-        ulong randomKey = keysList[randomIndex];
+        List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
+        ulong randomKey = keysList[Random.Range(0, keysList.Count)];
 
-        return randomKey;
+        return Managers.ObjectMng.Heroes[randomKey];
     }
 
     /*----------------------

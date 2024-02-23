@@ -54,7 +54,7 @@ public class Test : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            hero.Move.HandleAction(Managers.BattleMng.HeroGrid[1, 1]);
+            hero.MoveAction.HandleAction(Managers.BattleMng.HeroGrid[1, 1]);
         }
         else if (Input.GetKeyDown(KeyCode.T))
         {
