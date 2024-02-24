@@ -52,11 +52,21 @@ public class UI_BattleOrder : UI_Base
     private void OnEnable()
     {
         Managers.BattleMng.TurnHeroUIChange += EnableBattleOrderUI;
+        foreach (var pair in Managers.ObjectMng.Heroes)
+        {
+            var hero = pair.Value;
+            hero.WeaponChange += SetSkills;
+        }
     }
 
     private void OnDisable()
     {
         Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
+        foreach (var pair in Managers.ObjectMng.Heroes)
+        {
+            var hero = pair.Value;
+            hero.WeaponChange -= SetSkills;
+        }
     }
 
     public void EnableBattleOrderUI(Hero hero)
@@ -161,8 +171,7 @@ public class UI_BattleOrder : UI_Base
                 var skillData = skill.SkillData;
                 GetText(Text.Text_ActionName).text = skillData.Name;
                 GetText(Text.Text_ActionDescription).text = skillData.Description;
-                GetText(Text.Text_DamageNumber).text = Mathf.Max(skill.Owner.CreatureStat.Attack - 
-                                                           skill.Owner.TargetCell.CellCreature.CreatureStat.Defense, 1f).ToString();
+                GetText(Text.Text_DamageNumber).text = Mathf.Max(skill.Owner.CreatureStat.Attack, 1f).ToString();
                 GetText(Text.Text_DamageWord).text = _stringDamage;
                 GetText(Text.Text_SlotPercentWord).text = _stringPercent;
                 GetText(Text.Text_SlotPercentage).text = skill.ActionAttribute == Define.ActionAttribute.TauntSkill?

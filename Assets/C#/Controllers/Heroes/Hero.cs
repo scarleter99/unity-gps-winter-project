@@ -16,6 +16,8 @@ public abstract class Hero : Creature
     public Weapon Weapon { get; protected set; }
     public Define.WeaponType WeaponType => Weapon.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
+
+    public event Action<Hero> WeaponChange;
     
     
     protected override void Init()
@@ -68,6 +70,7 @@ public abstract class Hero : Creature
         Weapon.Equip(this);
         ChangeWeaponVisibility(true);
         ChangeAnimator();
+        WeaponChange?.Invoke(this);
     }
     
     public void UnEquipWeapon()
