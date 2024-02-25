@@ -10,6 +10,9 @@ public class ObjectManager
     
     public ulong NextHeroId;
     public ulong NextMonsterId;
+
+	// TODO: Test code, 현재 BaseScene에서 매니저들의 Init을 호출하기 때문에 씬 이동 시 중복 호출. 이 부울값을 사용해서 임시로 중복 호출 방지
+    public bool InitComplete = false;
     
     public void Init()
     {
@@ -17,6 +20,8 @@ public class ObjectManager
 	    Monsters = new Dictionary<ulong, Monster>();
 	    NextHeroId = 10000;
 	    NextMonsterId = 20000;
+
+        InitComplete = true; // TODO: Test code
     }
     
     #region Roots

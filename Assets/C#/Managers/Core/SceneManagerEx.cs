@@ -74,4 +74,10 @@ public class SceneManagerEx
 
         yield return loadingScreen.Fade(true); // fade in, LoadingUI 삭제
     }
+
+    public IEnumerator LoadAreaScene(Define.AreaName areaName, Quest quest)
+    {
+        yield return SceneManager.LoadSceneAsync(GetSceneName(Define.SceneType.AreaScene));
+        GetCurrentScene<AreaScene>().InitArea(areaName, quest);
+    }
 }

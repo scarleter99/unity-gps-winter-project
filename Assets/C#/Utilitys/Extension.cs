@@ -27,4 +27,16 @@ public static class Extension
     {
         return go != null & go.activeSelf;
     }
+
+    public static string QuestRewardToString(this Data.QuestReward[] rewards)
+    {
+        string toString = "";
+
+        foreach (var reward in rewards)
+        {
+            toString += $"{Managers.DataMng.ItemDataDict[reward.RewardDataId].Name} x{reward.Quantity} ";
+        }
+
+        return toString;
+    }
 }

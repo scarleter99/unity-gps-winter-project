@@ -56,9 +56,12 @@ public class AreaManager
 
     public void Init()
     {
-        // TODO: AreaManager는 Manager이므로 게임 시작 씬에서 이 Init을 실행한다면, 밑의 코드는 지우고 GenerateMap() 등을 다른 곳에서 호출해야함 
-        if (Managers.SceneMng.CurrentScene.SceneType != SceneType.AreaScene) return;
+        // TODO: 게임 시작 씬에서 Init할 코드 작성
+    }
 
+    // 마을을 통해 AreaScene으로 오면 호출
+    public void InitArea()
+    {
         GenerateMap();
         InitCamera();
         SpawnPlayers();
@@ -72,6 +75,7 @@ public class AreaManager
         _suddendeathCount = 0;
         _suddendeathTimer = 4; // Area마다 타이머를 다르게 한다면 Areadata json 사용
         _light = GameObject.FindGameObjectWithTag("AreaLight");
+
     }
 
     private void HandleMouseInput(MouseEvent mouseEvent)

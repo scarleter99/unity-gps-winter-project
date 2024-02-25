@@ -1,5 +1,4 @@
 using DG.Tweening;
-using QuestExtention;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,7 +23,15 @@ public class UI_QuestBoard : UI_Base
 
         public void SetQuest(Quest quest)
         {
-            GetText(Texts.QuestName).text = quest.Name;
+            TextMeshProUGUI questName = GetText(Texts.QuestName);
+            questName.text = quest.QuestData.Name;
+            if (!quest.QuestData.IsUnlocked)
+            {   
+                Color color = new Color(0.5f, 0.5f, 0.5f);
+                questName.color = color;
+                GetComponent<Image>().color = color;
+                GetComponent<Button>().transition = Selectable.Transition.None;
+            }
         }
     }
 
@@ -53,14 +60,15 @@ public class UI_QuestBoard : UI_Base
 
         public void SetQuest(Quest _quest)
         {
-            GetText(Texts.Title).text = _quest.Name;
+            GetText(Texts.Title).text = _quest.QuestData.Name;
 
-            GetText(Texts.Description).text = _quest.Description + '\n';
-            GetText(Texts.Reward).text = "Reward: " + _quest.Reward.RewardToString();
+            GetText(Texts.Description).text = _quest.QuestData.Description + '\n';
+            GetText(Texts.Reward).text = "Reward: " + _quest.QuestData.Rewards.QuestRewardToString();
 
             void OnClickedAccpetButton(PointerEventData eventData)
             {
-                // 지구 이동
+                Enum.TryParse(_quest.QuestData.AreaName, out Define.AreaName areaName);
+                Managers.Instance.StartCoroutine((Managers.SceneMng.LoadAreaScene(areaName, _quest)));
                 this.gameObject.SetActive(false);
             }
 
@@ -93,10 +101,9 @@ public class UI_QuestBoard : UI_Base
             Managers.ResourceMng.Destroy(child.gameObject);
 
         // 퀘스트 목록 받아오기
-        for (int i = 0; i < 10; i++)
+        foreach (Data.QuestData questData in Managers.DataMng.QuestDataDict.Values)
         {
-            Quest quest = Managers.ResourceMng.Load<Quest>("ScriptableObjects/Quest/Quest"); // 테스트용 코드
-
+            Quest quest = new Quest(questData);
             UI_QuestBoard_Quest questBoard_Quest = Managers.UIMng.MakeSubItemUI<UI_QuestBoard_Quest>(content.transform);
             questBoard_Quest.SetQuest(quest);
 
@@ -110,7 +117,11 @@ public class UI_QuestBoard : UI_Base
                 ui_Quest.SetQuest(quest);
             }
 
-            questBoard_Quest.gameObject.BindEvent(OnClicked, Define.UIEvent.Click);
+            if (questData.IsUnlocked)
+            {
+                questBoard_Quest.gameObject.BindEvent(OnClicked, Define.UIEvent.Click);
+            }
+            
         }
     }
 }

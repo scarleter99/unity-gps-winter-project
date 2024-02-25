@@ -15,8 +15,9 @@ public class AreaScene : BaseScene
             AreaManager.AreaName = value;
         }
     }
+    public Quest Quest { get; private set; }
 
-    private AreaManager AreaManager;
+    private AreaManager AreaManager => Managers.AreaMng;
 
     public AreaState AreaState
     {
@@ -30,15 +31,20 @@ public class AreaScene : BaseScene
     protected override void Init()
     {
         base.Init();
-        AreaManager = Managers.AreaMng;
         SceneType = SceneType.AreaScene;
-        AreaName = AreaName.Forest; // TODO - 나중엔 외부에서 지정해줘야 함
-        AreaManager.Init();
+        //InitArea(AreaName.Forest); // TODO: Test code. AreaScene에서 직접 테스트 및 작업 시 필요
 
         OnBattleSceneLoadStart -= AreaManager.OnBattleSceneLoadStart;
         OnBattleSceneLoadStart += AreaManager.OnBattleSceneLoadStart;
         OnBattleSceneUnloadFinish -= AreaManager.OnBattleSceneUnloadFinish;
         OnBattleSceneUnloadFinish += AreaManager.OnBattleSceneUnloadFinish;
+    }
+
+    public void InitArea(AreaName areaName, Quest quest)
+    {
+        AreaName = areaName;
+        Quest = quest;
+        AreaManager.InitArea();
     }
 
     public void LoadBattleScene()

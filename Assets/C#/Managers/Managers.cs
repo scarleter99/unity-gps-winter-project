@@ -44,7 +44,7 @@ public class Managers : MonoBehaviour
 
     static void Init()
     {
-        if (s_instance == null && Initialized == false)
+        if (s_instance == null || Initialized == false)
         {
             Initialized = true;
             

@@ -19,17 +19,19 @@ public class DataManager
     public Dictionary<int, Data.ArmorData> ArmorDataDict { get; private set; }
     public Dictionary<int, Data.SkillData> SkillDataDict { get; private set; }
     public Dictionary<Define.AreaName, Data.AreaData> AreaDataDict { get; private set; }
+    public Dictionary<int, Data.QuestData> QuestDataDict { get; private set; }
 
     public void Init()
     {
-        HeroDataDict = LoadJson<Data.HeroLoaderLoader, int, Data.HeroData>("HeroData").MakeDict();
-        MonsterDataDict = LoadJson<Data.MonsterLoaderLoader, int, Data.MonsterData>("MonsterData").MakeDict();
-        MonsterSquadDataDict = LoadJson<Data.MonsterSquadLoaderLoader, int, Data.MonsterSquadData>("MonsterSquadData").MakeDict();
-        ItemDataDict = LoadJson<Data.ItemLoaderLoader, int, Data.ItemData>("ItemData").MakeDict();
-        WeaponDataDict = LoadJson<Data.WeaponLoaderLoader, int, Data.WeaponData>("WeaponData").MakeDict();
-        ArmorDataDict = LoadJson<Data.ArmorLoaderLoader, int, Data.ArmorData>("ArmorData").MakeDict();
-        SkillDataDict = LoadJson<Data.SkillLoaderLoader, int, Data.SkillData>("SkillData").MakeDict();
-        AreaDataDict = LoadJson<Data.AreaLoaderSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
+        HeroDataDict = LoadJson<Data.HeroDataLoader, int, Data.HeroData>("HeroData").MakeDict();
+        MonsterDataDict = LoadJson<Data.MonsterDataLoader, int, Data.MonsterData>("MonsterData").MakeDict();
+      MonsterSquadDataDict = LoadJson<Data.MonsterSquadLoaderLoader, int, Data.MonsterSquadData>("MonsterSquadData").MakeDict();
+        ItemDataDict = LoadJson<Data.ItemDataLoader, int, Data.ItemData>("ItemData").MakeDict();
+        WeaponDataDict = LoadJson<Data.WeaponDataLoader, int, Data.WeaponData>("WeaponData").MakeDict();
+        ArmorDataDict = LoadJson<Data.ArmorDataLoader, int, Data.ArmorData>("ArmorData").MakeDict();
+        SkillDataDict = LoadJson<Data.SkillDataLoader, int, Data.SkillData>("SkillData").MakeDict();
+        AreaDataDict = LoadJson<Data.AreaDataSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
+        QuestDataDict = LoadJson<Data.QuestDataLoader, int, Data.QuestData>("QuestData").MakeDict();
     }
 
     // path 위치의 Json 파일을 TextAsset 타입으로 로드
