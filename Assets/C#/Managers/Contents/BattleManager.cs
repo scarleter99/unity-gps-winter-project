@@ -136,6 +136,8 @@ public class BattleManager
             turns[turnNum++] = id;
         
         TurnSystem.Init(turns);
+        // TODO - 디버깅 코드
+        Debug.Log(turns);
     }
     #endregion
 
@@ -198,8 +200,8 @@ public class BattleManager
             return;
         
         Hero currentTurnHero = CurrentTurnCreature as Hero;
-        if (currentTurnHero != null) 
-            currentTurnHero.DoAction(CurrentMouseOverCell);
+        if (currentTurnHero != null)
+            currentTurnHero.CreatureBattleState = Define.CreatureBattleState.Action;
         else
             Debug.Log("No currentTurnHero!");
     }
