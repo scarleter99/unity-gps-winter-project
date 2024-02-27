@@ -1,5 +1,6 @@
- using System;
+using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public abstract class Hero : Creature
@@ -13,12 +14,12 @@ public abstract class Hero : Creature
 
     public SelectBag SelectBag { get; protected set; }
     public Bag Bag { get; protected set; }
+    [CanBeNull]
     public Weapon Weapon { get; protected set; }
-    public Define.WeaponType WeaponType => Weapon.WeaponType;
+    public Define.WeaponType? WeaponType => Weapon?.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
 
     public event Action<Hero> WeaponChange;
-    
     
     protected override void Init()
     {
@@ -34,6 +35,9 @@ public abstract class Hero : Creature
         Bag.SetInfo();
         Bag.Owner = this;
         
+        // TODO - TEST CODE
+        ApproachType = Define.ApproachType.Jump;
+        
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
@@ -48,6 +52,49 @@ public abstract class Hero : Creature
         CreatureStat = new HeroStat(HeroData);
     }
 
+    #region Action
+
+    private bool NeedsInvoke(out int percent)
+    {
+        switch (CurrentAction.ActionAttribute)
+        {
+            case Define.ActionAttribute.SelectBag:
+            case Define.ActionAttribute.Flee:
+            case Define.ActionAttribute.Move:
+            case Define.ActionAttribute.AttackItem:
+            case Define.ActionAttribute.BuffItem:
+            case Define.ActionAttribute.DebuffItem:
+            case Define.ActionAttribute.HealItem:
+                percent = 0;
+                return false;
+        }
+        
+        Debug.Log(CurrentAction.ActionAttribute);
+
+        percent = CurrentAction.ActionAttribute switch
+        {
+            Define.ActionAttribute.AttackSkill => WeaponType switch
+            {
+                Define.WeaponType.Bow => HeroStat.Dexterity,
+                Define.WeaponType.Spear => HeroStat.Dexterity,
+                Define.WeaponType.Wand => HeroStat.Intelligence,
+                Define.WeaponType.SingleSword => HeroStat.Strength,
+                Define.WeaponType.DoubleSword => HeroStat.Strength,
+                Define.WeaponType.SwordAndShield => HeroStat.Strength,
+                Define.WeaponType.TwoHandedSword => HeroStat.Strength,
+                null => HeroStat.Strength
+            },
+            Define.ActionAttribute.BuffSkill => HeroStat.Intelligence,
+            Define.ActionAttribute.DebuffSkill => HeroStat.Intelligence,
+            Define.ActionAttribute.HealSkill => HeroStat.Intelligence,
+            Define.ActionAttribute.TauntSkill => HeroStat.Vitality
+        };
+
+        return true;
+    }
+    
+    #endregion
+    
     // TODO - Data Id로 무기 및 아머를 장착하도록 구현
     #region Weapon
     public void ChangeAnimator()

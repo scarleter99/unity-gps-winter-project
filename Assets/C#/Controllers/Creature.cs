@@ -63,11 +63,13 @@ public abstract class Creature : MonoBehaviour
     public virtual void DoAction(BattleGridCell cell)
     {
         TargetCell = cell;
-
         switch (CurrentAction.ActionAttribute)
         {
             case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
+                break;
+            case Define.ActionAttribute.Move:
+                OnHandleAction();
                 break;
         }
     }
@@ -210,7 +212,7 @@ public abstract class Creature : MonoBehaviour
         
         TargetCell = null;
         
-        Managers.BattleMng.NextTurn();
+        //Managers.BattleMng.NextTurn();
     }
 
     public void OnApproachStart()

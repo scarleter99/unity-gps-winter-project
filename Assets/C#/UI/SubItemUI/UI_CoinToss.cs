@@ -1,11 +1,7 @@
-using OpenCover.Framework.Model;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class UI_CoinToss : UI_Base
 {
@@ -18,16 +14,31 @@ public class UI_CoinToss : UI_Base
     }
 
     private CoinGroup _currentGroup;
-    private int _count;
 
     public override void Init()
     {
         Bind<GameObject>(typeof(CoinGroup));
     }
 
-    /// <summary>
-    /// CoinToss UI 필요할 때만 보이고, 나머지는 숨김
-    /// </summary>
+    private void OnEnable()
+    {
+        Managers.BattleMng.ShowCoinToss += ShowTossResult;
+    }
+
+    private void OnDisable()
+    {
+        Managers.BattleMng.ShowCoinToss -= ShowTossResult;
+    }
+
+    public void ShowTossResult(BaseAction action, int successPercent)
+    {
+        if (action.ActionAttribute == Define.ActionAttribute.Move ||
+            action.ActionAttribute == Define.ActionAttribute.SelectBag)
+            return;
+        
+        StartCoroutine(DisplayCoinToss(action, successPercent));
+    }
+    
     public void ChangeVisibility(BaseAction action)
     {
         switch (action.ActionAttribute)
@@ -51,17 +62,8 @@ public class UI_CoinToss : UI_Base
         groupObj.SetActive(true);
         
         int i = 0;
-        switch (action.ActionAttribute)
-        {
-            case Define.ActionAttribute.Flee:
-                foreach (Transform item in groupObj.transform)
-                    item.gameObject.SetActive(i++ < (action as Flee)?.CoinNum);
-                break;
-            default:
-                foreach (Transform item in groupObj.transform)
-                    item.gameObject.SetActive(i++ < (action as BaseSkill)?.CoinNum);
-                break;
-        }
+        foreach (Transform item in groupObj.transform)
+            item.gameObject.SetActive(i++ < CoinCount(action));
 
         _currentGroup = activatedGroup;
     }
@@ -77,7 +79,7 @@ public class UI_CoinToss : UI_Base
             default:
                 ret = (action.Owner as Hero)?.WeaponType switch
                 {
-                    Define.WeaponType.NoWeapon => CoinGroup.StrengthGroup,
+                    null => CoinGroup.StrengthGroup,
                     Define.WeaponType.Bow => CoinGroup.DexterityGroup,
                     Define.WeaponType.Spear => CoinGroup.DexterityGroup,
                     Define.WeaponType.Wand => CoinGroup.IntelligenceGroup,
@@ -94,12 +96,47 @@ public class UI_CoinToss : UI_Base
         return ret;
     }
 
-    public void DisplayCoinToss(int successCount)
+    private int CoinCount(BaseAction action)
+    {
+        switch (action.ActionAttribute)
+        {
+            case Define.ActionAttribute.Flee:
+                return (action as Flee).CoinNum;
+            default:
+                return (action as BaseSkill).CoinNum;
+        }
+    }
+
+    private IEnumerator DisplayCoinToss(BaseAction action, int successPercent)
     {
         GameObject groupObj = GetGameObject(_currentGroup);
+        int coinCount = CoinCount(action);
+        int successCount = Managers.BattleMng.SuccessCount(coinCount, successPercent);
 
-        for (int i = 0; i < _count; i++)
-            groupObj.transform.GetChild(i).GetOrAddComponent<UI_Coin>().DisplayIcon(i < successCount);
+        for (int i = 0; i < coinCount; i++)
+        {
+            successCount--;
+            if (successCount >= 0)
+                groupObj.transform.GetChild(i).GetOrAddComponent<UI_Coin>().DisplayIcon(true);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+        
+        // TODO - Test Code
+        if (action.ActionAttribute == Define.ActionAttribute.Flee)
+        {
+            if (successCount == coinCount)
+                Debug.Log("Success");
+            else
+                Debug.Log("Failure");
+        }
+        else
+        {
+            Managers.BattleMng.CurrentTurnCreature.DoAction(Managers.BattleMng.CurrentMouseOverCell);
+        }
+        
+        groupObj.SetActive(false);
     }
 
     private void Clear()

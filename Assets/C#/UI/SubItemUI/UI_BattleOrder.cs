@@ -1,17 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class UI_BattleOrder : UI_Base
 {
     public event Action<BaseAction> SelectedActionChange;
+    public event Action<BaseAction, int> SelectedActionClick;
 
+    public int _percentage;
     private BaseAction _selectedAction;
     private static readonly string _stringDamage = "Damage";
     private static readonly string _stringBlank = "";
@@ -40,7 +37,6 @@ public class UI_BattleOrder : UI_Base
         Text_DamageWord,
         Text_SlotPercentage,
         Text_SlotPercentWord
-        //Text_Target
     }
 
     public override void Init()
@@ -51,41 +47,44 @@ public class UI_BattleOrder : UI_Base
 
     private void OnEnable()
     {
+        Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI; 
         Managers.BattleMng.TurnHeroUIChange += EnableBattleOrderUI;
         foreach (var pair in Managers.ObjectMng.Heroes)
         {
             var hero = pair.Value;
-            hero.WeaponChange += SetSkills;
+            hero.WeaponChange -= BindSkills;
+            hero.WeaponChange += BindSkills;
         }
     }
-
+    
+    // TODO - 없으면 두번째 플레이부터 에러남, 이유 모르겠음
     private void OnDisable()
     {
         Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
         foreach (var pair in Managers.ObjectMng.Heroes)
         {
             var hero = pair.Value;
-            hero.WeaponChange -= SetSkills;
+            hero.WeaponChange -= BindSkills;
         }
     }
 
     public void EnableBattleOrderUI(Hero hero)
     {
         BindDefaultActions(hero);
-        SetSkills(hero);
+        BindSkills(hero);
     }
-
+    
+    #region Action
+    
     private void BindDefaultActions(Hero hero)
     {
-        //ClearDefaultActionIcon();
-        
+        ClearDefaultActionIcons();
         foreach (ActionGroup singleAction in Enum.GetValues(typeof(ActionGroup)))
         {
             if (singleAction == ActionGroup.Skill1 || singleAction == ActionGroup.Skill2 || singleAction == ActionGroup.Skill3)
                 continue;
-
-            var test = GetGameObject(GameObjects.ActionIcons);
-            var iconObj = test.transform.GetChild((int)singleAction).gameObject;
+            
+            var iconObj = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)singleAction).gameObject;
             BaseAction action;
             switch (singleAction)
             {
@@ -105,13 +104,13 @@ public class UI_BattleOrder : UI_Base
             {
                 GetText(Text.Text_ActionName).text = action.ToString();
                 GetText(Text.Text_ActionDescription).text = "Test Description check";
-                GetText(Text.Text_DamageNumber).text = IsDefaultAction(singleAction)? 
+                GetText(Text.Text_DamageNumber).text = HasNoDamage(singleAction)? 
                     _stringBlank : Mathf.Max(hero.HeroStat.Attack - hero.TargetCell.CellCreature.CreatureStat.Defense,1f).ToString();
-                GetText(Text.Text_DamageWord).text = IsDefaultAction(singleAction)? _stringBlank : _stringDamage;
-                GetText(Text.Text_SlotPercentage).text = IsDefaultAction(singleAction)? 
+                GetText(Text.Text_DamageWord).text = HasNoDamage(singleAction)? _stringBlank : _stringDamage;
+                var percentageText = GetText(Text.Text_SlotPercentage);
+                percentageText.text = HasNoPercentage(singleAction)? 
                     _stringBlank: hero.WeaponType switch
                     {
-                        Define.WeaponType.NoWeapon => hero.HeroStat.Strength.ToString(),
                         Define.WeaponType.Bow => hero.HeroStat.Dexterity.ToString(),
                         Define.WeaponType.Spear => hero.HeroStat.Dexterity.ToString(),
                         Define.WeaponType.Wand => hero.HeroStat.Intelligence.ToString(),
@@ -119,8 +118,11 @@ public class UI_BattleOrder : UI_Base
                         Define.WeaponType.DoubleSword => hero.HeroStat.Strength.ToString(),
                         Define.WeaponType.SwordAndShield => hero.HeroStat.Strength.ToString(),
                         Define.WeaponType.TwoHandedSword => hero.HeroStat.Strength.ToString(),
+                        null => hero.HeroStat.Strength.ToString()
                     } + '%';
-                GetText(Text.Text_SlotPercentWord).text = IsDefaultAction(singleAction)? 
+                if (int.TryParse(percentageText.text.Substring(0, Mathf.Max(percentageText.text.Length - 1, 0)), out _percentage) == false)
+                    _percentage = 0;
+                GetText(Text.Text_SlotPercentWord).text = HasNoPercentage(singleAction)? 
                     _stringBlank : _stringPercent;
 
                 _selectedAction = action;
@@ -129,8 +131,27 @@ public class UI_BattleOrder : UI_Base
 
             void UseAction(PointerEventData eventData)
             {
-                // TODO - BattleState 넘기고 Select Target으로 이어주기
-                this.gameObject.SetActive(false);
+                var battleMng = Managers.BattleMng;
+                battleMng.CurrentTurnCreature.CurrentAction = action;
+
+                // Flee, SelectBag 만 이쪽에서 핸들링, 나머지는 BattleManager BattleState set에서 관리
+                // TODO - Flee, SelectBag 핸들링도 BattleManager로 넘기는 쪽이 깔끔해보임
+                switch (action.ActionAttribute)
+                {
+                    case Define.ActionAttribute.Flee:
+                        battleMng.CurrentTurnCreature.DoAction(battleMng.CurrentTurnCreature.TargetCell);
+                        break;
+                    case Define.ActionAttribute.SelectBag:
+                        // TODO - Item UI 띄우기
+                        Debug.Log("SelectBag Clicked!");
+                        break;
+                    case Define.ActionAttribute.Move:
+                        battleMng.BattleState = Define.BattleState.SelectTarget;
+                        break;
+                }
+                
+                gameObject.SetActive(false);
+                SelectedActionClick?.Invoke(_selectedAction, _percentage);
             }
             
             iconObj.SetActive(true);
@@ -138,15 +159,37 @@ public class UI_BattleOrder : UI_Base
             iconObj.BindEvent(UseAction, Define.UIEvent.Click);
         }
     }
+    
+    private void ClearDefaultActionIcons()
+    {
+        foreach (ActionGroup action in Enum.GetValues(typeof(ActionGroup)))
+        {
+            if (action == ActionGroup.Skill1 || action == ActionGroup.Skill2 || action == ActionGroup.Skill3)
+                continue;
+            
+            var icon = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)action).gameObject;
+            icon.SetActive(false);
+            icon.ClearEvent();
+        }
+    }
 
-    private bool IsDefaultAction(ActionGroup action)
+    private bool HasNoDamage(ActionGroup action)
     {
         return action == ActionGroup.Flee || action == ActionGroup.Item || action == ActionGroup.Move;
     }
 
-    public void SetSkills(Hero hero)
+    private bool HasNoPercentage(ActionGroup action)
     {
-        //ClearSkillIcon();
+        return action == ActionGroup.Item || action == ActionGroup.Move;
+    }
+
+    #endregion
+    
+    #region Skill
+    
+    public void BindSkills(Hero hero)
+    {
+        ClearSkillIcons();
         var heroStat = hero.HeroStat;
 
         for (int i = 0; i < 3; i++)
@@ -158,7 +201,7 @@ public class UI_BattleOrder : UI_Base
                 1 => hero.Weapon?.Skill2,
                 2 => hero.Weapon?.Skill3
             };
-
+            
             if (skill == null)
             {
                 iconObj.SetActive(false);
@@ -167,6 +210,7 @@ public class UI_BattleOrder : UI_Base
 
             void DisplaySkill(PointerEventData eventData)
             {
+                //if (skill.Owner == null) return; // TODO - SHOULD NOT HAPPEN
                 //iconObj.GetOrAddComponent<Image>().color = new Colo
                 var skillData = skill.SkillData;
                 GetText(Text.Text_ActionName).text = skillData.Name;
@@ -178,7 +222,7 @@ public class UI_BattleOrder : UI_Base
                     heroStat.Vitality.ToString() : 
                     (skill.Owner as Hero)?.WeaponType switch
                 {
-                    Define.WeaponType.NoWeapon => heroStat.Strength.ToString(),
+                    null => heroStat.Strength.ToString(),
                     Define.WeaponType.Bow => heroStat.Dexterity.ToString(),
                     Define.WeaponType.Spear => heroStat.Dexterity.ToString(),
                     Define.WeaponType.Wand => heroStat.Intelligence.ToString(),
@@ -190,13 +234,14 @@ public class UI_BattleOrder : UI_Base
 
                 _selectedAction = skill;
                 SelectedActionChange?.Invoke(_selectedAction);
-                this.gameObject.SetActive(true);
+                gameObject.SetActive(true);
             }
 
             void UseSkill(PointerEventData eventData)
             {
-                // TODO - BattleState 넘기고 Select Target으로 이어주기
-                this.gameObject.SetActive(false);
+                Managers.BattleMng.CurrentTurnCreature.CurrentAction = _selectedAction;
+                Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
+                gameObject.SetActive(false);
             }
             
             iconObj.SetActive(true);
@@ -205,26 +250,15 @@ public class UI_BattleOrder : UI_Base
         }
     }
 
-    private void ClearSkillIcon()
+    private void ClearSkillIcons()
     {
         for (int i = 0; i < 2; i++)
         {
             var icon = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)ActionGroup.Skill1 + i).gameObject;
-            icon.gameObject.SetActive(false);
             icon.gameObject.ClearEvent();
+            icon.gameObject.SetActive(false);
         }
     }
-
-    private void ClearDefaultActionIcon()
-    {
-        foreach (ActionGroup action in Enum.GetValues(typeof(ActionGroup)))
-        {
-            if (action == ActionGroup.Skill1 || action == ActionGroup.Skill2)
-                continue;
-            
-            var icon = GetGameObject(GameObjects.ActionIcons).transform.GetChild((int)action).gameObject;
-            icon.gameObject.SetActive(false);
-            icon.gameObject.ClearEvent();
-        }
-    }
+    
+    #endregion
 }

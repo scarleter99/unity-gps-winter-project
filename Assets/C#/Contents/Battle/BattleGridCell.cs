@@ -20,6 +20,7 @@ public class BattleGridCell : MonoBehaviour
     {   
         _indicator = GetComponent<SpriteRenderer>();
         _originalColor = _indicator.color;
+        transform.position += new Vector3(0f, 0.03f, 0f);
     }
 
     public void SetRowCol(int row, int col, Define.GridSide gridSide)
@@ -57,5 +58,10 @@ public class BattleGridCell : MonoBehaviour
     {
         _colorTween?.Kill();
         _colorTween = null;
+    }
+
+    public void RevertColor()
+    {
+        ChangeColor(_originalColor);
     }
 }
