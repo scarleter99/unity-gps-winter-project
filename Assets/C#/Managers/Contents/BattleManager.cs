@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,7 +21,7 @@ public class BattleManager
                     TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
                     break;
                 case Define.BattleState.SelectTarget:
-                    // BattleGridCell로 Target 선택 활성화
+                    // TODO - BattleGridCell로 Target 선택 활성화
                     break;
                 case Define.BattleState.ActionProceed:
                     if (CurrentTurnCreature.CurrentAction.ActionAttribute == Define.ActionAttribute.Move)
@@ -65,7 +63,7 @@ public class BattleManager
         switch (mouseEvent)
         {
             case Define.MouseEvent.Click:
-                if (BattleState == Define.BattleState.SelectTarget && OnMouseOverCell())
+                if (OnMouseOverCell())
                     OnClickGridCell();
                 break;
             case Define.MouseEvent.Hover:
@@ -89,7 +87,7 @@ public class BattleManager
                 HeroGrid[row, col] = Util.FindChild<BattleGridCell>(heroSide, $"BattleGridCell ({row}, {col})");
                 HeroGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
                 MonsterGrid[row, col] = Util.FindChild<BattleGridCell>(monsterSide, $"BattleGridCell ({row}, {col})");
-                MonsterGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
+                MonsterGrid[row, col].SetRowCol(row, col, Define.GridSide.MonsterSide);
             }
         }
         
@@ -108,7 +106,7 @@ public class BattleManager
         PlaceHero(10001, HeroGrid[0, 1]);
         PlaceHero(10002, HeroGrid[1, 2]);
         
-        MonsterSquadData monsterSquadData = Managers.DataMng.MonsterSquadDataDict[monsterSquadDataId];
+        Data.MonsterSquadData monsterSquadData = Managers.DataMng.MonsterSquadDataDict[monsterSquadDataId];
         int line1Col = 0;
         int line2Col = 0;
         foreach (int monsterId in monsterSquadData.Line1)
@@ -158,7 +156,7 @@ public class BattleManager
     #endregion
 
     #region Battle
-
+    
     public void PlaceCreature(Creature creature, BattleGridCell targetCell, bool isPlace = false)
     {
         if (creature.Cell != null)

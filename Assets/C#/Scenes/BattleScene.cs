@@ -16,8 +16,8 @@ public class BattleScene : BaseScene
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
 
-        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_Squad1_ID);
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
+        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_Squad1_ID);
     }
 
     public override void Clear()
