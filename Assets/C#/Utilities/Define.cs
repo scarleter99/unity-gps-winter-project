@@ -46,6 +46,8 @@ public class Define
         Recover,
     }
     
+    
+    
     public enum ActionTargetType
     {
         Single,
@@ -256,6 +258,8 @@ public class Define
     public const int ITEM_HEALPOTION_ID = 301000;
     
     public const int SKILL_STRIKE_ID = 401000;
+
+    public const int MONSTERSQUAD_Squad1_ID = 501000;
     #endregion
 
     public const float MOVE_SPEED = 5f;

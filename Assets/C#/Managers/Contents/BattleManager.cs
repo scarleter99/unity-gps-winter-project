@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using Data;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,7 +23,7 @@ public class BattleManager
                     TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
                     break;
                 case Define.BattleState.SelectTarget:
-                    // TODO - BattleGridCell로 Target 선택 활성화
+                    // BattleGridCell로 Target 선택 활성화
                     break;
                 case Define.BattleState.ActionProceed:
                     if (CurrentTurnCreature.CurrentAction.ActionAttribute == Define.ActionAttribute.Move)
@@ -63,7 +65,7 @@ public class BattleManager
         switch (mouseEvent)
         {
             case Define.MouseEvent.Click:
-                if (OnMouseOverCell())
+                if (BattleState == Define.BattleState.SelectTarget && OnMouseOverCell())
                     OnClickGridCell();
                 break;
             case Define.MouseEvent.Hover:
@@ -73,7 +75,7 @@ public class BattleManager
     }
     
     #region InitBattle
-    public void InitBattle()
+    public void InitBattle(int monsterSquadDataId)
     {
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
@@ -87,59 +89,61 @@ public class BattleManager
                 HeroGrid[row, col] = Util.FindChild<BattleGridCell>(heroSide, $"BattleGridCell ({row}, {col})");
                 HeroGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
                 MonsterGrid[row, col] = Util.FindChild<BattleGridCell>(monsterSide, $"BattleGridCell ({row}, {col})");
-                MonsterGrid[row, col].SetRowCol(row, col, Define.GridSide.MonsterSide);
+                MonsterGrid[row, col].SetRowCol(row, col, Define.GridSide.HeroSide);
             }
         }
         
         _battleState = Define.BattleState.Init;
         
-
-        PlaceAllCreatures();
+        PlaceAllCreatures(monsterSquadDataId);
         
-        SetTurns();
+        SetBattleTurns();
         NextTurn(true);
     }
     
-    private void PlaceAllCreatures()
+    private void PlaceAllCreatures(int monsterSquadDataId)
     {
         // TODO - TEST CODE
-        PlaceHero(10000, 0, 0);
-        PlaceHero(10001, 0, 1);
-        PlaceHero(10002, 1, 2);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 0);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 0, 1);
-        SpawnAndPlaceMonster(Define.MONSTER_BAT_ID, 1, 2);
+        PlaceHero(10000, HeroGrid[0, 0]);
+        PlaceHero(10001, HeroGrid[0, 1]);
+        PlaceHero(10002, HeroGrid[1, 2]);
+        
+        MonsterSquadData monsterSquadData = Managers.DataMng.MonsterSquadDataDict[monsterSquadDataId];
+        int line1Col = 0;
+        int line2Col = 0;
+        foreach (int monsterId in monsterSquadData.Line1)
+        {
+            SpawnAndPlaceMonster(monsterId, MonsterGrid[0, line1Col++]);
+        }
+        foreach (int monsterId in monsterSquadData.Line2)
+        {
+            SpawnAndPlaceMonster(monsterId, MonsterGrid[1, line2Col++]);
+        }
     }
     
-    public Hero PlaceHero(ulong heroId, int row, int col)
+    public Hero PlaceHero(ulong heroId, BattleGridCell targetCell)
     {
         Hero hero = Managers.ObjectMng.Heroes[heroId];
-        HeroGrid[row, col].CellCreature = hero;
-        hero.transform.position = HeroGrid[row, col].transform.position;
-        hero.Row = row;
-        hero.Col = col;
+        
+        PlaceCreature(hero, targetCell, true);
 
         return hero;
     }
     
-    public Monster SpawnAndPlaceMonster(int monsterDataId, int row, int col)
+    public Monster SpawnAndPlaceMonster(int monsterDataId, BattleGridCell targetCell)
     {
         Monster monster = Managers.ObjectMng.SpawnMonster(monsterDataId);
-        MonsterGrid[row, col].CellCreature = monster;
-        monster.transform.position = MonsterGrid[row, col].transform.position;
-        
-        // 180도 회전
+
         Vector3 currentRotation = monster.transform.rotation.eulerAngles;
         currentRotation.y += 180f;
         monster.transform.rotation = Quaternion.Euler(currentRotation);
         
-        monster.Row = row;
-        monster.Col = col;
+        PlaceCreature(monster, targetCell, true);
         
         return monster;
     }
     
-    private void SetTurns()
+    private void SetBattleTurns()
     {
         // TODO - 속도에 따른 코드로 수정 예정
         ulong[] turns = new ulong[100];
@@ -154,6 +158,18 @@ public class BattleManager
     #endregion
 
     #region Battle
+
+    public void PlaceCreature(Creature creature, BattleGridCell targetCell, bool isPlace = false)
+    {
+        if (creature.Cell != null)
+            creature.Cell.CellCreature = null;
+        
+        targetCell.CellCreature = creature;
+        creature.Cell = targetCell;
+
+        if (isPlace)
+            creature.transform.position = targetCell.transform.position;
+    }
 
     public int SuccessCount(int coinNum, int percentage)
     {
@@ -187,9 +203,9 @@ public class BattleManager
     public void ReplaceCreature(Creature creature, BattleGridCell cell)
     {
         if (cell.GridSide == Define.GridSide.HeroSide) 
-            HeroGrid[creature.Row, creature.Col] = null;
+            HeroGrid[creature.Cell.Row, creature.Cell.Col] = null;
         else
-            MonsterGrid[creature.Row, creature.Col] = null;
+            MonsterGrid[creature.Cell.Row, creature.Cell.Col] = null;
         cell.CellCreature = creature;
     }
     

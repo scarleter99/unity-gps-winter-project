@@ -89,13 +89,13 @@ public class UI_BattleOrder : UI_Base
             switch (singleAction)
             {
                 case ActionGroup.Flee:
-                    action = hero.Flee;
+                    action = hero.FleeAction;
                     break;
                 case ActionGroup.Move:
-                    action = hero.Move;
+                    action = hero.MoveAction;
                     break;
                 default: // case ActionGroup.Item:
-                    action = hero.SelectBag;
+                    action = hero.SelectBagAction;
                     break;
             };
             

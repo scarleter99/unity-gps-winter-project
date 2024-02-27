@@ -40,11 +40,11 @@ public class AreaGenerator
     {
         _areaName = areaName;
         _originPosition = originPosition;
-        _grid = new AreaGrid(Managers.DataMng.AreaDataDict[_areaName].width, Managers.DataMng.AreaDataDict[_areaName].height, originPosition);
-        _grid.InitializeTileTypeArray(ParseBasemap(Managers.DataMng.AreaDataDict[_areaName].basemap));
+        _grid = new AreaGrid(Managers.DataMng.AreaDataDict[_areaName].Width, Managers.DataMng.AreaDataDict[_areaName].Height, originPosition);
+        _grid.InitializeTileTypeArray(ParseBasemap(Managers.DataMng.AreaDataDict[_areaName].Basemap));
         //Debug.Log(_basemap);
-        _battleTileNum = Managers.DataMng.AreaDataDict[_areaName].battleTileNum;
-        _encounterTileNum = Managers.DataMng.AreaDataDict[_areaName].encounterTileNum;
+        _battleTileNum = Managers.DataMng.AreaDataDict[_areaName].BattleTileNum;
+        _encounterTileNum = Managers.DataMng.AreaDataDict[_areaName].EncounterTileNum;
 
         _tileParent = new GameObject("Tiles").transform;
     }
@@ -52,7 +52,7 @@ public class AreaGenerator
     // 맵 생성 로직 흐름 관리
     public void GenerateMap()
     {
-        InstantiateBaseMap(Managers.DataMng.AreaDataDict[_areaName].mapPrefabPath);
+        InstantiateBaseMap(Managers.DataMng.AreaDataDict[_areaName].MapPrefabPath);
         GenerateStartTile();
         GenerateBossTile();
         GenerateBattleTile();

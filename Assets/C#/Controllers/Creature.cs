@@ -14,12 +14,12 @@ public abstract class Creature : MonoBehaviour
     public Data.CreatureData CreatureData { get; protected set; }
     public IStat CreatureStat { get; protected set; }
 
-    public Move Move { get; protected set; }
-    public Flee Flee { get; protected set; }
+    public MoveAction MoveAction { get; protected set; }
+    public FleeAction FleeAction { get; protected set; }
     
-    public Define.CreatureBattleState CreatureBattleState { get; set; }
-    public int Row { get; set; }
-    public int Col { get; set; }
+    public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
+    
+    public BattleGridCell Cell { get; set; }
 
     public BaseAction CurrentAction { get; set; }
     public BattleGridCell TargetCell { get; protected set; }
@@ -32,10 +32,10 @@ public abstract class Creature : MonoBehaviour
     protected virtual void Init()
     {
         Animator = GetComponent<Animator>();
-        Move = new Move();
-        Move.SetInfo(this);
-        Flee = new Flee();
-        Flee.SetInfo(this);
+        MoveAction = new MoveAction();
+        MoveAction.SetInfo(this);
+        FleeAction = new FleeAction();
+        FleeAction.SetInfo(this);
     }
     
     // 수동 실행
@@ -241,6 +241,7 @@ public abstract class Creature : MonoBehaviour
         Animator.SetBool(_hashbApproach, false);
     }
 
+    // TODO - 코인 앞면 수에 비례한 데미지 계산 
     public void OnDamage(int damage, int attackCount = 1)
     {
         CreatureStat.OnDamage(damage, attackCount);
@@ -270,8 +271,7 @@ public abstract class Creature : MonoBehaviour
     public void OnMove(BattleGridCell cell)
     {
         Managers.BattleMng.ReplaceCreature(this, cell);
-        Row = cell.Row;
-        Col = cell.Col;
+        Cell = cell;
         
         StartCoroutine("CoLerpToCell", cell);
     }
@@ -279,7 +279,7 @@ public abstract class Creature : MonoBehaviour
     
     IEnumerator CoLerpToCell(BattleGridCell cell)
     {
-        while ((transform.position - cell.transform.position).magnitude > 0.001f)
+        while ((transform.position - cell.transform.position).magnitude > 0.001)
         {
             //Debug.Log((transform.position - cell.transform.position).magnitude);
             //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);

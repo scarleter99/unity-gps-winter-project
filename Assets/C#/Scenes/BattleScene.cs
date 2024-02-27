@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,10 +16,10 @@ public class BattleScene : BaseScene
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
         Managers.ObjectMng.SpawnHero(Define.HERO_KNIGHT_ID);
 
+        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_Squad1_ID);
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
-        Managers.BattleMng.InitBattle();
     }
-    
+
     public override void Clear()
     {
         Debug.Log("BattleScene Clear!");

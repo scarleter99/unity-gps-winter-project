@@ -5,5 +5,5 @@
 
     public Creature Owner { get; set; }
     
-    public abstract void HandleAction(BattleGridCell cell);
+    public abstract void HandleAction(BattleGridCell targetCell);
 }

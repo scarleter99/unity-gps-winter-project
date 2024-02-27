@@ -101,7 +101,7 @@ public class UI_CoinToss : UI_Base
         switch (action.ActionAttribute)
         {
             case Define.ActionAttribute.Flee:
-                return (action as Flee).CoinNum;
+                return (action as FleeAction).CoinNum;
             default:
                 return (action as BaseSkill).CoinNum;
         }

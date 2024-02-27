@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Move : BaseAction
+public class MoveAction : BaseAction
 {
     public void SetInfo(Creature owner)
     {
@@ -10,11 +10,12 @@ public class Move : BaseAction
         ActionTargetType = Define.ActionTargetType.Single;
     }
 
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell targetCell)
     {
-        if (cell.CellCreature != null)
+        if (targetCell.CellCreature != null)
             return;
         
-        Owner.OnMove(cell);
+        Managers.BattleMng.PlaceCreature(Owner, targetCell);
+        Owner.OnMove(targetCell);
     }
 }

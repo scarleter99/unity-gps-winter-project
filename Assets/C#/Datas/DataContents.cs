@@ -31,7 +31,7 @@ namespace Data
     }
 
     [Serializable]
-    public class HeroDataLoader : IData<int, HeroData>
+    public class HeroLoader : ILoader<int, HeroData>
     {
         public List<HeroData> heroes = new List<HeroData>();
 
@@ -56,7 +56,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterDataLoader : IData<int, MonsterData>
+    public class MonsterLoader : ILoader<int, MonsterData>
     {
         public List<MonsterData> monsters = new List<MonsterData>();
 
@@ -84,7 +84,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterSquadDataLoader : IData<int, MonsterSquadData>
+    public class MonsterSquadLoader : ILoader<int, MonsterSquadData>
     {
         public List<MonsterSquadData> monsterSquads = new List<MonsterSquadData>();
 
@@ -112,7 +112,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ItemDataLoader : IData<int, ItemData>
+    public class ItemLoader : ILoader<int, ItemData>
     {
         public List<ItemData> items = new List<ItemData>();
 
@@ -153,7 +153,7 @@ namespace Data
     }
 
     [Serializable]
-    public class WeaponDataLoader : IData<int, WeaponData>
+    public class WeaponLoader : ILoader<int, WeaponData>
     {
         public List<WeaponData> weapons = new List<WeaponData>();
 
@@ -176,7 +176,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ArmorDataLoader : IData<int, ArmorData>
+    public class ArmorLoader : ILoader<int, ArmorData>
     {
         public List<ArmorData> armors = new List<ArmorData>();
 
@@ -201,7 +201,7 @@ namespace Data
     }
 
     [Serializable]
-    public class SkillDataLoader : IData<int, SkillData>
+    public class SkillLoader : ILoader<int, SkillData>
     {
         public List<SkillData> skills = new List<SkillData>();
 
@@ -220,17 +220,17 @@ namespace Data
     [Serializable]
     public class AreaData
     {
-        public string name; // AreaName enum의 값과 같아야 함
-        public string basemap;
-        public int width;
-        public int height;
-        public int battleTileNum;
-        public int encounterTileNum;
-        public string mapPrefabPath;
+        public string Name; // AreaName enum의 값과 같아야 함
+        public string Basemap;
+        public int Width;
+        public int Height;
+        public int BattleTileNum;
+        public int EncounterTileNum;
+        public string MapPrefabPath;
     }
 
     [Serializable]
-    public class AreaDataSet : IData<Define.AreaName, AreaData>
+    public class AreaLoader : ILoader<Define.AreaName, AreaData>
     {
         public List<AreaData> areadatas = new();
 
@@ -239,17 +239,65 @@ namespace Data
             var dic = new Dictionary<Define.AreaName, AreaData>();
             foreach (AreaData areadata in areadatas)
             {   
-                if (Enum.TryParse(areadata.name, out Define.AreaName areaName))
+                if (Enum.TryParse(areadata.Name, out Define.AreaName areaName))
                 {   
                     dic.Add(areaName, areadata);
                 }
                 else
                 {
-                    Debug.LogError($"{areadata.name} - No such area name in enum!");
+                    Debug.LogError($"{areadata.Name} - AreaName is invalid!");
                 }
             }
             return dic; 
         }
     }
+    #endregion
+
+    #region QuestData
+
+    [Serializable]
+    public class QuestReward
+    {
+        public int RewardDataId;
+        public int Quantity;
+    }
+
+    [Serializable]
+    public class QuestData
+    {
+        public int DataId;
+        public string Name;
+        public string Description;
+
+        public string AreaName; // 퀘스트 수락 시 이동되는 Area. AreaName enum의 값과 같아야함.
+        public QuestReward[] Rewards;
+        public int[] UnlockQuestDataId; // 해당 퀘스트 완료 시 열리는 퀘스트의 DataId
+
+        public bool IsRepeatable; // 퀘스트 반복 가능 여부
+        public bool IsUnlocked; // 퀘스트 개방 여부
+        public bool IsComplete; // 퀘스트 완료 여부. 처음은 무조건 false.
+    }
+
+    [Serializable]
+    public class QuestDataLoader : ILoader<int, QuestData>
+    {
+        public List<QuestData> quests = new List<QuestData>();
+
+        public Dictionary<int, QuestData> MakeDict()
+        {
+            var dic = new Dictionary<int, QuestData>();
+            foreach (QuestData quest in quests)
+            {
+                if (!Enum.TryParse(quest.AreaName, out Define.AreaName areaName))
+                {
+                    Debug.LogError($"Quest {quest.DataId} - AreaName is invalid!");
+                    continue;
+                }
+                dic.Add(quest.DataId, quest);
+            }
+            return dic;
+        }
+    }
+
     #endregion
 }

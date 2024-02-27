@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SelectBag : BaseAction
+public class SelectBagAction : BaseAction
 {
     public void SetInfo(Creature owner)
     {
