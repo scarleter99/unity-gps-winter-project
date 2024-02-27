@@ -31,7 +31,7 @@ namespace Data
     }
 
     [Serializable]
-    public class HeroLoaderLoader : ILoader<int, HeroData>
+    public class HeroLoader : ILoader<int, HeroData>
     {
         public List<HeroData> heroes = new List<HeroData>();
 
@@ -56,7 +56,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterLoaderLoader : ILoader<int, MonsterData>
+    public class MonsterLoader : ILoader<int, MonsterData>
     {
         public List<MonsterData> monsters = new List<MonsterData>();
 
@@ -84,7 +84,7 @@ namespace Data
     }
 
     [Serializable]
-    public class MonsterSquadLoaderLoader : ILoader<int, MonsterSquadData>
+    public class MonsterSquadLoader : ILoader<int, MonsterSquadData>
     {
         public List<MonsterSquadData> monsterSquads = new List<MonsterSquadData>();
 
@@ -112,7 +112,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ItemLoaderLoader : ILoader<int, ItemData>
+    public class ItemLoader : ILoader<int, ItemData>
     {
         public List<ItemData> items = new List<ItemData>();
 
@@ -153,7 +153,7 @@ namespace Data
     }
 
     [Serializable]
-    public class WeaponLoaderLoader : ILoader<int, WeaponData>
+    public class WeaponLoader : ILoader<int, WeaponData>
     {
         public List<WeaponData> weapons = new List<WeaponData>();
 
@@ -176,7 +176,7 @@ namespace Data
     }
 
     [Serializable]
-    public class ArmorLoaderLoader : ILoader<int, ArmorData>
+    public class ArmorLoader : ILoader<int, ArmorData>
     {
         public List<ArmorData> armors = new List<ArmorData>();
 
@@ -201,7 +201,7 @@ namespace Data
     }
 
     [Serializable]
-    public class SkillLoaderLoader : ILoader<int, SkillData>
+    public class SkillLoader : ILoader<int, SkillData>
     {
         public List<SkillData> skills = new List<SkillData>();
 
@@ -230,7 +230,7 @@ namespace Data
     }
 
     [Serializable]
-    public class AreaLoaderSet : ILoader<Define.AreaName, AreaData>
+    public class AreaLoader : ILoader<Define.AreaName, AreaData>
     {
         public List<AreaData> areadatas = new();
 
@@ -279,7 +279,7 @@ namespace Data
     }
 
     [Serializable]
-    public class QuestDataLoader : IData<int, QuestData>
+    public class QuestDataLoader : ILoader<int, QuestData>
     {
         public List<QuestData> quests = new List<QuestData>();
 
