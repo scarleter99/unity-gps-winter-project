@@ -263,5 +263,8 @@ public class Define
     public const int MONSTERSQUAD_Squad1_ID = 501000;
     #endregion
 
+    #region Value
     public const float MOVE_SPEED = 5f;
+    #endregion
+    
 }

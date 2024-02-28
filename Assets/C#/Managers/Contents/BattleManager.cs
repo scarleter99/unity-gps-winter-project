@@ -18,7 +18,8 @@ public class BattleManager
             {
                 case Define.BattleState.SelectAction:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.SelectAction;
-                    TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
+                    if (CurrentTurnCreature.CreatureType == Define.CreatureType.Hero)
+                        TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
                     break;
                 case Define.BattleState.SelectTarget:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.SelectTarget;
@@ -27,7 +28,7 @@ public class BattleManager
                 case Define.BattleState.ActionProceed:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.ActionProceed;
                     if (CurrentTurnCreature.CurrentAction.ActionAttribute != Define.ActionAttribute.Move)
-                        ShowCoinToss?.Invoke(CurrentTurnCreature.CurrentAction, 50); // TODO - 바꾸기
+                        ShowCoinToss?.Invoke(CurrentTurnCreature.CurrentAction, 50);
                     break;
             }
         }
@@ -46,6 +47,10 @@ public class BattleManager
     public void Init()
     {
         TurnSystem = new TurnSystem();
+
+        TurnHeroUIChange = null;
+        ShowCoinToss = null;
+        TurnMonsterUIChange = null;
     }
     
     #region InitBattle

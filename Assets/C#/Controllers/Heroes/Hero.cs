@@ -42,6 +42,8 @@ public abstract class Hero : Creature
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
+
+        WeaponChange = null;
     }
     
     public override void SetInfo(int templateId)

@@ -24,15 +24,33 @@ public abstract class Monster : Creature
         CreatureStat = new MonsterStat(MonsterData);
     }
 
-    public override void DoAction()
+    public override void DoSelectAction()
     {
+        // TODO - Action 선택 알고리즘 구현
+        BaseSkill skill = new Strike();
+        skill.SetInfo(Define.SKILL_STRIKE_ID, this);
+        CurrentAction = skill;
+
+        Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
+    }
+    
+    public override void DoSelectTarget()
+    {
+        // TODO - Target Hero 선택 알고리즘 구현
         TargetCell = GetRandomHeroCell();
 
+        Managers.BattleMng.BattleState = Define.BattleState.ActionProceed;
+    }
+    
+    public override void DoAction()
+    {
         switch (CurrentAction.ActionAttribute)
         {
             case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
-                Debug.Log("AttackSkill");
+                break;
+            case Define.ActionAttribute.Move:
+                OnMove(TargetCell);
                 break;
         }
     }

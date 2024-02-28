@@ -60,12 +60,12 @@ public class UI_BattleOrder : UI_Base
     // TODO - 없으면 두번째 플레이부터 에러남, 이유 모르겠음
     private void OnDisable()
     {
-        Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
-        foreach (var pair in Managers.ObjectMng.Heroes)
-        {
-            var hero = pair.Value;
-            hero.WeaponChange -= BindSkills;
-        }
+        // Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
+        // foreach (var pair in Managers.ObjectMng.Heroes)
+        // {
+        //     var hero = pair.Value;
+        //     hero.WeaponChange -= BindSkills;
+        // }
     }
 
     public void EnableBattleOrderUI(Hero hero)
@@ -74,7 +74,7 @@ public class UI_BattleOrder : UI_Base
         BindSkills(hero);
     }
     
-    #region Action
+    #region DefaultAction
     private void BindDefaultActions(Hero hero)
     {
         ClearDefaultActionIcons();
