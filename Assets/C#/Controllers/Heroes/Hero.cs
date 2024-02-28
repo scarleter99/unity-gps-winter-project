@@ -14,24 +14,7 @@ public abstract class Hero : Creature
 
     public SelectBagAction SelectBagAction { get; protected set; }
     public Bag Bag { get; protected set; }
-    public override Define.CreatureBattleState CreatureBattleState
-    {
-        get => base.CreatureBattleState;
-        set
-        {
-            switch (value)
-            {
-                case Define.CreatureBattleState.Wait:
-                    break;
-                case Define.CreatureBattleState.Action:
-                    // TODO - Battle Ui 가시화
-                    break;
-                case Define.CreatureBattleState.Dead:
-                    break;
-            }
-        }
-    }
-
+    
     [CanBeNull]
     public Weapon Weapon { get; protected set; }
     public Define.WeaponType? WeaponType => Weapon?.WeaponType;

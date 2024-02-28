@@ -16,8 +16,26 @@ public abstract class Creature : MonoBehaviour
 
     public MoveAction MoveAction { get; protected set; }
     public FleeAction FleeAction { get; protected set; }
+
+    private Define.CreatureBattleState _creatureBattleState;
     
-    public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
+    public Define.CreatureBattleState CreatureBattleState
+    {
+        get => _creatureBattleState;
+        set
+        {
+            switch (value)
+            {
+                case Define.CreatureBattleState.Wait:
+                    break;
+                case Define.CreatureBattleState.Action:
+                    DoSelectAction();
+                    break;
+                case Define.CreatureBattleState.Dead:
+                    break;
+            }
+        }
+    }
     
     public BattleGridCell Cell { get; set; }
 
@@ -59,10 +77,15 @@ public abstract class Creature : MonoBehaviour
         CreatureStat = statStruct;
     }
     
-    // 턴제에서 본인 턴일 때 사용할 함수
-    public virtual void DoAction(BattleGridCell cell)
+    public virtual void DoSelectAction()
     {
-        TargetCell = cell;
+        // TODO - UI로 Action 선택
+    }
+    
+    public virtual void DoAction()
+    {
+        TargetCell = Managers.BattleMng.CurrentMouseOverCell;
+
         switch (CurrentAction.ActionAttribute)
         {
             case Define.ActionAttribute.AttackSkill:

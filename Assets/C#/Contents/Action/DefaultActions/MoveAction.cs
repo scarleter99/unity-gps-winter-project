@@ -15,7 +15,7 @@ public class MoveAction : BaseAction
         if (targetCell.CellCreature != null)
             return;
         
-        Managers.BattleMng.PlaceCreature(Owner, targetCell);
-        Owner.OnMove(targetCell);
+        Managers.BattleMng.MoveCreature(Owner, targetCell);
+        Owner.LerpToTargetCell(targetCell);
     }
 }
