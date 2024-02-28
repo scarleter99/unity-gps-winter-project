@@ -16,6 +16,7 @@ public class UI_BattleScene : UI_Scene
 
 		Bind<UI_Base>(typeof(SubItemUI));
 
-		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).OnSelectedSkillChanged += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).SetStatType;
+		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).SelectedActionChange += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ChangeVisibility;
+		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).SelectedActionClick += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ShowTossResult;
     }
 }

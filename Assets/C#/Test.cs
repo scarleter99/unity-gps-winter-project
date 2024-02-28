@@ -14,11 +14,12 @@ public class Test : MonoBehaviour
 
     private void OnKeyboardClick()
     {
-        Hero hero = Managers.ObjectMng.Heroes[Managers.ObjectMng.NextHeroId - 1];
-        
+        //Hero hero = Managers.ObjectMng.Heroes[Managers.ObjectMng.NextHeroId - 1];
+        Hero hero = Managers.BattleMng.CurrentTurnCreature as Hero;
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            BaseItem item = hero.Bag.StoreItem(Define.ITEM_HEALPORTION_ID);
+            BaseItem item = hero.Bag.StoreItem(Define.ITEM_HEALPOTION_ID);
             Debug.Log($"{item.ItemData.Name}: {item.Count}");
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -55,13 +56,6 @@ public class Test : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
             hero.MoveAction.HandleAction(Managers.BattleMng.HeroGrid[1, 1]);
-        }
-        else if (Input.GetKeyDown(KeyCode.T))
-        {
-            // TargetCreature = GameObject.Find("@Monsters").transform.GetChild(0).GetComponent<Creature>();
-            // AnimState = Define.AnimState.Attack;
-            // CurrentAction = new Strike();
-            // CurrentAction.Owner = this;
         }
     }
 }

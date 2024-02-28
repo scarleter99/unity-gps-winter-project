@@ -3,6 +3,7 @@
     {
       "DataId": 401000,
       "Name": "Strike",
+      "Description": "Basic Melee Strike Attack",
       "CoinNum": 3,
       "ReducedStat": 0
     }

@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
-
-public class Strike : BaseSkill
+﻿public class Strike : BaseSkill
 {
-    public void SetInfo(int templateId, Creature owner)
+    public override void SetInfo(int templateId, Creature owner)
     {
-        ActionAttribute = Define.ActionAttribute.JumpAttack;
+        ActionAttribute = Define.ActionAttribute.AttackSkill;
         ActionTargetType = Define.ActionTargetType.Single;
         
         base.SetInfo(templateId, owner);

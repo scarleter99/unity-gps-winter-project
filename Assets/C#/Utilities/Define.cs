@@ -120,12 +120,18 @@ public class Define
     public enum ActionAttribute
     {
         None,
-        JumpAttack,
-        MoveAttack,
-        RangedAttack,
-        Buff,
-        Heal,
-        Move
+        TauntSkill,
+        AttackSkill,
+        BuffSkill,
+        DebuffSkill,
+        HealSkill,
+        HealItem,
+        BuffItem,
+        DebuffItem,
+        AttackItem,
+        Move,
+        Flee,
+        SelectBag
     }
     
     public enum GridSide
@@ -249,7 +255,7 @@ public class Define
     public const int ARMOR_SAMPLEBODY1_ID = 202000;
     public const int ARMOR_SAMPLEBODY2_ID = 202001;
 
-    public const int ITEM_HEALPORTION_ID = 301000;
+    public const int ITEM_HEALPOTION_ID = 301000;
     
     public const int SKILL_STRIKE_ID = 401000;
 

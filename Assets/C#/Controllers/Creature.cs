@@ -15,6 +15,7 @@ public abstract class Creature : MonoBehaviour
     public IStat CreatureStat { get; protected set; }
 
     public MoveAction MoveAction { get; protected set; }
+    public FleeAction FleeAction { get; protected set; }
 
     private Define.CreatureBattleState _creatureBattleState;
     
@@ -41,7 +42,7 @@ public abstract class Creature : MonoBehaviour
     public BaseAction CurrentAction { get; set; }
     public BattleGridCell TargetCell { get; protected set; }
 
-    private void Start()
+    private void Awake()
     {
         Init();
     }
@@ -51,6 +52,8 @@ public abstract class Creature : MonoBehaviour
         Animator = GetComponent<Animator>();
         MoveAction = new MoveAction();
         MoveAction.SetInfo(this);
+        FleeAction = new FleeAction();
+        FleeAction.SetInfo(this);
     }
     
     // 수동 실행
@@ -85,16 +88,19 @@ public abstract class Creature : MonoBehaviour
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.JumpAttack:
+            case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
-                Debug.Log("JumpAttack");
+                break;
+            case Define.ActionAttribute.Move:
+                OnHandleAction();
                 break;
         }
     }
     
     #region AnimationControl
+    
     // 공격하기 전 접근 단계에서 사용
-    protected Define.ApproachType _approachType;
+    public Define.ApproachType ApproachType { get; set; }
     protected Vector3 _comebackPos;
     protected bool _moveDOTriggered;
     [SerializeField] protected Vector3 _approachOffset;
@@ -176,7 +182,7 @@ public abstract class Creature : MonoBehaviour
         _comebackPos = transform.position;
         _moveDOTriggered = false;
         
-        switch (_approachType)
+        switch (ApproachType)
         {
             case Define.ApproachType.Jump:
                 Animator.SetBool(_hashbJump, true);
@@ -209,15 +215,16 @@ public abstract class Creature : MonoBehaviour
             case Define.AnimState.Die:
                 _stringDie.Append(index.ToString());
                 Animator.Play(_stringDie.ToString());
-                _stringDie.Remove(_stringDie.Length - 2, 1);
+                _stringDie.Remove(_stringDie.Length - 1, 1);
                 break;
             case Define.AnimState.Hit:
                 _stringHit.Append(index.ToString());
                 Animator.Play(_stringHit.ToString());
-                _stringHit.Remove(_stringHit.Length - 2, 1);
+                _stringHit.Remove(_stringHit.Length - 1, 1);
                 break;
         }
     }
+    
     #endregion
 
     #region Event
@@ -228,7 +235,7 @@ public abstract class Creature : MonoBehaviour
         
         TargetCell = null;
         
-        Managers.BattleMng.NextTurn();
+        //Managers.BattleMng.NextTurn();
     }
 
     public void OnApproachStart()
@@ -236,7 +243,7 @@ public abstract class Creature : MonoBehaviour
         if (!_moveDOTriggered)
         {
             _moveDOTriggered = true;
-            float duration = _approachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
+            float duration = ApproachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
             if (Animator.GetBool(_hashbAttack))
             {
                 transform.DOMove(_comebackPos, duration)
@@ -273,7 +280,7 @@ public abstract class Creature : MonoBehaviour
     
     public void OnDead()
     {
-          CreatureBattleState = Define.CreatureBattleState.Dead;
+        CreatureBattleState = Define.CreatureBattleState.Dead;
         AnimState = Define.AnimState.Die;
     }
 
@@ -284,9 +291,12 @@ public abstract class Creature : MonoBehaviour
         // TODO - 회복 애니메이션 실행
     }
 
-    public void LerpToTargetCell(BattleGridCell targetCell)
+    public void OnMove(BattleGridCell cell)
     {
-        StartCoroutine("CoLerpToCell", targetCell);
+        Managers.BattleMng.ReplaceCreature(this, cell);
+        Cell = cell;
+        
+        StartCoroutine("CoLerpToCell", cell);
     }
     #endregion
     
@@ -294,6 +304,7 @@ public abstract class Creature : MonoBehaviour
     {
         while ((transform.position - cell.transform.position).magnitude > 0.001)
         {
+            //Debug.Log((transform.position - cell.transform.position).magnitude);
             //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
             transform.position = Vector3.MoveTowards(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
 

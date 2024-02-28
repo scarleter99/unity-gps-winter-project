@@ -6,7 +6,7 @@ public abstract class BaseSkill : BaseAction
     public int CoinNum { get; protected set; }
     public int ReducedStat { get; protected set; }
 
-    public void SetInfo(int templateId, Creature owner)
+    public virtual void SetInfo(int templateId, Creature owner)
     {
         DataId = templateId;
         SkillData = Managers.DataMng.SkillDataDict[templateId];

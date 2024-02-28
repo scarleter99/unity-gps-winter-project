@@ -96,5 +96,9 @@ public abstract class UI_Base : MonoBehaviour
 
         evt.OnClickHandler = null;
         evt.OnDragHandler = null;
+        evt.OnEnterHandler = null;
+        evt.OnExitHandler = null;
+        evt.OnStayHandler = null;
+        evt.OnDoubleClickHandler = null;
     }
 }
