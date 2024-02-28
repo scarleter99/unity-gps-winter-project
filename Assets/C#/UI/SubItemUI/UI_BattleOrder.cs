@@ -75,7 +75,6 @@ public class UI_BattleOrder : UI_Base
     }
     
     #region Action
-    
     private void BindDefaultActions(Hero hero)
     {
         ClearDefaultActionIcons();
@@ -131,22 +130,21 @@ public class UI_BattleOrder : UI_Base
 
             void UseAction(PointerEventData eventData)
             {
-                var battleMng = Managers.BattleMng;
-                battleMng.CurrentTurnCreature.CurrentAction = action;
+                Managers.BattleMng.CurrentTurnCreature.CurrentAction = action;
 
                 // Flee, SelectBag 만 이쪽에서 핸들링, 나머지는 BattleManager BattleState set에서 관리
                 // TODO - Flee, SelectBag 핸들링도 BattleManager로 넘기는 쪽이 깔끔해보임
                 switch (action.ActionAttribute)
                 {
                     case Define.ActionAttribute.Flee:
-                        battleMng.CurrentTurnCreature.DoAction(battleMng.CurrentTurnCreature.TargetCell);
+                        //Managers.BattleMng.CurrentTurnCreature.DoAction();
                         break;
                     case Define.ActionAttribute.SelectBag:
                         // TODO - Item UI 띄우기
                         Debug.Log("SelectBag Clicked!");
                         break;
                     case Define.ActionAttribute.Move:
-                        battleMng.BattleState = Define.BattleState.SelectTarget;
+                        Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
                         break;
                 }
                 

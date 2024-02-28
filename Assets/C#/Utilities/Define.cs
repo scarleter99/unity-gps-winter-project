@@ -147,7 +147,9 @@ public class Define
     public enum CreatureBattleState
     {
         Wait,
-        Action,
+        SelectAction,
+        SelectTarget,
+        ActionProceed,
         Dead
     }
     
@@ -168,7 +170,6 @@ public class Define
     public enum BattleState
     {
         Init,
-        MonsterTurn,
         SelectAction,
         SelectTarget,
         ActionProceed,
