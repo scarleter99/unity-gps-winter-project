@@ -32,6 +32,7 @@ namespace Data
 
     [Serializable]
     public class HeroDataLoader : ILoader<int, HeroData>
+
     {
         public List<HeroData> heroes = new List<HeroData>();
 
@@ -57,6 +58,7 @@ namespace Data
 
     [Serializable]
     public class MonsterDataLoader : ILoader<int, MonsterData>
+
     {
         public List<MonsterData> monsters = new List<MonsterData>();
 
@@ -154,6 +156,7 @@ namespace Data
 
     [Serializable]
     public class WeaponDataLoader : ILoader<int, WeaponData>
+
     {
         public List<WeaponData> weapons = new List<WeaponData>();
 
