@@ -37,28 +37,13 @@ public class BattleManager
     public void Init()
     {
         TurnSystem = new TurnSystem();
-        
-        Managers.InputMng.MouseAction -= HandleMouseInput;
-        Managers.InputMng.MouseAction += HandleMouseInput;
-    }
-    
-    private void HandleMouseInput(Define.MouseEvent mouseEvent)
-    {
-        switch (mouseEvent)
-        {
-            case Define.MouseEvent.Click:
-                if (BattleState == Define.BattleState.SelectTarget && OnMouseOverCell())
-                    OnClickGridCell();
-                break;
-            case Define.MouseEvent.Hover:
-                OnMouseOverCell();
-                break;
-        }
     }
     
     #region InitBattle
     public void InitBattle(int monsterSquadDataId)
     {
+        Managers.InputMng.MouseAction += HandleMouseInput;
+        
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
@@ -107,7 +92,7 @@ public class BattleManager
     {
         Hero hero = Managers.ObjectMng.Heroes[heroId];
         
-        PlaceCreature(hero, targetCell, true);
+        MoveCreature(hero, targetCell, true);
 
         return hero;
     }
@@ -120,7 +105,7 @@ public class BattleManager
         currentRotation.y += 180f;
         monster.transform.rotation = Quaternion.Euler(currentRotation);
         
-        PlaceCreature(monster, targetCell, true);
+        MoveCreature(monster, targetCell, true);
         
         return monster;
     }
@@ -136,34 +121,22 @@ public class BattleManager
             turns[turnNum++] = id;
         
         TurnSystem.Init(turns);
+        // TODO - 디버깅 코드
+        Debug.Log(turns);
     }
     #endregion
 
-    #region Battle
-    public void PlaceCreature(Creature creature, BattleGridCell targetCell, bool isPlace = false)
+    #region Input
+    private void HandleMouseInput(Define.MouseEvent mouseEvent)
     {
-        if (creature.Cell != null)
-            creature.Cell.CellCreature = null;
-        
-        targetCell.CellCreature = creature;
-        creature.Cell = targetCell;
-
-        if (isPlace)
-            creature.transform.position = targetCell.transform.position;
-    }
-    
-    public void NextTurn(bool isInit = false)
-    {
-        if (isInit == false)
-            TurnSystem.NextTurn();
-        
-        switch (CurrentTurnCreature.CreatureType)
+        switch (mouseEvent)
         {
-            case Define.CreatureType.Hero:
-                BattleState = Define.BattleState.SelectAction;
+            case Define.MouseEvent.Hover:
+                OnMouseOverCell();
                 break;
-            case Define.CreatureType.Monster:
-                BattleState = Define.BattleState.MonsterTurn;
+            case Define.MouseEvent.Click:
+                if (BattleState == Define.BattleState.SelectTarget && OnMouseOverCell())
+                    OnClickGridCell();
                 break;
         }
     }
@@ -198,10 +171,41 @@ public class BattleManager
             return;
         
         Hero currentTurnHero = CurrentTurnCreature as Hero;
-        if (currentTurnHero != null) 
-            currentTurnHero.DoAction(CurrentMouseOverCell);
+        if (currentTurnHero != null)
+            currentTurnHero.CreatureBattleState = Define.CreatureBattleState.Action;
         else
             Debug.Log("No currentTurnHero!");
+    }
+
+    #endregion
+    
+    #region Battle
+    public void MoveCreature(Creature creature, BattleGridCell targetCell, bool isPlace = false)
+    {
+        if (creature.Cell != null)
+            creature.Cell.CellCreature = null;
+        
+        targetCell.CellCreature = creature;
+        creature.Cell = targetCell;
+
+        if (isPlace)
+            creature.transform.position = targetCell.transform.position;
+    }
+    
+    public void NextTurn(bool isInit = false)
+    {
+        if (isInit == false)
+            TurnSystem.NextTurn();
+        
+        switch (CurrentTurnCreature.CreatureType)
+        {
+            case Define.CreatureType.Hero:
+                BattleState = Define.BattleState.SelectAction;
+                break;
+            case Define.CreatureType.Monster:
+                BattleState = Define.BattleState.MonsterTurn;
+                break;
+        }
     }
     
     public Creature GetCreatureByRowCol(int row, int col, Define.GridSide gridSide)
@@ -216,4 +220,9 @@ public class BattleManager
         }
     }
     #endregion
+
+    public void EndBattle()
+    {
+        Managers.InputMng.MouseAction -= HandleMouseInput;
+    }
 }

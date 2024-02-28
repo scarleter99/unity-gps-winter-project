@@ -5,24 +5,6 @@ public abstract class Monster : Creature
 {
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
-
-    public override Define.CreatureBattleState CreatureBattleState
-    {
-        get => base.CreatureBattleState;
-        set
-        {
-            switch (value)
-            {
-                case Define.CreatureBattleState.Wait:
-                    break;
-                case Define.CreatureBattleState.Action:
-                    DoAction(GetRandomHero().Cell);
-                    break;
-                case Define.CreatureBattleState.Dead:
-                    break;
-            }
-        }
-    }
     
     protected override void Init()
     {
@@ -41,13 +23,26 @@ public abstract class Monster : Creature
         
         CreatureStat = new MonsterStat(MonsterData);
     }
+
+    public override void DoAction()
+    {
+        TargetCell = GetRandomHeroCell();
+
+        switch (CurrentAction.ActionAttribute)
+        {
+            case Define.ActionAttribute.JumpAttack:
+                AnimState = Define.AnimState.Attack;
+                Debug.Log("JumpAttack");
+                break;
+        }
+    }
     
-    Hero GetRandomHero()
+    BattleGridCell GetRandomHeroCell()
     {
         List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
         ulong randomKey = keysList[Random.Range(0, keysList.Count)];
 
-        return Managers.ObjectMng.Heroes[randomKey];
+        return Managers.ObjectMng.Heroes[randomKey].Cell;
     }
 
     /*----------------------

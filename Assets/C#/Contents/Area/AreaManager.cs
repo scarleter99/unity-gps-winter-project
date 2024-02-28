@@ -52,14 +52,13 @@ public class AreaManager
 
     private Vector2[] HERO_SPAWN_POSITION_OFFSET = new[]
         { new Vector2(0, 0.75f), new Vector2(-0.75f, -0.75f), new Vector2(0.75f, -0.75f) };
-
-
+    
     public void Init()
     {
         // TODO: 게임 시작 씬에서 Init할 코드 작성
     }
 
-    // 마을을 통해 AreaScene으로 오면 호출
+    #region InitArea
     public void InitArea()
     {
         GenerateMap();
@@ -77,35 +76,7 @@ public class AreaManager
         _light = GameObject.FindGameObjectWithTag("AreaLight");
 
     }
-
-    private void HandleMouseInput(MouseEvent mouseEvent)
-    {   
-        if (AreaState != AreaState.Idle || !GetMouseoverCell())
-        {
-            return;
-        }
-        switch (mouseEvent)
-        {
-            case MouseEvent.PointerUp:
-                OnMouseLeftClick.Invoke();
-                break;
-            case MouseEvent.Hover:
-                _grid.HandleMouseHover(_currentMouseoverPosition);
-                break;
-        }
-    }
-
-    private void SelectDestinationTile()
-    {
-        if (_grid.IsNeighbor(_currentPlayerPosition, _currentMouseoverPosition))
-        {   
-            _grid.GetGridPosition(_currentMouseoverPosition, out int x, out int z);
-            AreaState = AreaState.Moving;
-            _grid.ChangeNeighborTilesColor(_currentPlayerPosition, TileColorChangeType.Reset);
-            MovePlayers( _grid.GetWorldPosition(x, z) + new Vector3(0, 1.02f,0));
-        }
-    }
-
+    
     private void GenerateMap()
     {
         AreaGenerator areaGenerator = new AreaGenerator(AreaName, new Vector3(100, 0, 100));
@@ -126,7 +97,33 @@ public class AreaManager
         }
 
     }
+    
+    private void InitCamera()
+    {
+        _cameraController = Managers.ResourceMng.Instantiate("Area/AreaCamera");
+        _cameraController.transform.position = new Vector3(_currentPlayerPosition.x, 50, _currentPlayerPosition.z - 40);
+        _areaCamera = _cameraController.transform.GetComponentInChildren<Camera>();
+    }
+    #endregion
 
+    #region Input
+    private void HandleMouseInput(MouseEvent mouseEvent)
+    {   
+        if (AreaState != AreaState.Idle || !GetMouseoverCell())
+        {
+            return;
+        }
+        switch (mouseEvent)
+        {
+            case MouseEvent.PointerUp:
+                OnMouseLeftClick.Invoke();
+                break;
+            case MouseEvent.Hover:
+                _grid.HandleMouseHover(_currentMouseoverPosition);
+                break;
+        }
+    }
+    
     private bool GetMouseoverCell()
     {
         Ray ray = _areaCamera.ScreenPointToRay(Input.mousePosition);
@@ -139,7 +136,20 @@ public class AreaManager
         }
         return false;
     }
+    
+    private void SelectDestinationTile()
+    {
+        if (_grid.IsNeighbor(_currentPlayerPosition, _currentMouseoverPosition))
+        {   
+            _grid.GetGridPosition(_currentMouseoverPosition, out int x, out int z);
+            AreaState = AreaState.Moving;
+            _grid.ChangeNeighborTilesColor(_currentPlayerPosition, TileColorChangeType.Reset);
+            MovePlayers( _grid.GetWorldPosition(x, z) + new Vector3(0, 1.02f,0));
+        }
+    }
+    #endregion
 
+    #region Explore
     private void MovePlayers(Vector3 destination)
     {
         Sequence moveSequence = DOTween.Sequence();
@@ -159,14 +169,7 @@ public class AreaManager
             _currentTile.OnTileEnter();
         });
     }
-
-    private void InitCamera()
-    {
-        _cameraController = Managers.ResourceMng.Instantiate("Area/@AreaCameraController");
-        _cameraController.transform.position = new Vector3(_currentPlayerPosition.x, 50, _currentPlayerPosition.z - 40);
-        _areaCamera = _cameraController.transform.GetComponentInChildren<Camera>();
-    }
-
+    
     // OnBattleSceneLoadStart에 포함되지 않은 이유: 밑의 전투씬 전환 시 흐름 참조
     // 카메라 정지 -> 로딩화면 Fade in -> Area의 빛, 카메라 비활성화 (OnBattleSceneLoadStart) -> 배틀 씬 로딩 시작 및 완료 -> 로딩화면 Fade out
     public void FreezeCamera()
@@ -214,4 +217,5 @@ public class AreaManager
         _suddendeathCount++;
         AreaState = AreaState.Idle;
     }
+    #endregion
 }
