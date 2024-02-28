@@ -54,7 +54,6 @@ public abstract class Hero : Creature
     }
 
     #region Action
-
     private bool NeedsInvoke(out int percent)
     {
         switch (CurrentAction.ActionAttribute)
@@ -93,7 +92,6 @@ public abstract class Hero : Creature
 
         return true;
     }
-    
     #endregion
     
     // TODO - Data Id로 무기 및 아머를 장착하도록 구현

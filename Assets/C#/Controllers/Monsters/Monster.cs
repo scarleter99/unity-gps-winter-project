@@ -30,9 +30,9 @@ public abstract class Monster : Creature
 
         switch (CurrentAction.ActionAttribute)
         {
-            case Define.ActionAttribute.JumpAttack:
+            case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
-                Debug.Log("JumpAttack");
+                Debug.Log("AttackSkill");
                 break;
         }
     }
