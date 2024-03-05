@@ -151,7 +151,7 @@ public class BattleManager
         foreach (ulong id in Managers.ObjectMng.Monsters.Keys)
             turns[turnNum++] = id;
         
-        TurnSystem.Init(turns);
+        TurnSystem.Init(turns, turnNum);
     }
     #endregion
 
@@ -185,7 +185,10 @@ public class BattleManager
     public void NextTurn(bool isInit = false)
     {
         if (isInit == false)
+        {
             TurnSystem.NextTurn();
+            Managers.UIMng.GetUIComponent<UI_TurnState>().ChangeTurnStateUI();
+        }
         
         switch (CurrentTurnCreature.CreatureType)
         {

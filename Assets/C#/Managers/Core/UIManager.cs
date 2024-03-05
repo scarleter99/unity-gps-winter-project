@@ -68,6 +68,19 @@ public class UIManager
         
         return popupUI;
     }
+    
+    // T 타입의 UI 컴포넌트를 반환
+    public T GetUIComponent<T>() where T: UI_Base
+    {
+        if (_sceneUI == null)
+        {
+            Debug.Log("SceneUI is null!"); 
+            return null;
+        }
+         
+        T ui = Util.FindChild<T>(_sceneUI.gameObject, recursive: true);
+        return ui;
+    }
 
     // 이름이 name인 SubItemUI를 생성한 후 T컴포넌트로 반환
     public T MakeSubItemUI<T>(Transform parent = null, string name = null) where T : UI_Base
@@ -76,7 +89,7 @@ public class UIManager
             name = typeof(T).Name;
 
         GameObject go = Managers.ResourceMng.Instantiate($"UI/SubItemUI/{name}");
-        RectTransform rectTransform = go.GetComponent<RectTransform>();
+        RectTransform   rectTransform = go.GetComponent<RectTransform>();
         if (parent != null)
         {
             // 부모 설정 후 스케일 변하는거 방지
