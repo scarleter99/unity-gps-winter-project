@@ -10,7 +10,7 @@ public class HealPotion : BaseItem
         base.SetInfo(templateId, owner, bag, idx, addNum);
     }
 
-    public override void HandleAction(BattleGridCell targetCell)
+    public override void HandleAction(BattleGridCell targetCell, int coinHeadNum)
     {
         if (targetCell.CellCreature == null)
             return;
@@ -18,6 +18,6 @@ public class HealPotion : BaseItem
         Creature targetCreature = targetCell.CellCreature;
         targetCreature.OnHeal(ItemData.Heal);
         
-        base.HandleAction(targetCell);
+        base.HandleAction(targetCell, coinHeadNum);
     }
 }

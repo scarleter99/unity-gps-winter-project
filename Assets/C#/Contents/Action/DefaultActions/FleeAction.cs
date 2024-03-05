@@ -13,7 +13,7 @@ public class FleeAction : BaseAction
         CoinNum = 3;
     }
 
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell cell, int coinHeadNum)
     {
         // TODO - 구현
         Debug.Log("Flee Debug");

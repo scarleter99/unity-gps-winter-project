@@ -5,6 +5,7 @@ using UnityEngine;
 
 public abstract class Hero : Creature
 {
+    #region Field
     public Data.HeroData HeroData => CreatureData as Data.HeroData;
     public HeroStat HeroStat => (HeroStat)CreatureStat;
 
@@ -15,12 +16,10 @@ public abstract class Hero : Creature
     public SelectBagAction SelectBagAction { get; protected set; }
     public Bag Bag { get; protected set; }
     
-    [CanBeNull]
     public Weapon Weapon { get; protected set; }
     public Define.WeaponType? WeaponType => Weapon?.WeaponType;
     public Dictionary<Define.ArmorType, Armor> Armors { get; protected set; }
-
-    public event Action<Hero> WeaponChange;
+    #endregion
     
     protected override void Init()
     {
@@ -32,6 +31,7 @@ public abstract class Hero : Creature
 
         SelectBagAction = new SelectBagAction();
         SelectBagAction.SetInfo(this);
+        
         Bag = new Bag();
         Bag.SetInfo();
         Bag.Owner = this;
@@ -42,8 +42,6 @@ public abstract class Hero : Creature
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
-
-        WeaponChange = null;
     }
     
     public override void SetInfo(int templateId)
@@ -51,10 +49,44 @@ public abstract class Hero : Creature
         CreatureType = Define.CreatureType.Hero;
         
         base.SetInfo(templateId);
-        
-        CreatureStat = new HeroStat(HeroData);
     }
 
+    #region Battle
+    public override void DoSelectAction()
+    {
+        ((UI_BattleScene)Managers.UIMng.SceneUI).BattleOrderUI.InitTurn();
+    }
+    
+    public override void DoSelectTarget()
+    {
+        
+    }
+    
+    public override void DoAction()
+    {
+        TargetCell = Managers.BattleMng.CurrentMouseOverCell;
+        
+        CoinHeadNum = 0;
+        CoinHeadNum = CurrentAction.CoinToss();
+        ((UI_BattleScene)Managers.UIMng.SceneUI).CoinTossUI.ShowCoinToss(CurrentAction, CoinHeadNum);
+        
+        switch (CurrentAction.ActionAttribute)
+        {
+            case Define.ActionAttribute.AttackSkill:
+                AnimState = Define.AnimState.Attack;
+                break;
+            case Define.ActionAttribute.Move:
+                OnMove(TargetCell);
+                break;
+        }
+    }
+
+    public override void DoEndTrun()
+    {
+        ((UI_BattleScene)Managers.UIMng.SceneUI).BattleOrderUI.EndTurn();
+    }
+    #endregion
+    
     #region Action
     private bool NeedsInvoke(out int percent)
     {
@@ -115,10 +147,10 @@ public abstract class Hero : Creature
         
         Weapon = equippingWeapon;
         HeroStat.AttachEquipment(Weapon.EquipmentData);
+        HeroStat.Attack += 1;
         Weapon.Equip(this);
         ChangeWeaponVisibility(true);
         ChangeAnimator();
-        WeaponChange?.Invoke(this);
     }
     
     public void UnEquipWeapon()
