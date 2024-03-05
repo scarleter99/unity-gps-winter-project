@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// TEST CODE
+// TODO - TEST CODE
 public class Test : MonoBehaviour
 {
     private void Start()
@@ -14,7 +14,7 @@ public class Test : MonoBehaviour
 
     private void OnKeyboardClick()
     {
-        //Hero hero = Managers.ObjectMng.Heroes[Managers.ObjectMng.NextHeroId - 1];
+        // Hero hero = Managers.ObjectMng.Heroes[Managers.ObjectMng.NextHeroId - 1];
         Hero hero = Managers.BattleMng.CurrentTurnCreature as Hero;
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -55,7 +55,7 @@ public class Test : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            hero.MoveAction.HandleAction(Managers.BattleMng.HeroGrid[1, 1]);
+            hero.MoveAction.HandleAction(Managers.BattleMng.HeroGrid[1, 1], 0);
         }
     }
 }

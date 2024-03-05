@@ -9,7 +9,7 @@ public class SelectBagAction : BaseAction
         ActionAttribute = Define.ActionAttribute.SelectBag;
     }
 
-    public override void HandleAction(BattleGridCell cell)
+    public override void HandleAction(BattleGridCell cell, int coinHeadNum)
     {
         
     }

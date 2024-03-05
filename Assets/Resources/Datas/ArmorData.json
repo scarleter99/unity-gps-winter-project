@@ -3,14 +3,14 @@
     {
       "DataId": 202000,
       "Name": "SampleBody1",
-      "Defense": 200,
+      "Defense": 2,
       "ArmorIndex": 5
     },
     {
       "DataId": 202001,
       "Name": "SampleBody2",
-      "Defense": 6,
-      "Speed": 10,
+      "Defense": 1,
+      "Dexterity": 1,
       "ArmorIndex": 6
     }
   ]

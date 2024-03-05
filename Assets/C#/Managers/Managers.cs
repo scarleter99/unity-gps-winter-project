@@ -5,11 +5,13 @@ using UnityEngine;
 
 public class Managers : MonoBehaviour
 {
-    public static bool Initialized { get; set; } = false;
+    public static bool Initialized { get; set; }
     
     private static Managers s_instance;
     public static Managers Instance { get { Init(); return s_instance; } }
 
+    public static bool InitComplete = false;
+    
     #region Contents
     private ObjectManager _objectMng = new ObjectManager();
     private BattleManager _battleMng = new BattleManager();
@@ -42,7 +44,7 @@ public class Managers : MonoBehaviour
     public static ServerManager ServerMng => Instance._serverMng;
     #endregion
 
-    static void Init()
+    public static void Init()
     {
         if (s_instance == null || Initialized == false)
         {

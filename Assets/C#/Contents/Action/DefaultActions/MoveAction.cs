@@ -10,7 +10,7 @@ public class MoveAction : BaseAction
         ActionTargetType = Define.ActionTargetType.Single;
     }
     
-    public override void HandleAction(BattleGridCell targetCell)
+    public override void HandleAction(BattleGridCell targetCell, int coinHeadNum)
     {
         if (targetCell.CellCreature != null)
             return;

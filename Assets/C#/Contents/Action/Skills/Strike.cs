@@ -8,12 +8,12 @@
         base.SetInfo(templateId, owner);
     }
     
-    public override void HandleAction(BattleGridCell targetCell)
+    public override void HandleAction(BattleGridCell targetCell, int coinHeadNum)
     {
         if (targetCell.CellCreature == null)
             return;
         
         Creature targetCreature = targetCell.CellCreature;
-        targetCreature.OnDamage(Owner.CreatureStat.Attack, 1);
+        targetCreature.OnDamage(Owner.CreatureStat.Attack * (coinHeadNum / CoinNum), 1);
     }
 }
