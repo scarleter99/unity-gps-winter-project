@@ -7,14 +7,14 @@ public class Define
         Hero,
         Monster,
     }
-    
+
     public enum EquipmentType
     {
         None,
         Weapon,
         Armor,
     }
-    
+
     public enum WeaponType
     {
         NoWeapon,
@@ -26,7 +26,7 @@ public class Define
         TwoHandedSword,
         Wand,
     }
-    
+
     public enum ArmorType
     {
         None,
@@ -36,7 +36,7 @@ public class Define
         HeadAccessory,
         Helmet,
     }
-    
+
     public enum ItemType
     {
         None,
@@ -46,8 +46,6 @@ public class Define
         Recover,
     }
     
-    
-    
     public enum ActionTargetType
     {
         Single,
@@ -55,16 +53,16 @@ public class Define
         Horizontal,
         Vertical,
     }
-    
+
     public enum ApproachType
     {
         InPlace,
         Jump,
         Move,
     }
-    
+
     public enum AreaTileType
-    {   
+    {
         Invalid,
         Obstacle,
         Empty,
@@ -75,12 +73,12 @@ public class Define
         Boss,
         Destroyed
     }
-    
+
     public enum QuestRewardType
     {
         Money,
     }
-    
+
     // public enum SceneType
     public enum SceneType
     {
@@ -92,7 +90,7 @@ public class Define
         TitleScene,
         TownScene,
     }
-    
+
     // public enum SoundType
     public enum SoundType
     {
@@ -101,7 +99,7 @@ public class Define
         MaxCount,
     }
     #endregion
-    
+
     #region Attribute
     public enum Stat
     {
@@ -116,7 +114,7 @@ public class Define
         Vitality,
         Dexterity,
     }
-    
+
     public enum ActionAttribute
     {
         None,
@@ -133,16 +131,14 @@ public class Define
         Flee,
         SelectBag
     }
-    
+
     public enum GridSide
     {
         HeroSide,
         MonsterSide,
     }
-    
-    
     #endregion
-    
+
     #region State
     public enum CreatureBattleState
     {
@@ -152,7 +148,7 @@ public class Define
         ActionProceed,
         Dead
     }
-    
+
     public enum AnimState
     {
         Attack,
@@ -166,7 +162,7 @@ public class Define
         Skill,
         Victory
     }
-    
+
     public enum BattleState
     {
         Init,
@@ -174,7 +170,7 @@ public class Define
         SelectTarget,
         ActionProceed,
     }
-    
+
     public enum AreaState
     {
         Idle,
@@ -184,7 +180,7 @@ public class Define
         Boss,
     }
     #endregion
-    
+
     #region Event
     public enum UIEvent
     {
@@ -205,7 +201,7 @@ public class Define
         Hover,
     }
     #endregion
-    
+
     #region NonContent
     public enum Layer
     {
@@ -214,25 +210,25 @@ public class Define
         Monster = 8,
         Player = 9,
     }
-    
+
     public enum CameraMode
     {
         QuarterView,
     }
     #endregion
-    
+
     #region Path
     public const string HERO_PATH = "Heroes";
     public const string MONSTER_PATH = "Monsters";
     #endregion
-    
+
     // Name은 나중에 Json으로 관리
     #region Name
     public enum AreaName
-    {   
+    {
         Forest,
     }
-   
+
     public enum MonsterName
     {
         Slime,
@@ -249,15 +245,15 @@ public class Define
     public const int HERO_KNIGHT_ID = 101000;
 
     public const int MONSTER_BAT_ID = 102000;
-    
+
     public const int WEAPON_SAMPLESINGLESWORD_ID = 201000;
     public const int WEAPON_SAMPLESWORDANDSHIELD_ID = 201001;
-    
+
     public const int ARMOR_SAMPLEBODY1_ID = 202000;
     public const int ARMOR_SAMPLEBODY2_ID = 202001;
 
     public const int ITEM_HEALPOTION_ID = 301000;
-    
+
     public const int SKILL_STRIKE_ID = 401000;
 
     public const int MONSTERSQUAD_Squad1_ID = 501000;
@@ -265,6 +261,21 @@ public class Define
 
     #region Value
     public const float MOVE_SPEED = 5f;
-    #endregion
+
+    // Animation Name
+    public static readonly int ANIMATION_DEFEND = UnityEngine.Animator.StringToHash("Defend");
+    public static readonly int ANIMATION_DEFEND_HIT = UnityEngine.Animator.StringToHash("DefendHit");
+    public static readonly int ANIMATION_DIZZY = UnityEngine.Animator.StringToHash("Dizzy");
+    public static readonly int ANIMATION_IDLE = UnityEngine.Animator.StringToHash("Idle");
+    public static readonly int ANIMATION_JUMP = UnityEngine.Animator.StringToHash("Jump");
+    public static readonly int ANIMATION_MOVE = UnityEngine.Animator.StringToHash("Move");
+    public static readonly int ANIMATION_MOVEAPPROACH = UnityEngine.Animator.StringToHash("MoveApproach");
+    public static readonly int ANIMATION_VICTORY = UnityEngine.Animator.StringToHash("Victory");
     
+    // Animation Parameter
+    public static readonly int PARAMETER_ATTACK_FINISHED = UnityEngine.Animator.StringToHash("AttackFinished");
+    public static readonly int PARAMETER_APPROACH_FINISHED = UnityEngine.Animator.StringToHash("ApproachFinished");
+    public static readonly int PARAMETER_NEEDS_JUMP = UnityEngine.Animator.StringToHash("NeedsJump");
+    public static readonly int PARAMETER_NEEDS_MOVE = UnityEngine.Animator.StringToHash("NeedsMove");
+    #endregion
 }

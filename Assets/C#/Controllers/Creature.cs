@@ -6,13 +6,14 @@ using Random = System.Random;
 
 public abstract class Creature : MonoBehaviour
 {
+    #region Field
     public Animator Animator { get; protected set; }
     
     public ulong Id { get; set; }
     public int DataId { get; protected set; }
     public Define.CreatureType CreatureType { get; protected set; }
     public Data.CreatureData CreatureData { get; protected set; }
-    public IStat CreatureStat { get; protected set; }
+    public CreatureStat CreatureStat { get; protected set; }
 
     private Define.CreatureBattleState _creatureBattleState;
     public Define.CreatureBattleState CreatureBattleState
@@ -41,16 +42,14 @@ public abstract class Creature : MonoBehaviour
     
     public BattleGridCell Cell { get; set; }
 
-    public BaseAction CurrentAction
-    {
-        get; 
-        set;
-    }
+    public BaseAction CurrentAction { get; set; }
     public BattleGridCell TargetCell { get; protected set; }
+    public int CoinHeadNum { get; protected set; }
     
     public MoveAction MoveAction { get; protected set; }
     public FleeAction FleeAction { get; protected set; }
-
+    #endregion
+    
     private void Awake()
     {
         Init();
@@ -59,6 +58,7 @@ public abstract class Creature : MonoBehaviour
     protected virtual void Init()
     {
         Animator = GetComponent<Animator>();
+        CreatureStat = GetComponent<CreatureStat>();
         MoveAction = new MoveAction();
         MoveAction.SetInfo(this);
         FleeAction = new FleeAction();
@@ -77,63 +77,20 @@ public abstract class Creature : MonoBehaviour
 
         gameObject.name = $"{CreatureData.DataId}_{CreatureData.Name}";
         
+        CreatureStat.SetStat(CreatureData);
         CreatureBattleState = Define.CreatureBattleState.Wait;
         AnimState = Define.AnimState.Idle;
-    }
-
-    public virtual void ChangeStat(IStat statStruct)
-    {
-        CreatureStat = statStruct;
+        
+        CoinHeadNum = 0;
     }
     
-    public virtual void DoSelectAction()
-    {
-        // TODO - UI로 Action 선택
-    }
-    
-    public virtual void DoSelectTarget()
-    {
-        // TODO - UI로 Target 선택
-    }
-    
-    public virtual void DoAction()
-    {
-        TargetCell = Managers.BattleMng.CurrentMouseOverCell;
-
-        switch (CurrentAction.ActionAttribute)
-        {
-            case Define.ActionAttribute.AttackSkill:
-                AnimState = Define.AnimState.Attack;
-                break;
-            case Define.ActionAttribute.Move:
-                OnMove(TargetCell);
-                break;
-        }
-    }
-    
-    #region AnimationControl
+    #region Animation
     
     // 공격하기 전 접근 단계에서 사용
     public Define.ApproachType ApproachType { get; set; }
     protected Vector3 _comebackPos;
     protected bool _moveDOTriggered;
     [SerializeField] protected Vector3 _approachOffset;
-
-    // animator controller bool hash
-    protected static readonly int _hashbAttack = UnityEngine.Animator.StringToHash("AttackFinished");
-    protected static readonly int _hashbApproach = UnityEngine.Animator.StringToHash("ApproachFinished");
-    protected static readonly int _hashbJump = UnityEngine.Animator.StringToHash("NeedsJump");
-    protected static readonly int _hashbMove = UnityEngine.Animator.StringToHash("NeedsMove");
-    
-    // state hash
-    protected static readonly int _hashDefend = UnityEngine.Animator.StringToHash("Defend");
-    protected static readonly int _hashDefendHit = UnityEngine.Animator.StringToHash("DefendHit");
-    protected static readonly int _hashDizzy = UnityEngine.Animator.StringToHash("Dizzy");
-    protected static readonly int _hashIdle = UnityEngine.Animator.StringToHash("Idle");
-    protected static readonly int _hashJump = UnityEngine.Animator.StringToHash("Jump");
-    protected static readonly int _hashMove = UnityEngine.Animator.StringToHash("Move");
-    protected static readonly int _hashMoveAttack = UnityEngine.Animator.StringToHash("MoveApproach");
-    protected static readonly int _hashVictory = UnityEngine.Animator.StringToHash("Victory");
     
     // randomly selected states
     protected StringBuilder _stringAttack = new ("Attack");
@@ -155,30 +112,30 @@ public abstract class Creature : MonoBehaviour
                     ApproachBeforeAttack();
                     break;
                 case Define.AnimState.Defend:
-                    Animator.Play(_hashDefend);
+                    Animator.Play(Define.ANIMATION_DEFEND);
                     break;
                 case Define.AnimState.DefendHit:
-                    Animator.Play(_hashDefendHit);
+                    Animator.Play(Define.ANIMATION_DEFEND_HIT);
                     break;
                 case Define.AnimState.Die:
                     PlayRandomAnimation(value);
                     break;
                 case Define.AnimState.Dizzy:
-                    Animator.Play(_hashDizzy);
+                    Animator.Play(Define.ANIMATION_DIZZY);
                     break;
                 case Define.AnimState.Hit:
                     PlayRandomAnimation(value);
                     break;
                 case Define.AnimState.Idle:
-                    Animator.Play(_hashIdle);
+                    Animator.Play(Define.ANIMATION_IDLE);
                     break;
                 case Define.AnimState.Move:
-                    Animator.Play(_hashMove);
+                    Animator.Play(Define.ANIMATION_MOVE);
                     break;
                 //case Define.AnimState.Skill:
                 //    break;
                 case Define.AnimState.Victory:
-                    Animator.Play(_hashVictory);
+                    Animator.Play(Define.ANIMATION_VICTORY);
                     break;
             }
 
@@ -191,27 +148,27 @@ public abstract class Creature : MonoBehaviour
         // TODO - TEST CODE
         _stringAttack.Append("1");
         
-        Animator.SetBool(_hashbAttack, false);
-        Animator.SetBool(_hashbApproach, false);
+        Animator.SetBool(Define.PARAMETER_ATTACK_FINISHED, false);
+        Animator.SetBool(Define.PARAMETER_APPROACH_FINISHED, false);
         _comebackPos = transform.position;
         _moveDOTriggered = false;
         
         switch (ApproachType)
         {
             case Define.ApproachType.Jump:
-                Animator.SetBool(_hashbJump, true);
-                Animator.SetBool(_hashbMove, false);
-                Animator.Play(_hashJump);
+                Animator.SetBool(Define.PARAMETER_NEEDS_JUMP, true);
+                Animator.SetBool(Define.PARAMETER_NEEDS_MOVE, false);
+                Animator.Play(Define.ANIMATION_JUMP);
                 break;
             case Define.ApproachType.InPlace:
-                Animator.SetBool(_hashbJump, false);
-                Animator.SetBool(_hashbMove, false);
+                Animator.SetBool(Define.PARAMETER_NEEDS_JUMP, false);
+                Animator.SetBool(Define.PARAMETER_NEEDS_MOVE, false);
                 Animator.Play(_stringAttack.ToString());
                 break;
             case Define.ApproachType.Move:
-                Animator.SetBool(_hashbJump, false);
-                Animator.SetBool(_hashbMove, true);
-                Animator.Play(_hashMoveAttack);
+                Animator.SetBool(Define.PARAMETER_NEEDS_JUMP, false);
+                Animator.SetBool(Define.PARAMETER_NEEDS_MOVE, true);
+                Animator.Play(Define.ANIMATION_MOVEAPPROACH);
                 break;
         }
     }
@@ -239,9 +196,6 @@ public abstract class Creature : MonoBehaviour
         }
     }
     
-    #endregion
-
-    #region Event
     private bool _isReturn;
     public virtual void OnApproachStart()
     {
@@ -249,10 +203,10 @@ public abstract class Creature : MonoBehaviour
         {
             _moveDOTriggered = true;
             float duration = ApproachType == Define.ApproachType.Jump ? 0.433f : 0.8f;
-            if (Animator.GetBool(_hashbAttack))
+            if (Animator.GetBool(Define.PARAMETER_ATTACK_FINISHED))
             {
                 transform.DOMove(_comebackPos, duration)
-                    .OnComplete(() => { _stringAttack.Remove(6, 1); Animator.SetBool(_hashbApproach, true); });
+                    .OnComplete(() => { _stringAttack.Remove(6, 1); Animator.SetBool(Define.PARAMETER_APPROACH_FINISHED, true); });
             }
             else
             {
@@ -264,15 +218,16 @@ public abstract class Creature : MonoBehaviour
 
     public virtual void OnHandleAction()
     {
-        CurrentAction.HandleAction(TargetCell);
+        CurrentAction.HandleAction(TargetCell, CoinHeadNum);
+        CoinHeadNum = 0;
         _isReturn = true;
     }
     
     public virtual void OnAttackEnd()
     {
         _moveDOTriggered = false;
-        Animator.SetBool(_hashbAttack, true);
-        Animator.SetBool(_hashbApproach, false);
+        Animator.SetBool(Define.PARAMETER_ATTACK_FINISHED, true);
+        Animator.SetBool(Define.PARAMETER_APPROACH_FINISHED, false);
     }
 
     public virtual void OnReturnEnd()
@@ -285,7 +240,25 @@ public abstract class Creature : MonoBehaviour
         TargetCell = null;
         Managers.BattleMng.NextTurn();
     }
+    #endregion
 
+    #region Battle
+
+    public abstract void DoSelectAction();
+
+    public abstract void DoSelectTarget();
+
+    public abstract void DoAction();
+
+    public abstract void DoEndTrun();
+    #endregion
+    
+    #region Event
+    public virtual void OnChangeStat(CreatureStat creatureStatStruct)
+    {
+        CreatureStat = creatureStatStruct;
+    }
+    
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
     public void OnDamage(int damage, int attackCount = 1)
     {
@@ -326,15 +299,13 @@ public abstract class Creature : MonoBehaviour
     {
         while ((transform.position - cell.transform.position).magnitude > 0.001)
         {
-            //Debug.Log((transform.position - cell.transform.position).magnitude);
-            //transform.position = Vector3.Lerp(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
             transform.position = Vector3.MoveTowards(transform.position, cell.transform.position, Define.MOVE_SPEED * Time.deltaTime);
 
             yield return new WaitForSeconds(0.01f);
         }
 
         transform.position = cell.transform.position;
-        CurrentAction.HandleAction(TargetCell);
+        CurrentAction.HandleAction(TargetCell, CoinHeadNum);
         yield return null;
     }
 }

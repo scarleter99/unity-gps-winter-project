@@ -15,7 +15,6 @@ namespace Data
         public int Hp;
         public int Attack;
         public int Defense;
-        public int Speed;
     }
     #endregion
     
@@ -54,6 +53,7 @@ namespace Data
     [Serializable]
     public class MonsterData : CreatureData
     {
+        public int Speed;
     }
 
     [Serializable]
