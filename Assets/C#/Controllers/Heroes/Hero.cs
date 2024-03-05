@@ -14,24 +14,7 @@ public abstract class Hero : Creature
 
     public SelectBagAction SelectBagAction { get; protected set; }
     public Bag Bag { get; protected set; }
-    public override Define.CreatureBattleState CreatureBattleState
-    {
-        get => base.CreatureBattleState;
-        set
-        {
-            switch (value)
-            {
-                case Define.CreatureBattleState.Wait:
-                    break;
-                case Define.CreatureBattleState.Action:
-                    // TODO - Battle Ui 가시화
-                    break;
-                case Define.CreatureBattleState.Dead:
-                    break;
-            }
-        }
-    }
-
+    
     [CanBeNull]
     public Weapon Weapon { get; protected set; }
     public Define.WeaponType? WeaponType => Weapon?.WeaponType;
@@ -59,6 +42,8 @@ public abstract class Hero : Creature
         Armors = new Dictionary<Define.ArmorType, Armor>();
         foreach (Define.ArmorType type in (Define.ArmorType[])Enum.GetValues(typeof(Define.ArmorType)))
             Armors.TryAdd(type, null);
+
+        WeaponChange = null;
     }
     
     public override void SetInfo(int templateId)
@@ -71,7 +56,6 @@ public abstract class Hero : Creature
     }
 
     #region Action
-
     private bool NeedsInvoke(out int percent)
     {
         switch (CurrentAction.ActionAttribute)
@@ -110,7 +94,6 @@ public abstract class Hero : Creature
 
         return true;
     }
-    
     #endregion
     
     // TODO - Data Id로 무기 및 아머를 장착하도록 구현

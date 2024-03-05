@@ -23,14 +23,14 @@ public class DataManager
 
     public void Init()
     {
-        HeroDataDict = LoadJson<Data.HeroLoader, int, Data.HeroData>("HeroData").MakeDict();
-        MonsterDataDict = LoadJson<Data.MonsterLoader, int, Data.MonsterData>("MonsterData").MakeDict();
-      MonsterSquadDataDict = LoadJson<Data.MonsterSquadLoader, int, Data.MonsterSquadData>("MonsterSquadData").MakeDict();
-        ItemDataDict = LoadJson<Data.ItemLoader, int, Data.ItemData>("ItemData").MakeDict();
-        WeaponDataDict = LoadJson<Data.WeaponLoader, int, Data.WeaponData>("WeaponData").MakeDict();
-        ArmorDataDict = LoadJson<Data.ArmorLoader, int, Data.ArmorData>("ArmorData").MakeDict();
-        SkillDataDict = LoadJson<Data.SkillLoader, int, Data.SkillData>("SkillData").MakeDict();
-        AreaDataDict = LoadJson<Data.AreaLoader, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
+        HeroDataDict = LoadJson<Data.HeroDataLoader, int, Data.HeroData>("HeroData").MakeDict();
+        MonsterDataDict = LoadJson<Data.MonsterDataLoader, int, Data.MonsterData>("MonsterData").MakeDict();
+      MonsterSquadDataDict = LoadJson<Data.MonsterSquadDataLoader, int, Data.MonsterSquadData>("MonsterSquadData").MakeDict();
+        ItemDataDict = LoadJson<Data.ItemDataLoader, int, Data.ItemData>("ItemData").MakeDict();
+        WeaponDataDict = LoadJson<Data.WeaponDataLoader, int, Data.WeaponData>("WeaponData").MakeDict();
+        ArmorDataDict = LoadJson<Data.ArmorDataLoader, int, Data.ArmorData>("ArmorData").MakeDict();
+        SkillDataDict = LoadJson<Data.SkillDataLoader, int, Data.SkillData>("SkillData").MakeDict();
+        AreaDataDict = LoadJson<Data.AreaDataSet, Define.AreaName, Data.AreaData>("AreaData").MakeDict();
         QuestDataDict = LoadJson<Data.QuestDataLoader, int, Data.QuestData>("QuestData").MakeDict();
     }
 

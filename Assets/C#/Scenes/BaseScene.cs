@@ -23,15 +23,17 @@ public abstract class BaseScene : MonoBehaviour
 
     protected virtual void Init()
     {
-        // TODO - TEST CODE: 나중엔 최초 Scene에서만 실행
-        if (!Managers.ObjectMng.InitComplete)
+        // TODO - 나중엔 최초 Scene에서만 실행
+        if (!Managers.InitComplete)
         {
+            Managers.Init();
             Managers.InputMng.Init();
             Managers.DataMng.Init();
             Managers.NetworkMng.Init();
             Managers.ServerMng.Init();
             Managers.SoundMng.Init();
             Managers.PoolMng.Init();
+            Managers.UIMng.Init();
             Managers.ObjectMng.Init();
             Managers.BattleMng.Init();
         }

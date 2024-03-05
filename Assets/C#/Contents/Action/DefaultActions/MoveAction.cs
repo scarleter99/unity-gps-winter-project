@@ -9,13 +9,12 @@ public class MoveAction : BaseAction
         ActionAttribute = Define.ActionAttribute.Move;
         ActionTargetType = Define.ActionTargetType.Single;
     }
-
+    
     public override void HandleAction(BattleGridCell targetCell)
     {
         if (targetCell.CellCreature != null)
             return;
         
-        Managers.BattleMng.PlaceCreature(Owner, targetCell);
-        Owner.OnMove(targetCell);
+        Managers.BattleMng.MoveCreature(Owner, targetCell);
     }
 }

@@ -5,24 +5,6 @@ public abstract class Monster : Creature
 {
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
-
-    public override Define.CreatureBattleState CreatureBattleState
-    {
-        get => base.CreatureBattleState;
-        set
-        {
-            switch (value)
-            {
-                case Define.CreatureBattleState.Wait:
-                    break;
-                case Define.CreatureBattleState.Action:
-                    DoAction(GetRandomHero().Cell);
-                    break;
-                case Define.CreatureBattleState.Dead:
-                    break;
-            }
-        }
-    }
     
     protected override void Init()
     {
@@ -41,13 +23,44 @@ public abstract class Monster : Creature
         
         CreatureStat = new MonsterStat(MonsterData);
     }
+
+    public override void DoSelectAction()
+    {
+        // TODO - Action 선택 알고리즘 구현
+        BaseSkill skill = new Strike();
+        skill.SetInfo(Define.SKILL_STRIKE_ID, this);
+        CurrentAction = skill;
+
+        Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
+    }
     
-    Hero GetRandomHero()
+    public override void DoSelectTarget()
+    {
+        // TODO - Target Hero 선택 알고리즘 구현
+        TargetCell = GetRandomHeroCell();
+
+        Managers.BattleMng.BattleState = Define.BattleState.ActionProceed;
+    }
+    
+    public override void DoAction()
+    {
+        switch (CurrentAction.ActionAttribute)
+        {
+            case Define.ActionAttribute.AttackSkill:
+                AnimState = Define.AnimState.Attack;
+                break;
+            case Define.ActionAttribute.Move:
+                OnMove(TargetCell);
+                break;
+        }
+    }
+    
+    BattleGridCell GetRandomHeroCell()
     {
         List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
         ulong randomKey = keysList[Random.Range(0, keysList.Count)];
 
-        return Managers.ObjectMng.Heroes[randomKey];
+        return Managers.ObjectMng.Heroes[randomKey].Cell;
     }
 
     /*----------------------

@@ -147,7 +147,9 @@ public class Define
     public enum CreatureBattleState
     {
         Wait,
-        Action,
+        SelectAction,
+        SelectTarget,
+        ActionProceed,
         Dead
     }
     
@@ -168,7 +170,6 @@ public class Define
     public enum BattleState
     {
         Init,
-        MonsterTurn,
         SelectAction,
         SelectTarget,
         ActionProceed,
@@ -262,5 +263,8 @@ public class Define
     public const int MONSTERSQUAD_Squad1_ID = 501000;
     #endregion
 
+    #region Value
     public const float MOVE_SPEED = 5f;
+    #endregion
+    
 }

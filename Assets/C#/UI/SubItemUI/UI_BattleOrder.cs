@@ -60,12 +60,12 @@ public class UI_BattleOrder : UI_Base
     // TODO - 없으면 두번째 플레이부터 에러남, 이유 모르겠음
     private void OnDisable()
     {
-        Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
-        foreach (var pair in Managers.ObjectMng.Heroes)
-        {
-            var hero = pair.Value;
-            hero.WeaponChange -= BindSkills;
-        }
+        // Managers.BattleMng.TurnHeroUIChange -= EnableBattleOrderUI;
+        // foreach (var pair in Managers.ObjectMng.Heroes)
+        // {
+        //     var hero = pair.Value;
+        //     hero.WeaponChange -= BindSkills;
+        // }
     }
 
     public void EnableBattleOrderUI(Hero hero)
@@ -74,8 +74,7 @@ public class UI_BattleOrder : UI_Base
         BindSkills(hero);
     }
     
-    #region Action
-    
+    #region DefaultAction
     private void BindDefaultActions(Hero hero)
     {
         ClearDefaultActionIcons();
@@ -131,22 +130,21 @@ public class UI_BattleOrder : UI_Base
 
             void UseAction(PointerEventData eventData)
             {
-                var battleMng = Managers.BattleMng;
-                battleMng.CurrentTurnCreature.CurrentAction = action;
+                Managers.BattleMng.CurrentTurnCreature.CurrentAction = action;
 
                 // Flee, SelectBag 만 이쪽에서 핸들링, 나머지는 BattleManager BattleState set에서 관리
                 // TODO - Flee, SelectBag 핸들링도 BattleManager로 넘기는 쪽이 깔끔해보임
                 switch (action.ActionAttribute)
                 {
                     case Define.ActionAttribute.Flee:
-                        battleMng.CurrentTurnCreature.DoAction(battleMng.CurrentTurnCreature.TargetCell);
+                        //Managers.BattleMng.CurrentTurnCreature.DoAction();
                         break;
                     case Define.ActionAttribute.SelectBag:
                         // TODO - Item UI 띄우기
                         Debug.Log("SelectBag Clicked!");
                         break;
                     case Define.ActionAttribute.Move:
-                        battleMng.BattleState = Define.BattleState.SelectTarget;
+                        Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
                         break;
                 }
                 

@@ -133,7 +133,7 @@ public class UI_CoinToss : UI_Base
         }
         else
         {
-            Managers.BattleMng.CurrentTurnCreature.DoAction(Managers.BattleMng.CurrentMouseOverCell);
+            //Managers.BattleMng.CurrentTurnCreature.DoAction();
         }
         
         groupObj.SetActive(false);

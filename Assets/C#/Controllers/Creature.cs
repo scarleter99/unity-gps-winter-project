@@ -14,15 +14,42 @@ public abstract class Creature : MonoBehaviour
     public Data.CreatureData CreatureData { get; protected set; }
     public IStat CreatureStat { get; protected set; }
 
-    public MoveAction MoveAction { get; protected set; }
-    public FleeAction FleeAction { get; protected set; }
-    
-    public virtual Define.CreatureBattleState CreatureBattleState { get; set; }
+    private Define.CreatureBattleState _creatureBattleState;
+    public Define.CreatureBattleState CreatureBattleState
+    {
+        get => _creatureBattleState;
+        set
+        {
+            switch (value)
+            {
+                case Define.CreatureBattleState.Wait:
+                    break;
+                case Define.CreatureBattleState.SelectAction:
+                    DoSelectAction();
+                    break;
+                case Define.CreatureBattleState.SelectTarget:
+                    DoSelectTarget();
+                    break;
+                case Define.CreatureBattleState.ActionProceed:
+                    DoAction();
+                    break;
+                case Define.CreatureBattleState.Dead:
+                    break;
+            }
+        }
+    }
     
     public BattleGridCell Cell { get; set; }
 
-    public BaseAction CurrentAction { get; set; }
+    public BaseAction CurrentAction
+    {
+        get; 
+        set;
+    }
     public BattleGridCell TargetCell { get; protected set; }
+    
+    public MoveAction MoveAction { get; protected set; }
+    public FleeAction FleeAction { get; protected set; }
 
     private void Awake()
     {
@@ -59,17 +86,27 @@ public abstract class Creature : MonoBehaviour
         CreatureStat = statStruct;
     }
     
-    // 턴제에서 본인 턴일 때 사용할 함수
-    public virtual void DoAction(BattleGridCell cell)
+    public virtual void DoSelectAction()
     {
-        TargetCell = cell;
+        // TODO - UI로 Action 선택
+    }
+    
+    public virtual void DoSelectTarget()
+    {
+        // TODO - UI로 Target 선택
+    }
+    
+    public virtual void DoAction()
+    {
+        TargetCell = Managers.BattleMng.CurrentMouseOverCell;
+
         switch (CurrentAction.ActionAttribute)
         {
             case Define.ActionAttribute.AttackSkill:
                 AnimState = Define.AnimState.Attack;
                 break;
             case Define.ActionAttribute.Move:
-                OnHandleAction();
+                OnMove(TargetCell);
                 break;
         }
     }
@@ -205,17 +242,8 @@ public abstract class Creature : MonoBehaviour
     #endregion
 
     #region Event
-    public virtual void OnHandleAction()
-    {
-        CurrentAction.HandleAction(TargetCell);
-        CreatureBattleState = Define.CreatureBattleState.Wait;
-        
-        TargetCell = null;
-        
-        //Managers.BattleMng.NextTurn();
-    }
-
-    public void OnApproachStart()
+    private bool _isReturn;
+    public virtual void OnApproachStart()
     {
         if (!_moveDOTriggered)
         {
@@ -234,11 +262,28 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
-    public void OnAttackEnd()
+    public virtual void OnHandleAction()
+    {
+        CurrentAction.HandleAction(TargetCell);
+        _isReturn = true;
+    }
+    
+    public virtual void OnAttackEnd()
     {
         _moveDOTriggered = false;
         Animator.SetBool(_hashbAttack, true);
         Animator.SetBool(_hashbApproach, false);
+    }
+
+    public virtual void OnReturnEnd()
+    {
+        if (!_isReturn)
+            return;
+
+        _isReturn = false;
+        CreatureBattleState = Define.CreatureBattleState.Wait;
+        TargetCell = null;
+        Managers.BattleMng.NextTurn();
     }
 
     // TODO - 코인 앞면 수에 비례한 데미지 계산 
@@ -289,6 +334,7 @@ public abstract class Creature : MonoBehaviour
         }
 
         transform.position = cell.transform.position;
+        CurrentAction.HandleAction(TargetCell);
         yield return null;
     }
 }

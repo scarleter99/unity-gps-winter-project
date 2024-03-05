@@ -22,7 +22,7 @@ public class MatchmakerClient
     
     public void Init()
     {
-        Debug.Log("1: MatchmakerClient Init");
+        //Debug.Log("1: MatchmakerClient Init");
         ServerStartUp.ClientInstance += SignIn;
     }
 
@@ -36,7 +36,7 @@ public class MatchmakerClient
     /// </summary>
     private async void SignIn()
     {
-        Debug.Log("3: SignIn");
+        //Debug.Log("3: SignIn");
         await ClientSignIn("HeroPlayer");
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         

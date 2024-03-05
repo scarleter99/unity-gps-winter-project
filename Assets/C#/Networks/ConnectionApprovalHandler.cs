@@ -13,7 +13,7 @@ public class ConnectionApprovalHandler
 
     public void Init()
     {
-        Debug.Log("4: ConnectionApprovalHandler Init");
+        //Debug.Log("4: ConnectionApprovalHandler Init");
         NetworkManager.Singleton.ConnectionApprovalCallback = ApprovalCheck;
     }
 
