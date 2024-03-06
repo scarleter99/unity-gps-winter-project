@@ -62,7 +62,7 @@ public abstract class Monster : Creature
         }
     }
 
-    public override void DoEndTrun()
+    public override void DoEndTurn()
     {
         Managers.ResourceMng.Destroy(CoinTossUI.gameObject);
     }

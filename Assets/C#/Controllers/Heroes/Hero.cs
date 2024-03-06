@@ -81,7 +81,7 @@ public abstract class Hero : Creature
         }
     }
 
-    public override void DoEndTrun()
+    public override void DoEndTurn()
     {
         ((UI_BattleScene)Managers.UIMng.SceneUI).BattleOrderUI.EndTurn();
     }

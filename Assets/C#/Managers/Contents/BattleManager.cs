@@ -124,7 +124,7 @@ public class BattleManager
         foreach (ulong id in Managers.ObjectMng.Monsters.Keys)
             turns[turnNum++] = id;
         
-        TurnSystem.Init(turns);
+        TurnSystem.Init(turns, turnNum);
         // TODO - 디버깅 코드
         Debug.Log(turns);
     }
