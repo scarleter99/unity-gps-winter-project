@@ -79,7 +79,20 @@ public class Define
         Money,
     }
 
-    // public enum SceneType
+    public enum BattleResultType
+    {
+        Victory,
+        Defeat,
+        Flee,
+    }
+
+    public enum RewardActionType
+    {
+        Take,
+        Pass,
+        Dispose
+    }
+    
     public enum SceneType
     {
         UnknownScene,
@@ -91,7 +104,6 @@ public class Define
         TownScene,
     }
 
-    // public enum SoundType
     public enum SoundType
     {
         Bgm,
@@ -169,6 +181,7 @@ public class Define
         SelectAction,
         SelectTarget,
         ActionProceed,
+        Victory
     }
 
     public enum AreaState

@@ -27,6 +27,10 @@ public class BattleManager
                 case Define.BattleState.ActionProceed:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.ActionProceed;
                     break;
+                case Define.BattleState.Victory:
+                    CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Wait;
+                    break;
+
             }
         }
     }
@@ -47,7 +51,10 @@ public class BattleManager
     public void InitBattle(int monsterSquadDataId)
     {
         Managers.InputMng.MouseAction += HandleMouseInput;
-        
+
+        // TODO: Test Code
+        Managers.InputMng.KeyAction += (() => EndBattle(Define.BattleResultType.Victory));
+
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
@@ -217,10 +224,11 @@ public class BattleManager
         
         BattleState = Define.BattleState.SelectAction;
     }
-    
-    public void EndBattle()
-    {
+
+    public void EndBattle(Define.BattleResultType battleResult)
+    {   
         Managers.InputMng.MouseAction -= HandleMouseInput;
+        ((UI_BattleScene)Managers.UIMng.SceneUI).EndBattle(battleResult);
     }
     #endregion
 
