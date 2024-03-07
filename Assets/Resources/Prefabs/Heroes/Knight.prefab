@@ -4202,7 +4202,7 @@ GameObject:
   - component: {fileID: 5594853916759015738}
   - component: {fileID: 923524702142873111}
   - component: {fileID: 7081461020838591907}
-  - component: {fileID: 279015998887179346}
+  - component: {fileID: 8346608673337138966}
   m_Layer: 9
   m_Name: Knight
   m_TagString: Player
@@ -4313,7 +4313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _approachOffset: {x: 0, y: 0, z: -2}
---- !u!114 &279015998887179346
+--- !u!114 &8346608673337138966
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4322,7 +4322,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8001354749718593143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb84e3c4c4a641c085adcce70927c360, type: 3}
+  m_Script: {fileID: 11500000, guid: d960c9849a4545cfb2fb5b53272c9e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8017519852781684414

@@ -87,15 +87,15 @@ public class ObjectManager
 			Managers.ResourceMng.Destroy(creature.gameObject);
 	}
 
-    public void StatChange(Define.CreatureType creatureType, ulong id, IStat statStruct)
+    public void StatChange(Define.CreatureType creatureType, ulong id, CreatureStat creatureStatStruct)
     {
 	    switch (creatureType)
 	    {
 		    case Define.CreatureType.Hero:
-			    Heroes[id].ChangeStat(statStruct);
+			    Heroes[id].OnChangeStat(creatureStatStruct);
 			    break;
 		    case Define.CreatureType.Monster:
-			    Monsters[id].ChangeStat(statStruct);
+			    Monsters[id].OnChangeStat(creatureStatStruct);
 			    break;
 		    default:
 			    Debug.Log("Failed to ChangeStat");

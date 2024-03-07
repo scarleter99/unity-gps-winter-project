@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,24 +50,28 @@ public class UI_PlayerStat : UI_Base
         Bind<UnityEngine.UI.Image>(typeof(Image));
     }
 
-    public void ConnectPlayerStat(HeroStat stat)
+    public void BindPlayerStat(HeroStat stat)
     {
         stat.StatChangeAction += ChangePlayerStatUI;
 
         OnClaer?.Invoke();
         OnClaer = null;
         OnClaer += () => stat.StatChangeAction -= ChangePlayerStatUI;
+        
+        // init
+        ChangePlayerStatUI(stat);
     }
 
-    private void ChangePlayerStatUI(HeroStat heroStat)
+    private void ChangePlayerStatUI(CreatureStat creatureStat)
     {
+        HeroStat heroStat = (HeroStat)creatureStat;
+        
         GetText(Text.Text_Name).text = heroStat.Name;
 
         Get<Slider>(Sliders.Slider_HP).value = heroStat.Hp / heroStat.MaxHp;
         GetText(Text.Text_HP).text = $"{heroStat.Hp}/{heroStat.MaxHp}";
         GetText(Text.Text_Attack).text = heroStat.Attack.ToString();
         GetText(Text.Text_Defense).text = heroStat.Defense.ToString();
-        GetText(Text.Text_Speed).text = heroStat.Speed.ToString();
 
         GetText(Text.Text_Strength).text = heroStat.Strength.ToString();
         GetText(Text.Text_Vitality).text = heroStat.Vitality.ToString();

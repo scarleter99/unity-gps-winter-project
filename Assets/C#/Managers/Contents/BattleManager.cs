@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 
 public class BattleManager
 {
+    #region Field
     public TurnSystem TurnSystem { get; protected set; }
 
     private Define.BattleState _battleState;
@@ -18,7 +19,6 @@ public class BattleManager
             {
                 case Define.BattleState.SelectAction:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.SelectAction;
-                    TurnHeroUIChange?.Invoke(CurrentTurnCreature as Hero);
                     break;
                 case Define.BattleState.SelectTarget:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.SelectTarget;
@@ -26,8 +26,6 @@ public class BattleManager
                     break;
                 case Define.BattleState.ActionProceed:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.ActionProceed;
-                    if (CurrentTurnCreature.CurrentAction.ActionAttribute != Define.ActionAttribute.Move)
-                        ShowCoinToss?.Invoke(CurrentTurnCreature.CurrentAction, 50); // TODO - 바꾸기
                     break;
                 case Define.BattleState.Victory:
                     CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Wait;
@@ -42,11 +40,8 @@ public class BattleManager
     public BattleGridCell[,] MonsterGrid { get; protected set; } = new BattleGridCell[2, 3];
 
     public BattleGridCell CurrentMouseOverCell { get; protected set; }
-
-    public event Action<Hero> TurnHeroUIChange;
-    public event Action<BaseAction, int> ShowCoinToss; 
-    public event Action<Monster> TurnMonsterUIChange;
-
+    #endregion
+    
     public void Init()
     {
         TurnSystem = new TurnSystem();
@@ -136,7 +131,7 @@ public class BattleManager
         foreach (ulong id in Managers.ObjectMng.Monsters.Keys)
             turns[turnNum++] = id;
         
-        TurnSystem.Init(turns);
+        TurnSystem.Init(turns, turnNum);
         // TODO - 디버깅 코드
         Debug.Log(turns);
     }
@@ -229,24 +224,13 @@ public class BattleManager
         
         BattleState = Define.BattleState.SelectAction;
     }
-    
-    public int SuccessCount(int coinNum, int percentage)
-    {
-        int successCount = 0;
-        for (int i = 0; i < coinNum; i++)
-        {
-            float val = Random.value;
-            if (val < percentage / 100f)
-                successCount++;
-        }
-        
-        return successCount;
-    }
-    #endregion
 
     public void EndBattle(Define.BattleResultType battleResult)
     {   
         Managers.InputMng.MouseAction -= HandleMouseInput;
         ((UI_BattleScene)Managers.UIMng.SceneUI).EndBattle(battleResult);
     }
+    #endregion
+
+    
 }

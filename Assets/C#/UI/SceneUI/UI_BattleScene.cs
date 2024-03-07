@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UI_BattleScene : UI_Scene
@@ -13,14 +14,18 @@ public class UI_BattleScene : UI_Scene
         UI_BattleVictory
 	}
 
+	public UI_BattleOrder BattleOrderUI { get; protected set; }
+	public UI_CoinToss CoinTossUI { get; protected set; }
+	
     public override void Init()
     {
         base.Init();
 
 		Bind<UI_Base>(typeof(SubItemUI));
 
-		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).SelectedActionChange += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ChangeVisibility;
-		((UI_BattleOrder)Get<UI_Base>(SubItemUI.UI_BattleOrder)).SelectedActionClick += ((UI_CoinToss)Get<UI_Base>(SubItemUI.UI_CoinToss)).ShowTossResult;
+		BattleOrderUI = Get<UI_Base>(SubItemUI.UI_BattleOrder).GetOrAddComponent<UI_BattleOrder>();
+		BattleOrderUI.gameObject.SetActive(false);
+		CoinTossUI = Get<UI_Base>(SubItemUI.UI_CoinToss).GetOrAddComponent<UI_CoinToss>();
     }
 
     public void EndBattle(Define.BattleResultType battleResult)
