@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BattleManager
 {
@@ -123,7 +124,7 @@ public class BattleManager
         foreach (ulong id in Managers.ObjectMng.Monsters.Keys)
             turns[turnNum++] = id;
         
-        TurnSystem.Init(turns);
+        TurnSystem.Init(turns, turnNum);
         // TODO - 디버깅 코드
         Debug.Log(turns);
     }
@@ -184,9 +185,13 @@ public class BattleManager
         
         Hero currentTurnHero = CurrentTurnCreature as Hero;
         if (currentTurnHero != null)
+        {
             BattleState = Define.BattleState.ActionProceed;
+        }
         else
+        {
             Debug.Log("No currentTurnHero!");
+        }
 
         CurrentMouseOverCell.RevertColor();
     }

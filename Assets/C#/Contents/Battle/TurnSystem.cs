@@ -1,14 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TurnSystem
 {
     public ulong[] Turns { get; protected set; }
     public int CurrentTurn { get; protected set; }
+    public int CreatureCount { get; protected set; }
 
-    public void Init(ulong[] turns)
+    public void Init(ulong[] turns, int count)
     {
         Turns = turns;
         CurrentTurn = 0;
+        CreatureCount = count;
     }
 
     public void NextTurn()

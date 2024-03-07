@@ -250,7 +250,7 @@ public abstract class Creature : MonoBehaviour
 
     public abstract void DoAction();
 
-    public abstract void DoEndTrun();
+    public abstract void DoEndTurn();
     #endregion
     
     #region Event

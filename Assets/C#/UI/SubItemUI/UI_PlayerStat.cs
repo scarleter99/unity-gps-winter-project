@@ -50,13 +50,16 @@ public class UI_PlayerStat : UI_Base
         Bind<UnityEngine.UI.Image>(typeof(Image));
     }
 
-    public void ConnectPlayerStat(HeroStat stat)
+    public void BindPlayerStat(HeroStat stat)
     {
         stat.StatChangeAction += ChangePlayerStatUI;
 
         OnClaer?.Invoke();
         OnClaer = null;
         OnClaer += () => stat.StatChangeAction -= ChangePlayerStatUI;
+        
+        // init
+        ChangePlayerStatUI(stat);
     }
 
     private void ChangePlayerStatUI(CreatureStat creatureStat)
