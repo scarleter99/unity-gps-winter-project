@@ -29,6 +29,10 @@ public class BattleManager
                     if (CurrentTurnCreature.CurrentAction.ActionAttribute != Define.ActionAttribute.Move)
                         ShowCoinToss?.Invoke(CurrentTurnCreature.CurrentAction, 50); // TODO - 바꾸기
                     break;
+                case Define.BattleState.Victory:
+                    CurrentTurnCreature.CreatureBattleState = Define.CreatureBattleState.Wait;
+                    break;
+
             }
         }
     }
@@ -52,7 +56,10 @@ public class BattleManager
     public void InitBattle(int monsterSquadDataId)
     {
         Managers.InputMng.MouseAction += HandleMouseInput;
-        
+
+        // TODO: Test Code
+        Managers.InputMng.KeyAction += (() => EndBattle(Define.BattleResultType.Victory));
+
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
@@ -237,8 +244,9 @@ public class BattleManager
     }
     #endregion
 
-    public void EndBattle()
-    {
+    public void EndBattle(Define.BattleResultType battleResult)
+    {   
         Managers.InputMng.MouseAction -= HandleMouseInput;
+        ((UI_BattleScene)Managers.UIMng.SceneUI).EndBattle(battleResult);
     }
 }

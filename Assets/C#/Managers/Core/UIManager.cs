@@ -6,7 +6,7 @@ public class UIManager
 {
     private int _order = 10; // 현재까지 최근에 사용한 오더
     
-    private UI_Scene _sceneUI; // 현재의 고정 캔버스 UI
+    public UI_Scene SceneUI { get; set; } // 현재의 고정 캔버스 UI
     private Stack<UI_Popup> _popupStack = new Stack<UI_Popup>(); // 팝업 캔버스 UI Stack
 
     public GameObject Root
@@ -47,7 +47,7 @@ public class UIManager
 
         GameObject go = Managers.ResourceMng.Instantiate($"UI/SceneUI/{name}");
         T sceneUI = Util.GetOrAddComponent<T>(go);
-        _sceneUI = sceneUI;
+        SceneUI = sceneUI;
 
         go.transform.SetParent(Root.transform);
         
@@ -144,6 +144,6 @@ public class UIManager
     public void Clear()
     {
         CloseAllPopupUI();
-        _sceneUI = null;
+        SceneUI = null;
     }
 }
