@@ -33,7 +33,7 @@ public class AreaGenerator
     private int _battleTileNum;
     private int _encounterTileNum;
 
-    private const string TEST_GRID_POSITION_TEXT_PATH = "Area/TestPositionText";
+    private const string TEST_GRID_POSITION_TEXT_PATH = "Area/InfoText";
     
 
     public AreaGenerator(AreaName areaName, Vector3 originPosition)

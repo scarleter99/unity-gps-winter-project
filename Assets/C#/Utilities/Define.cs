@@ -66,12 +66,20 @@ public class Define
         Invalid,
         Obstacle,
         Empty,
+        MainTile,
+        SubTile,
         Start,
         Normal,
         Battle,
         Encounter,
         Boss,
         Destroyed
+    }
+
+    public enum AreaBaseTileType
+    {
+        MainTile,
+        SubTile
     }
 
     public enum QuestRewardType
@@ -240,6 +248,7 @@ public class Define
     public enum AreaName
     {
         Forest,
+        Snowfield
     }
 
     public enum MonsterName
