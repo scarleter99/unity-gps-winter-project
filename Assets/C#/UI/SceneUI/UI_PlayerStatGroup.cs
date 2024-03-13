@@ -14,8 +14,8 @@ public class UI_PlayerStatGroup : UI_Base
 
     public override void Init()
     {
-        DontDestroyOnLoad(this);
         Bind<GameObject>(typeof(PlayerStatUI));
+        //DontDestroyOnLoad(transform.parent.gameObject);
     }
 
     void Start()
