@@ -194,25 +194,30 @@ namespace Data
     }
     #endregion
 
-    #region SkillData
+    #region ActionData
     [Serializable]
-    public class SkillData : EquipmentData
+    public class ActionData
     {
+        public int DataId;
+        public string Name;
         public string Description;
         public int CoinNum;
-        public int ReducedStat;
+        public Define.Stat UsingStat;
+        public bool IsAttack;
+        public int IncreaseValue;
+        public int ReduceStat;
     }
 
     [Serializable]
-    public class SkillDataLoader : ILoader<int, SkillData>
+    public class ActionDataLoader : ILoader<int, ActionData>
     {
-        public List<SkillData> skills = new List<SkillData>();
+        public List<ActionData> actions = new List<ActionData>();
 
-        public Dictionary<int, SkillData> MakeDict()
+        public Dictionary<int, ActionData> MakeDict()
         {   
-            var dic = new Dictionary<int, SkillData>();
-            foreach (var skill in skills)
-                dic.Add(skill.DataId, skill);
+            var dic = new Dictionary<int, ActionData>();
+            foreach (var action in actions)
+                dic.Add(action.DataId, action);
 
             return dic;
         }

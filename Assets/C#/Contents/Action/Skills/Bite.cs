@@ -1,4 +1,4 @@
-﻿public class Strike : JumpAttackAction
+﻿public class Bite : MoveAttackAction
 {
     public override void SetInfo(int templateId)
     {

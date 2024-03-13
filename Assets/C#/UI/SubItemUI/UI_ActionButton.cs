@@ -21,29 +21,10 @@ public class UI_ActionButton : UI_Base
     protected void OnClickActionButton()
     {
         UIBattleOrder.CurrentTurnHero.CurrentAction = Action;
-        UIBattleOrder.CurrentTurnHero.CreatureBattleState = Define.CreatureBattleState.SelectTarget;
-        
-        UIBattleOrder.gameObject.SetActive(false);
-
-        Managers.BattleMng.BattleState = Define.BattleState.SelectTarget;
     }
     
     protected void OnEnterActionButton(PointerEventData data)
     {
-        bool isNoDamage = false;
-        bool isNoPercentage = false;
-        
-        switch (Action.ActionAttribute)
-        {
-            case Define.ActionAttribute.Move:
-                isNoDamage = true;
-                isNoPercentage = true;
-                break;
-            case Define.ActionAttribute.Flee:
-                isNoDamage = true;
-                break;
-        }
-        
-        UIBattleOrder.ShowActionInfo(Action, isNoDamage, isNoPercentage);
+        UIBattleOrder.ShowActionInfo(Action);
     }
 }

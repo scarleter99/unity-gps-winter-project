@@ -2,19 +2,23 @@
 
 public class MoveAction : BaseAction
 {
-    public void SetInfo(Creature owner)
+    public override void SetInfo(int templateId)
     {
-        Owner = owner;
-            
-        ActionAttribute = Define.ActionAttribute.Move;
+        base.SetInfo(templateId);
+        
         ActionTargetType = Define.ActionTargetType.Single;
     }
     
-    public override void HandleAction(BattleGridCell targetCell, int coinHeadNum)
+    public override void DoAction()
     {
-        if (targetCell.CellCreature != null)
+        // TODO
+    }
+    
+    public override void OnHandleAction()
+    {
+        if (TargetCell.CellCreature != null)
             return;
         
-        Managers.BattleMng.MoveCreature(Owner, targetCell);
+        Managers.BattleMng.MoveCreature(Owner, TargetCell);
     }
 }
