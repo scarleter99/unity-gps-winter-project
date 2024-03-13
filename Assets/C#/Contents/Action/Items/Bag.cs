@@ -33,6 +33,7 @@ public class Bag
         BaseItem item = Activator.CreateInstance(Type.GetType(className)) as BaseItem;
         if (item == null)
         {
+            Debug.Log("2");
             ContentChange?.Invoke(this);
             return null;
         }

@@ -1,3 +1,6 @@
+using UnityEngine;
+using UnityEngine.EventSystems;
+
 public class UI_Bag : UI_Base
 {
     enum Items
@@ -20,20 +23,33 @@ public class UI_Bag : UI_Base
         bag.ContentChange += ShowItems;
     }
 
+
     private void ShowItems(Bag bag)
     {
         for (int i = 0; i < 6; i++)
         {
             var currentItem = bag.Items[i];
-            var itemUI = GetImage((Items)i).transform.GetChild(0).GetComponent<UnityEngine.UI.Image>();
+            var item = GetImage((Items)i).transform.GetChild(0).gameObject;
+            var itemIcon = item.GetComponent<UnityEngine.UI.Image>();
+            var itemDetail = item.transform.GetChild(0).GetComponent<UI_ItemDescription>();
+
             if (currentItem != null)
             {
                 // TODO - item Image 넣기
                 //itemUI.image = currentItem.image;
-                itemUI.enabled = true;
+                itemIcon.enabled = true;
+                
+                itemDetail.SetInfo(currentItem);
+                item.BindEvent(itemDetail.OnMouseEnter, Define.UIEvent.Enter);
+                item.BindEvent(itemDetail.OnMouseExit, Define.UIEvent.Exit);
             }
             else
-                itemUI.enabled = false;
+            {
+                itemIcon.enabled = false;
+                item.ClearEvent();
+            }
+
+            itemDetail.ChangeImageVisibility(false);
         }
     }
 }

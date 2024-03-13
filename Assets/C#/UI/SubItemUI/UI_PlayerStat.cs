@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Data;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_PlayerStat : UI_Base
@@ -27,11 +23,6 @@ public class UI_PlayerStat : UI_Base
         Text_Gold,
     }
 
-    enum Button
-    {
-        Button_Inventory,
-    }
-
     enum Sliders
     {
         Slider_HP,
@@ -45,7 +36,6 @@ public class UI_PlayerStat : UI_Base
     public override void Init()
     {
         Bind<TextMeshProUGUI>(typeof(Text));
-        Bind<UnityEngine.UI.Button>(typeof(Button));
         Bind<UnityEngine.UI.Slider>(typeof(Sliders));
         Bind<UnityEngine.UI.Image>(typeof(Image));
     }

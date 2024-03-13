@@ -32,7 +32,7 @@ public class UI_PlayerStatGroup : UI_Base
             var go = GetGameObject((PlayerStatUI)index++);
             go.GetOrAddComponent<UI_PlayerStat>().BindPlayerStat(hero.HeroStat);
             go.SetActive(true);
-
+            
             go.transform.Find("Bag").GetOrAddComponent<UI_Bag>().BindBag(hero.Bag);
         }
     }
