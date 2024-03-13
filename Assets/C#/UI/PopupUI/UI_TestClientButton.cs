@@ -24,6 +24,5 @@ public class UI_TestClientButton : UI_Popup
     public void OnButtonClicked(PointerEventData data)
     {
         Debug.Log("TestClientButton Clicked!");
-        Managers.ServerMng.StartClient();
     }
 }

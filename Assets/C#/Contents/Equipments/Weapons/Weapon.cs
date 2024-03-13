@@ -5,9 +5,9 @@ public abstract class Weapon: Equipment
     public int LeftIndex { get; protected set; }
     public int RightIndex { get; protected set; }
 
-    public BaseSkill Skill1;
-    public BaseSkill Skill2;
-    public BaseSkill Skill3;
+    public BaseAction Skill1;
+    public BaseAction Skill2;
+    public BaseAction Skill3;
     
     public override void SetInfo(int templateId)
     {
@@ -18,7 +18,7 @@ public abstract class Weapon: Equipment
         LeftIndex = WeaponData.LeftIndex;
         RightIndex = WeaponData.RightIndex;
     }
-    
+
     public override void Equip(Hero hero)
     {
         base.Equip(hero);
@@ -27,7 +27,7 @@ public abstract class Weapon: Equipment
         Skill2.Owner = Owner;
         Skill3.Owner = Owner;
     }
-
+    
     public override void UnEquip()
     {
         Skill1.Owner = null;

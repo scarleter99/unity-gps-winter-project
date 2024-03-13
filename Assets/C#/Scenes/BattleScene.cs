@@ -14,7 +14,7 @@ public class BattleScene : BaseScene
         TestSpawnHeroes();
         
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
-        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_Squad1_ID);
+        Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_SQUAD1_ID);
     }
 
     public override void Clear()

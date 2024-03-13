@@ -24,6 +24,15 @@ public class UI_CoinToss : UI_Base
         gameObject.SetActive(true);
     }
 
+    public void EndTurn()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Util.FindChild(Get<GameObject>(i), "SuccessIcon").SetActive(false);
+            Util.FindChild(Get<GameObject>(i), "FailedIcon").SetActive(false);
+        }
+    }
+    
     public void ShowCoinNum(BaseAction action)
     {
         for (int i = 0; i < 5; i++)

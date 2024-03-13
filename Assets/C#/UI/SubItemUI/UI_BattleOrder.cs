@@ -51,9 +51,8 @@ public class UI_BattleOrder : UI_Base
 
     public void EndTurn()
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(false);
         CurrentTurnHero = null;
-        SetButtons();
     }
     
     protected void SetButtons()
@@ -65,19 +64,19 @@ public class UI_BattleOrder : UI_Base
         GetButton(Buttons.Flee).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.FleeAction;
     }
 
-    public void ShowActionInfo(BaseAction action, bool isNoDamage, bool isNoPercentage)
+    public void ShowActionInfo(BaseAction action)
     {
         ClearActionInfo();
-        GetText(Texts.Text_ActionName).text = action.ToString();
-        GetText(Texts.Text_ActionDescription).text = "Test Description check";
+        GetText(Texts.Text_ActionName).text = action.ActionData.Name;
+        GetText(Texts.Text_ActionDescription).text = action.ActionData.Description;
 
-        if (!isNoDamage)
+        if (action.ActionData.IsAttack)
         {
             GetText(Texts.Text_DamageWord).text = "DAMAGE";
             GetText(Texts.Text_DamageNumber).text = CurrentTurnHero.HeroStat.Attack.ToString();
         }
 
-        if (!isNoPercentage)
+        if (action.ActionData.UsingStat != Define.Stat.None)
         {
             GetText(Texts.Text_SlotPercentageWord).text = "Percentage\nPer Slot";
             GetText(Texts.Text_SlotPercentage).text = CurrentTurnHero.HeroStat.GetStatByDefine(action.UsingStat).ToString();

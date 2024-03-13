@@ -11,8 +11,8 @@ public class ObjectManager
     public ulong NextHeroId;
     public ulong NextMonsterId;
 
-	// TODO: Test code, 현재 BaseScene에서 매니저들의 Init을 호출하기 때문에 씬 이동 시 중복 호출. 이 부울값을 사용해서 임시로 중복 호출 방지
-    public bool InitComplete = false;
+    public Transform HeroRoot => GetRootTransform("@Heroes");
+    public Transform MonsterRoot => GetRootTransform("@Monsters");
     
     public void Init()
     {
@@ -20,11 +20,8 @@ public class ObjectManager
 	    Monsters = new Dictionary<ulong, Monster>();
 	    NextHeroId = 10000;
 	    NextMonsterId = 20000;
-
-        InitComplete = true; // TODO: Test code
     }
-    
-    #region Roots
+
     public Transform GetRootTransform(string name)
     {
 	    GameObject root = GameObject.Find(name);
@@ -34,10 +31,6 @@ public class ObjectManager
 	    return root.transform;
     }
 
-    public Transform HeroRoot { get { return GetRootTransform("@Heroes"); } }
-    public Transform MonsterRoot { get { return GetRootTransform("@Monsters"); } }
-    #endregion
-    
     public Hero SpawnHero(int heroDataId)
     {
 	    string className = Managers.DataMng.HeroDataDict[heroDataId].Name;
@@ -86,22 +79,6 @@ public class ObjectManager
 		if (creature != null)
 			Managers.ResourceMng.Destroy(creature.gameObject);
 	}
-
-    public void StatChange(Define.CreatureType creatureType, ulong id, CreatureStat creatureStatStruct)
-    {
-	    switch (creatureType)
-	    {
-		    case Define.CreatureType.Hero:
-			    Heroes[id].OnChangeStat(creatureStatStruct);
-			    break;
-		    case Define.CreatureType.Monster:
-			    Monsters[id].OnChangeStat(creatureStatStruct);
-			    break;
-		    default:
-			    Debug.Log("Failed to ChangeStat");
-			    break;
-	    }
-    }
 
     public Creature GetCreatureWithId(ulong id)
     {
