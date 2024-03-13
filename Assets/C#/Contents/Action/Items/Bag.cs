@@ -7,6 +7,7 @@ public class Bag
     public Hero Owner { get; set; }
     public List<BaseItem> Items { get; protected set; }
     public int Gold { get; protected set; }
+    public event Action<Bag> ContentChange;
 
     public void SetInfo()
     {
@@ -15,6 +16,7 @@ public class Bag
             Items.Add(null);
         
         Gold = 0;
+        ContentChange = null;
     }
     
     public BaseItem StoreItem(int itemDataId, int addNum = 1)
@@ -23,13 +25,17 @@ public class Bag
         if (currentItemIdx != -1)
         {
             Items[currentItemIdx].Count += addNum;
+            ContentChange?.Invoke(this);
             return Items[currentItemIdx];
         }
         
         string className = Managers.DataMng.ItemDataDict[itemDataId].Name;
         BaseItem item = Activator.CreateInstance(Type.GetType(className)) as BaseItem;
         if (item == null)
+        {
+            ContentChange?.Invoke(this);
             return null;
+        }
         
         for (int idx = 0; idx < Items.Count; idx++)
         {
@@ -42,6 +48,7 @@ public class Bag
             Debug.Log("Failed to StoreItem: Bag is Full");
         }
         
+        ContentChange?.Invoke(this);
         return item;
     }
     
