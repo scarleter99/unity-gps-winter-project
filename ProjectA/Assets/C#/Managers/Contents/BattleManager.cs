@@ -24,9 +24,6 @@ public class BattleManager
     
     public void InitBattle(int monsterSquadDataId)
     {
-        // TODO: Test Code
-        //Managers.InputMng.KeyAction += (() => EndBattle(Define.BattleResultType.Victory));
-
         GameObject battleGrid = Managers.ResourceMng.Instantiate("Battle/BattleGrid", null, "@BattleGrid");
         battleGrid.transform.position = Vector3.zero;
         GameObject heroSide = Util.FindChild(battleGrid, "HeroSide");
@@ -102,8 +99,8 @@ public class BattleManager
             turns[turnNum++] = id;
         
         TurnSystem.Init(turns, turnNum);
-        // TODO - 디버깅 코드
-        Debug.Log(turns[turnNum]);
+        
+        Debug.Log("Current Turn: " + turns[turnNum]); // TODO - 디버깅 코드
     }
     
     #endregion

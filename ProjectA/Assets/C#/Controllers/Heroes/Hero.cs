@@ -60,7 +60,6 @@ public abstract class Hero : Creature
         base.SetInfo(templateId);
     }
     
-
     #region Input
     
     private void HandleMouseInput(Define.MouseEvent mouseEvent)
@@ -117,6 +116,8 @@ public abstract class Hero : Creature
     
     public override void DoAction()
     {
+        CurrentAction.Equip(this);
+        
         TargetCell = CurrentMouseOverCell;
         
         CoinHeadNum = CurrentAction.CoinToss();
@@ -159,7 +160,6 @@ public abstract class Hero : Creature
         
         Weapon = equippingWeapon;
         HeroStat.AttachEquipment(Weapon.EquipmentData);
-        //HeroStat.Attack += 1;
         Weapon.Equip(this);
         ChangeWeaponVisibility(true);
         ChangeAnimator();

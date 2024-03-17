@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Data
 {
@@ -31,7 +29,6 @@ namespace Data
 
     [Serializable]
     public class HeroDataLoader : ILoader<int, HeroData>
-
     {
         public List<HeroData> heroes = new List<HeroData>();
 
@@ -53,12 +50,13 @@ namespace Data
     [Serializable]
     public class MonsterData : CreatureData
     {
+        public int Stat;
         public int Speed;
+        public List<int> Actions = new List<int>();
     }
 
     [Serializable]
     public class MonsterDataLoader : ILoader<int, MonsterData>
-
     {
         public List<MonsterData> monsters = new List<MonsterData>();
 
@@ -138,7 +136,6 @@ namespace Data
         public int Hp;
         public int Attack;
         public int Defense;
-        public int Speed;
         public int Dexterity;
         public int Strength;
         public int Vitality;
@@ -152,6 +149,7 @@ namespace Data
     {
         public int LeftIndex;
         public int RightIndex;
+        public List<int> Actions;
     }
 
     [Serializable]

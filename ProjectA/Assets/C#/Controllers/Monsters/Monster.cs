@@ -8,8 +8,6 @@ public abstract class Monster : Creature
     public Data.MonsterData MonsterData => CreatureData as Data.MonsterData;
     public MonsterStat MonsterStat => (MonsterStat)CreatureStat;
     
-    public UI_CoinToss CoinTossUI { get; protected set; }
-    
     #endregion
 
     public override void SetInfo(int templateId)
@@ -23,12 +21,8 @@ public abstract class Monster : Creature
 
     public override void DoPrepareAction()
     {
-        // TODO - Action 선택 알고리즘 구현
-        BaseAction action = new Bite();
-        action.SetInfo(Define.ACTION_BITE_ID);
-        action.Equip(this);
-        CurrentAction = action;
-
+        EquipAction();
+        
         TargetCell = GetRandomHeroCell(); // TODO - Target Hero 선택 알고리즘 구현
         CreatureBattleState = Define.CreatureBattleState.ActionProceed;
     }
@@ -51,8 +45,16 @@ public abstract class Monster : Creature
     }
     
     #endregion
+
+    protected void EquipAction()
+    {
+        int randomKey = MonsterData.Actions[Random.Range(0, MonsterData.Actions.Count)];
+
+        CurrentAction =  Managers.ObjectMng.Actions[randomKey];
+        CurrentAction.Equip(this);
+    }
     
-    BattleGridCell GetRandomHeroCell()
+    protected BattleGridCell GetRandomHeroCell()
     {
         List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
         ulong randomKey = keysList[Random.Range(0, keysList.Count)];
