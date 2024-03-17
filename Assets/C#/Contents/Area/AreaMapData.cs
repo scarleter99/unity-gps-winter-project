@@ -14,19 +14,22 @@ public class AreaMapData
     public int MapHeight;
     public int PlayableMapWidth;
     public int PlayableMapHeight;
-    public AreaBaseTileData MainTileData;
-    public AreaSubTileData[] SubTileData;
-
+    [Range(0, 1), Tooltip("Proportion of decoration tiles in unplayable field")]
+    public float UnplayableFieldDecorationProportion;
+    [Range(0, 0.8f), Tooltip("Proportion of decoration tiles in playable field")]
+    public float PlayableFieldDecorationProportion;
+    public AreaTileGroupData MainTileGroupData;
+    public AreaSubTileGroupData[] SubTileGroupData;
 }
 
 [Serializable]
-public class AreaBaseTileData
+public class AreaTileGroupData
 {
-    public AreaBaseTile[] Tiles;
+    public AreaBaseTileData[] Tiles;
     public int MinLength;
     public int MaxLength;
-    private List<AreaBaseTile> _globalAvailableTiles;
-    private List<AreaBaseTile> _localAvailableTiles;
+    private List<AreaBaseTileData> _globalAvailableTiles;
+    private List<AreaBaseTileData> _localAvailableTiles;
     private Dictionary<string, int> _globalCount = new();
     private Dictionary<string, int> _localCount = new();
 
@@ -38,47 +41,47 @@ public class AreaBaseTileData
         _localAvailableTiles = Tiles.ToList();
     }
 
-    public AreaBaseTile SelectRandomTile()
+    public AreaBaseTileData SelectRandomTile()
     {
         if (_localAvailableTiles.Count == 0)
         {
             Debug.LogError("No more selectable tile left!");
         }
 
-        AreaBaseTile tile = _localAvailableTiles[Random.Range(0, _localAvailableTiles.Count)];
+        AreaBaseTileData tileData = _localAvailableTiles[Random.Range(0, _localAvailableTiles.Count)];
 
-        Util.IncreaseDictCount(_globalCount, tile.Name);
-        Util.IncreaseDictCount(_localCount, tile.Name);
+        Util.IncreaseDictCount(_globalCount, tileData.Name);
+        Util.IncreaseDictCount(_localCount, tileData.Name);
         
-        if (tile.HasGlobalLimit && _globalCount[tile.Name] == tile.GlobalLimitCount)
+        if (tileData.HasGlobalLimit && _globalCount[tileData.Name] == tileData.GlobalLimitCount)
         {
-            _globalAvailableTiles.Remove(tile);
-            _localAvailableTiles.Remove(tile);
+            _globalAvailableTiles.Remove(tileData);
+            _localAvailableTiles.Remove(tileData);
         }
-        if (tile.HasLocalLimit && _localCount[tile.Name] == tile.LocalLimitCount)
+        if (tileData.HasLocalLimit && _localCount[tileData.Name] == tileData.LocalLimitCount)
         {
-            _localAvailableTiles.Remove(tile);
+            _localAvailableTiles.Remove(tileData);
         }
 
-        return new AreaBaseTile(tile.Tile);
+        return tileData;
     }
 
     public void OnNextTilegroupStart()
     {
         _localCount = new();
-        _localAvailableTiles = new List<AreaBaseTile>(_globalAvailableTiles);
+        _localAvailableTiles = new List<AreaBaseTileData>(_globalAvailableTiles);
     }
 }
 
 [Serializable]
-public class AreaSubTileData : AreaBaseTileData
+public class AreaSubTileGroupData : AreaTileGroupData
 {
     [Range(0, 1), Tooltip("Proportion of this subtile in the map")]
     public float Proportion;
 }
 
 [Serializable]
-public class AreaBaseTile
+public class AreaBaseTileData
 {
     public GameObject Tile;
     public string Name => Tile.name;
@@ -88,14 +91,4 @@ public class AreaBaseTile
     [Header("Only applied when HasLimit is True")]
     public int GlobalLimitCount;
     public int LocalLimitCount;
-
-    public AreaBaseTile(GameObject tile)
-    {
-        Tile = tile;
-    }
-
-    public void EnableDecoration()
-    {
-
-    }
 }

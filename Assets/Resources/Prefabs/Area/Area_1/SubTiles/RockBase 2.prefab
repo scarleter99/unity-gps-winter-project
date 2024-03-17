@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4244767488133046903}
   - component: {fileID: 2093196101151413949}
   - component: {fileID: 778299623658637887}
+  - component: {fileID: -7917660903375191600}
   m_Layer: 0
   m_Name: RockBase 2
   m_TagString: Untagged
@@ -99,6 +100,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2867195630737719237, guid: 2cad0b74742aeb045b0acb7cd382ed37, type: 3}
+--- !u!114 &-7917660903375191600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 435858176134575976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aac76fcde976fda4795249be29aab8cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7685412237586806510
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,6 +210,10 @@ PrefabInstance:
     - target: {fileID: 3267996510793251772, guid: 6ae48898fabfda1489ab7997cbb14d90, type: 3}
       propertyPath: m_Name
       value: Rock 01
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267996510793251772, guid: 6ae48898fabfda1489ab7997cbb14d90, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ae48898fabfda1489ab7997cbb14d90, type: 3}

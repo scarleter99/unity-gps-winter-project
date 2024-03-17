@@ -63,7 +63,7 @@ public class AreaGrid
                 switch (source[z,x])
                 {
                     case -1:
-                        _typeArray[z, x] = AreaTileType.Invalid;
+                        _typeArray[z, x] = AreaTileType.OutOfField;
                         break;
                     case 0:
                         _typeArray[z, x] = AreaTileType.Obstacle;
@@ -152,7 +152,7 @@ public class AreaGrid
     private bool IsPositionMoveable(int x, int z)
     {
         if (!IsPositionValid(x, z)) return false;
-        return _typeArray[z, x] != AreaTileType.Obstacle && _typeArray[z, x] != AreaTileType.Invalid;
+        return _typeArray[z, x] != AreaTileType.Obstacle && _typeArray[z, x] != AreaTileType.OutOfField;
     }
 
     private bool IsNeighbor(int originx, int originz, int targetx, int targetz)
@@ -236,7 +236,7 @@ public class AreaGrid
 }
 
 
-#region legacy: 유효한 그리드인지 확인해주는 2차원 bool _isValid 초기화. 맵을 미리 생성해 두는 것으로 결정되어 현재 사용하지 않음
+#region legacy: 플레이 가능한 필드를 나타내는 2차원 bool _isValid 초기화.
 //private void InitializeIsValid()
 //{
 //    _isValid = new bool[_height, _width];
