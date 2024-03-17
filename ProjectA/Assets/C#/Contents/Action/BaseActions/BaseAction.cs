@@ -40,7 +40,6 @@ public abstract class BaseAction
         int coinHeadNum = 0;
         if (Owner.CreatureType == Define.CreatureType.Hero)
         {
-            
             for (int i = 0; i < CoinNum; i++)
             {
                 float value = Random.value;
@@ -53,7 +52,7 @@ public abstract class BaseAction
             for (int i = 0; i < CoinNum; i++)
             {
                 float value = Random.value;
-                if (value < 50f / 100f) // TODO - 몬스터별 성공확률 구현
+                if (value < ((Monster)Owner).MonsterData.Stat / 100f)
                     coinHeadNum++;
             }
         }

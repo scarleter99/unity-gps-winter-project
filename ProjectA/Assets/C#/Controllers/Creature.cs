@@ -45,9 +45,6 @@ public abstract class Creature : MonoBehaviour
     public BattleGridCell TargetCell { get; protected set; }
     public int CoinHeadNum { get; set; }
     
-    public MoveAction MoveAction { get; protected set; }
-    public FleeAction FleeAction { get; protected set; }
-    
     #endregion
     
     private void Awake()
@@ -59,14 +56,6 @@ public abstract class Creature : MonoBehaviour
     {
         Animator = gameObject.GetOrAddComponent<Animator>();
         CreatureStat = gameObject.GetOrAddComponent<CreatureStat>();
-        MoveAction = new MoveAction();
-        FleeAction = new FleeAction();
-        
-        MoveAction.SetInfo(Define.ACTION_MOVE_ID);
-        FleeAction.SetInfo(Define.ACTION_FLEE_ID);
-        
-        MoveAction.Equip(this);
-        FleeAction.Equip(this);
     }
     
     // 수동 실행

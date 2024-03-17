@@ -2,7 +2,7 @@
   "actions": [
     {
       "DataId": 401000,
-      "Name": "Move",
+      "Name": "MoveAction",
       "Description": "",
       "CoinNum": 0,
       "UsingStat": "None",
@@ -12,7 +12,7 @@
     },
     {
       "DataId": 401001,
-      "Name": "Flee",
+      "Name": "FleeAction",
       "Description": "Perfect = Flee",
       "CoinNum": 2,
       "UsingStat": "Dexterity",

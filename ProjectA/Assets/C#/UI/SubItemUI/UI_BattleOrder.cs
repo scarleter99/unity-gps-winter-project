@@ -60,8 +60,9 @@ public class UI_BattleOrder : UI_Base
         GetButton(Buttons.Skill1).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.Weapon.Skill1;
         GetButton(Buttons.Skill2).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.Weapon.Skill2;
         GetButton(Buttons.Skill3).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.Weapon.Skill3;
-        GetButton(Buttons.Move).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.MoveAction;
-        GetButton(Buttons.Flee).GetOrAddComponent<UI_ActionButton>().Action = CurrentTurnHero.FleeAction;
+        GetButton(Buttons.Move).GetOrAddComponent<UI_ActionButton>().Action =
+            Managers.ObjectMng.Actions[Define.ACTION_MOVE_ID];
+        GetButton(Buttons.Flee).GetOrAddComponent<UI_ActionButton>().Action = Managers.ObjectMng.Actions[Define.ACTION_FLEE_ID];
     }
 
     public void ShowActionInfo(BaseAction action)

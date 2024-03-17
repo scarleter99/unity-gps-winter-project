@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Data;
 using UnityEngine;
 
 public class ObjectManager
@@ -10,6 +9,8 @@ public class ObjectManager
     
     public ulong NextHeroId;
     public ulong NextMonsterId;
+    
+    public Dictionary<int, BaseAction> Actions { get; protected set; }
 
     public Transform HeroRoot => GetRootTransform("@Heroes");
     public Transform MonsterRoot => GetRootTransform("@Monsters");
@@ -18,8 +19,12 @@ public class ObjectManager
     {
 	    Heroes = new Dictionary<ulong, Hero>();
 	    Monsters = new Dictionary<ulong, Monster>();
+	    Actions = new Dictionary<int, BaseAction>();
+	    
 	    NextHeroId = 10000;
 	    NextMonsterId = 20000;
+
+	    BindActions();
     }
 
     public Transform GetRootTransform(string name)
@@ -30,21 +35,44 @@ public class ObjectManager
 
 	    return root.transform;
     }
+    
+    #region Bind
+    
+    public void BindActions()
+    {
+        foreach (var actionData in Managers.DataMng.ActionDataDict)
+        {
+    	    Type actionType = Type.GetType(actionData.Value.Name);
+    	    if (actionType == null)
+    	    {
+    		    Debug.LogError("Failed to BindAction: " + actionData.Value.Name);
+    		    return;
+    	    }
+    		    
+    	    BaseAction action = (BaseAction)(Activator.CreateInstance(actionType));
+	        action.SetInfo(actionData.Key);
 
+    	    Actions[actionData.Key] = action;
+        }
+    }
+
+    #endregion
+
+    #region Creature
     public Hero SpawnHero(int heroDataId)
     {
 	    string className = Managers.DataMng.HeroDataDict[heroDataId].Name;
-		GameObject go = Managers.ResourceMng.Instantiate($"{Define.HERO_PATH}/{className}");
-		Hero hero = go.GetComponent<Hero>();
+	    GameObject go = Managers.ResourceMng.Instantiate($"{Define.HERO_PATH}/{className}");
+	    Hero hero = go.GetComponent<Hero>();
 		
-		hero.SetInfo(heroDataId);
-		go.transform.position = Vector3.zero;
-		hero.transform.parent = HeroRoot;
-		hero.Id = NextHeroId;
-		Heroes[NextHeroId++] = hero;
+	    hero.SetInfo(heroDataId);
+	    go.transform.position = Vector3.zero;
+	    hero.transform.parent = HeroRoot;
+	    hero.Id = NextHeroId;
+	    Heroes[NextHeroId++] = hero;
 		
-		return hero;
-	}
+	    return hero;
+    }
     
     public Monster SpawnMonster(int monsterDataId)
     {
@@ -64,21 +92,21 @@ public class ObjectManager
     public void Despawn(Define.CreatureType creatureType, ulong id)
     {
 	    Creature creature = null;
-		switch (creatureType)
-		{
-			case Define.CreatureType.Hero:
-				creature = Heroes[id];
-				Heroes.Remove(id);
-				break;
-			case Define.CreatureType.Monster:
-				creature = Heroes[id];
-				Monsters.Remove(id);
-				break;
-		}
+	    switch (creatureType)
+	    {
+		    case Define.CreatureType.Hero:
+			    creature = Heroes[id];
+			    Heroes.Remove(id);
+			    break;
+		    case Define.CreatureType.Monster:
+			    creature = Heroes[id];
+			    Monsters.Remove(id);
+			    break;
+	    }
 		
-		if (creature != null)
-			Managers.ResourceMng.Destroy(creature.gameObject);
-	}
+	    if (creature != null)
+		    Managers.ResourceMng.Destroy(creature.gameObject);
+    }
 
     public Creature GetCreatureWithId(ulong id)
     {
@@ -91,14 +119,6 @@ public class ObjectManager
 	    return creature;
     }
     
-    public CreatureData GetCreatureDataWithDataId(int dataId)
-    {
-	    CreatureData creatureData = null;
-	    if (Managers.DataMng.HeroDataDict.TryGetValue(dataId, out HeroData heroData))
-		    creatureData = heroData;
-	    if (Managers.DataMng.MonsterDataDict.TryGetValue(dataId, out MonsterData monsterData))
-		    creatureData = monsterData;
 
-	    return creatureData;
-    }
+    #endregion
 }
