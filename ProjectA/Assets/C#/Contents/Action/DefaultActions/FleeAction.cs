@@ -11,7 +11,13 @@ public class FleeAction : BaseAction
         ActionTargetType = Define.ActionTargetType.Single;
     }
 
-    public override void DoAction()
+    public override bool CanStartAction()
+    {
+        // TODO
+        return false;
+    }
+
+    public override void OnStartAction()
     {
         // TODO
     }

@@ -97,6 +97,16 @@ public abstract class Hero : Creature
         if (CurrentMouseOverCell == null)
             return;
         
+        CurrentAction.Equip(this);
+        TargetCell = CurrentMouseOverCell;
+        
+        if (!CurrentAction.CanStartAction())
+        {
+            CurrentAction.UnEquip();
+            TargetCell = null;
+            return;
+        }
+
         CreatureBattleState = Define.CreatureBattleState.ActionProceed;
 
         CurrentMouseOverCell.RevertColor();
@@ -116,13 +126,6 @@ public abstract class Hero : Creature
     
     public override void DoAction()
     {
-        CurrentAction.Equip(this);
-        
-        TargetCell = CurrentMouseOverCell;
-        
-        CoinHeadNum = CurrentAction.CoinToss();
-        ((UI_BattleScene)Managers.UIMng.SceneUI).CoinTossUI.ShowCoinToss(CurrentAction, CoinHeadNum);
-        
         CurrentAction.DoAction();
     }
 
@@ -134,6 +137,7 @@ public abstract class Hero : Creature
         ((UI_BattleScene)Managers.UIMng.SceneUI).CoinTossUI.EndTurn();
         
         CreatureBattleState = Define.CreatureBattleState.Wait;
+        CurrentAction.UnEquip();
         TargetCell = null;
         Managers.BattleMng.NextTurn();
     }

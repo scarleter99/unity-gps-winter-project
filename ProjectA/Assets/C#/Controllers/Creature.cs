@@ -99,7 +99,7 @@ public abstract class Creature : MonoBehaviour
     
     protected virtual void OnJumpBWDStart() { CurrentAction.OnJumpBWDStart(); }
     
-    protected virtual void OnMoveFWDStart() { CurrentAction.OnMoveFWDStart(); }
+    protected virtual void OnMoveFWDStart() { CurrentAction.OnMoveStart(); }
     
     protected virtual void OnMoveFWDEnd() { CurrentAction.OnMoveFWDEnd(); }
     
@@ -135,14 +135,6 @@ public abstract class Creature : MonoBehaviour
     public void OnHeal(int heal)
     {
         CreatureStat.OnHeal(heal);
-    }
-
-    public void OnMove(BattleGridCell cell)
-    {
-        Managers.BattleMng.MoveCreature(this, cell);
-        Cell = cell;
-        
-        StartCoroutine("CoLerpToCell", cell);
     }
     
     #endregion

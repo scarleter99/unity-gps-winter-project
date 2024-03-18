@@ -9,7 +9,13 @@ public class HealPotion : BaseItem
         base.SetInfo(templateId, owner, bag, idx, addNum);
     }
 
-    public override void DoAction()
+    public override bool CanStartAction()
+    {
+        // TODO
+        return false;
+    }
+
+    public override void OnStartAction()
     {
         // TODO
     }
