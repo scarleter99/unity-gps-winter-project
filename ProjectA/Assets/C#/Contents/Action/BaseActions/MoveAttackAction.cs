@@ -5,10 +5,20 @@ public abstract class MoveAttackAction : BaseAction
 {
     protected Vector3 _meleeAttackRange;
 
-    public override void DoAction()
+    public override bool CanStartAction()
+    {
+        if (Owner.CreatureType == Define.CreatureType.Hero && TargetCell.GridSide == Define.GridSide.HeroSide)
+            return false;
+        if (Owner.CreatureType == Define.CreatureType.Monster && TargetCell.GridSide == Define.GridSide.MonsterSide)
+            return false;
+
+        return true;
+    }
+    
+    public override void OnStartAction()
     {
         Animator.Play("MoveFWD");
-        OnMoveFWDStart();
+        OnMoveStart();
     }
     
     public override void OnHandleAction()
@@ -20,7 +30,7 @@ public abstract class MoveAttackAction : BaseAction
         targetCreature.OnDamage(Owner.CreatureStat.Attack * (CoinHeadNum / CoinNum), 1);
     }
     
-    public override void OnMoveFWDStart()
+    public override void OnMoveStart()
     {
         Owner.transform.DOMove(TargetCell.transform.position + _meleeAttackRange, 0.8f).OnComplete(OnMoveFWDEnd);
     }

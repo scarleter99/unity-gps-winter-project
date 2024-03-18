@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 public abstract class BaseAction
 {
@@ -27,9 +28,15 @@ public abstract class BaseAction
         CoinNum = ActionData.CoinNum;
     }
 
-    public virtual void Equip(Creature owner)
+    public void Equip(Creature owner)
     {
         Owner = owner;
+    }
+    
+    public void UnEquip()
+    {
+        Owner.CurrentAction = null;
+        Owner = null;
     }
 
     public int CoinToss()
@@ -59,10 +66,19 @@ public abstract class BaseAction
 
         return coinHeadNum;
     }
+    public abstract bool CanStartAction();
     
     #region Action
 
-    public abstract void DoAction();
+    public void DoAction()
+    {
+        CoinHeadNum = CoinToss();
+        ((UI_BattleScene)Managers.UIMng.SceneUI).CoinTossUI.ShowCoinToss(this, CoinToss());
+
+        Owner.transform.DOLookAt(TargetCell.transform.position, 0.3f,  AxisConstraint.None, new Vector3(0, 1, 0)).OnComplete(OnStartAction);
+    }
+    
+    public abstract void OnStartAction();
     
     public abstract void OnHandleAction();
 
@@ -78,7 +94,7 @@ public abstract class BaseAction
     {
     }
     
-    public virtual void OnMoveFWDStart()
+    public virtual void OnMoveStart()
     {
     }
     
@@ -97,7 +113,14 @@ public abstract class BaseAction
     public void OnActionEnd()
     {
         Animator.Play("Idle");
-        Owner.DoEndTurn();
+        
+        Vector3 front;
+        if (Owner.CreatureType == Define.CreatureType.Hero)
+            front = new Vector3(0, 0, 1);
+        else
+            front = new Vector3(0, 0, -1);
+
+        Owner.transform.DOLookAt(front, 0.3f, AxisConstraint.None, new Vector3(0, 1, 0)).OnComplete(Owner.DoEndTurn);
     }
 
     #endregion

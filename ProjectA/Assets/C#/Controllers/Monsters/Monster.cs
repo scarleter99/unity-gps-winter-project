@@ -22,8 +22,15 @@ public abstract class Monster : Creature
     public override void DoPrepareAction()
     {
         EquipAction();
+        TargetCell = ChooseTarget(); 
         
-        TargetCell = GetRandomHeroCell(); // TODO - Target Hero 선택 알고리즘 구현
+        if (!CurrentAction.CanStartAction())
+        {
+            CurrentAction.UnEquip();
+            TargetCell = null;
+            DoPrepareAction();
+        }
+        
         CreatureBattleState = Define.CreatureBattleState.ActionProceed;
     }
 
@@ -39,13 +46,16 @@ public abstract class Monster : Creature
     public override void DoEndTurn()
     {
         ((UI_BattleScene)Managers.UIMng.SceneUI).CoinTossUI.EndTurn();
+        
         CreatureBattleState = Define.CreatureBattleState.Wait;
+        CurrentAction.UnEquip();
         TargetCell = null;
         Managers.BattleMng.NextTurn();
     }
     
     #endregion
 
+    // TODO - Action 선택 알고리즘 구현
     protected void EquipAction()
     {
         int randomKey = MonsterData.Actions[Random.Range(0, MonsterData.Actions.Count)];
@@ -54,7 +64,8 @@ public abstract class Monster : Creature
         CurrentAction.Equip(this);
     }
     
-    protected BattleGridCell GetRandomHeroCell()
+    // TODO - Target 선택 알고리즘 구현
+    protected BattleGridCell ChooseTarget()
     {
         List<ulong> keysList = new List<ulong>(Managers.ObjectMng.Heroes.Keys);
         ulong randomKey = keysList[Random.Range(0, keysList.Count)];

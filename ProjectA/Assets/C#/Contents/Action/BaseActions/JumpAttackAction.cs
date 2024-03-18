@@ -5,7 +5,17 @@ public abstract class JumpAttackAction : BaseAction
 {
     protected Vector3 _meleeAttackRange;
 
-    public override void DoAction()
+    public override bool CanStartAction()
+    {
+        if (Owner.CreatureType == Define.CreatureType.Hero && TargetCell.GridSide == Define.GridSide.HeroSide)
+            return false;
+        if (Owner.CreatureType == Define.CreatureType.Monster && TargetCell.GridSide == Define.GridSide.MonsterSide)
+            return false;
+
+        return true;
+    }
+    
+    public override void OnStartAction()
     {
         Animator.Play("JumpFWD");
     }
