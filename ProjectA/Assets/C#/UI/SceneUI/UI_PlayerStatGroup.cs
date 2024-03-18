@@ -15,6 +15,7 @@ public class UI_PlayerStatGroup : UI_Base
     public override void Init()
     {
         Bind<GameObject>(typeof(PlayerStatUI));
+        //DontDestroyOnLoad(transform.parent.gameObject);
     }
 
     void Start()
@@ -31,6 +32,8 @@ public class UI_PlayerStatGroup : UI_Base
             var go = GetGameObject((PlayerStatUI)index++);
             go.GetOrAddComponent<UI_PlayerStat>().BindPlayerStat(hero.HeroStat);
             go.SetActive(true);
+            
+            go.transform.Find("Bag").GetOrAddComponent<UI_Bag>().BindBag(hero.Bag);
         }
     }
 

@@ -15,6 +15,8 @@ public class BattleScene : BaseScene
         
         Managers.UIMng.ShowSceneUI<UI_BattleScene>();
         Managers.BattleMng.InitBattle(Define.MONSTERSQUAD_SQUAD1_ID);
+        // TODO - TEST CODE
+        Managers.ResourceMng.Instantiate("UI/SceneUI/UI_PlayerStatGroup");
     }
 
     public override void Clear()

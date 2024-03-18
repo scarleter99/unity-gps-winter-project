@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Data;
 using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 public class UI_PlayerStat : UI_Base
@@ -27,11 +23,6 @@ public class UI_PlayerStat : UI_Base
         Text_Gold,
     }
 
-    enum Button
-    {
-        Button_Inventory,
-    }
-
     enum Sliders
     {
         Slider_HP,
@@ -45,7 +36,6 @@ public class UI_PlayerStat : UI_Base
     public override void Init()
     {
         Bind<TextMeshProUGUI>(typeof(Text));
-        Bind<UnityEngine.UI.Button>(typeof(Button));
         Bind<UnityEngine.UI.Slider>(typeof(Sliders));
         Bind<UnityEngine.UI.Image>(typeof(Image));
     }
@@ -68,7 +58,7 @@ public class UI_PlayerStat : UI_Base
         
         GetText(Text.Text_Name).text = heroStat.Name;
 
-        Get<Slider>(Sliders.Slider_HP).value = heroStat.Hp / heroStat.MaxHp;
+        Get<Slider>(Sliders.Slider_HP).value = (float)heroStat.Hp / heroStat.MaxHp;
         GetText(Text.Text_HP).text = $"{heroStat.Hp}/{heroStat.MaxHp}";
         GetText(Text.Text_Attack).text = heroStat.Attack.ToString();
         GetText(Text.Text_Defense).text = heroStat.Defense.ToString();
